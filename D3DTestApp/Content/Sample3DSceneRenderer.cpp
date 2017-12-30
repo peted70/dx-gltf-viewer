@@ -2,7 +2,6 @@
 #include "Sample3DSceneRenderer.h"
 
 #include "..\Common\DirectXHelper.h"
-#include "..\WinRTGLTFParser\GLTF_Parser.h"
 
 using namespace D3DTestApp;
 
@@ -240,7 +239,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		auto parser = ref new WinRTGLTFParser::GLTF_Parser();
 		//parser->
-	};
+	});
 
 	loadModelTask.then([this]() {
 		m_loadingComplete = true;
