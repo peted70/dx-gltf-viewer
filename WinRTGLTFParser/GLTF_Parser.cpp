@@ -24,12 +24,13 @@ void GLTF_Parser::ParseFile(String^ Filename)
 
 	if (infile.fail())
 	{
-		throw Platform::Exception::CreateException(E_FAIL, ToStringHat(strerror(errno)));
+		throw Platform::Exception::CreateException(E_FAIL);
 	}
 
 	::ParseFile(infile, [this](const BufferData& data)
 	{
-		OnBufferEvent(data);
+		auto bd = ref new GLTF_BufferData(data);
+		OnBufferEvent(bd);
 	});
 
 	infile.close();

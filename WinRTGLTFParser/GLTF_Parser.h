@@ -10,7 +10,18 @@ namespace WinRTGLTFParser
 	using namespace Platform;
 	using namespace std;
 
-	public delegate void BufferEventHandler(const BufferData&);
+	public ref class GLTF_BufferData sealed
+	{
+	internal:
+		GLTF_BufferData(const BufferData& data) :
+			_data(data)
+		{}
+
+	private:
+		const BufferData& _data;
+	};
+
+	public delegate void BufferEventHandler(GLTF_BufferData^);
 
 	public ref class GLTF_Parser sealed
     {

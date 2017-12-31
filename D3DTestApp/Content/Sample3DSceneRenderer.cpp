@@ -237,8 +237,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	auto loadModelTask = (createPSTask && createVSTask).then([this]() 
 	{
-		auto parser = ref new WinRTGLTFParser::GLTF_Parser();
-		//parser->
+		GLTF_Parser^ parser = ref new GLTF_Parser();
+		parser->OnBufferEvent += ref new BufferEventHandler(this, &Sample3DSceneRenderer::OnBuffer);
 	});
 
 	loadModelTask.then([this]() {
@@ -320,6 +320,11 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	//createCubeTask.then([this] () {
 	//	m_loadingComplete = true;
 	//});
+}
+
+void Sample3DSceneRenderer::OnBuffer(Platform::Object^ sender, GLTF_BufferData^ data)
+{
+
 }
 
 void Sample3DSceneRenderer::ReleaseDeviceDependentResources()

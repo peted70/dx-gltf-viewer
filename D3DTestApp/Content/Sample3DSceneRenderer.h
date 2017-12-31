@@ -6,6 +6,8 @@
 
 namespace D3DTestApp
 {
+	using namespace WinRTGLTFParser;
+
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer
 	{
@@ -20,7 +22,7 @@ namespace D3DTestApp
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
-
+		void OnBuffer(Platform::Object^ sender, GLTF_BufferData^ data);
 
 	private:
 		void Rotate(float radians);
