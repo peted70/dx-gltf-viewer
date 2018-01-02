@@ -8,6 +8,24 @@ using namespace D3DTestApp;
 using namespace DirectX;
 using namespace Windows::Foundation;
 
+ref class EventShim sealed
+{
+internal:
+	EventShim(std::function<void(WinRTGLTFParser::GLTF_BufferData^)> callback):
+		callback_(std::move(callback)) 
+	{
+
+	}
+
+	void OnBuffer(Platform::Object^ sender, WinRTGLTFParser::GLTF_BufferData^ data)
+	{
+		callback_(data);
+	}
+
+private:
+	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> callback_;
+};
+
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),
@@ -237,8 +255,10 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	auto loadModelTask = (createPSTask && createVSTask).then([this]() 
 	{
-		GLTF_Parser^ parser = ref new GLTF_Parser();
-		parser->OnBufferEvent += ref new BufferEventHandler(this, &Sample3DSceneRenderer::OnBuffer);
+		//GLTF_Parser^ parser = ref new GLTF_Parser();
+		//std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
+		//auto es = ref new EventShim(memfun);
+		//parser->OnBufferEvent += ref new BufferEventHandler(this, &Sample3DSceneRenderer::OnBuffer);
 	});
 
 	loadModelTask.then([this]() {
@@ -322,7 +342,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	//});
 }
 
-void Sample3DSceneRenderer::OnBuffer(Platform::Object^ sender, GLTF_BufferData^ data)
+void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 {
 
 }

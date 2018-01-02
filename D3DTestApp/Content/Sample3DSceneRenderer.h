@@ -3,6 +3,7 @@
 #include "..\Common\DeviceResources.h"
 #include "ShaderStructures.h"
 #include "..\Common\StepTimer.h"
+#include "../SharedGLTFParser/gltfparser.h"
 
 namespace D3DTestApp
 {
@@ -22,7 +23,7 @@ namespace D3DTestApp
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
-		void OnBuffer(Platform::Object^ sender, GLTF_BufferData^ data);
+		void OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data);
 
 	private:
 		void Rotate(float radians);

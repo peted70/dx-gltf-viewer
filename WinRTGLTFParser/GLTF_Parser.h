@@ -1,8 +1,6 @@
 ﻿#pragma once
 
-#include <stdafx.h>
 #include <istream>
-#include "../SharedGLTFParser/gltfparser.h"
 
 namespace WinRTGLTFParser
 {
@@ -10,15 +8,39 @@ namespace WinRTGLTFParser
 	using namespace Platform;
 	using namespace std;
 
+	public ref class GLTF_SubresourceData sealed
+	{
+	public:
+		property unsigned int ByteWidth;
+		property unsigned int BindFlags;
+		property unsigned int CPUAccessFlags;
+		property unsigned int MiscFlags;
+		property unsigned int StructureByteStride;
+	};
+
+	public ref class GLTF_BufferDesc sealed
+	{
+	public:
+		property IntPtr pSysMem;
+		property unsigned int SysMemPitch;
+		property unsigned int SysMemSlicePitch;
+	};
+
 	public ref class GLTF_BufferData sealed
 	{
 	internal:
-		GLTF_BufferData(const BufferData& data) :
-			_data(data)
-		{}
+		GLTF_BufferData(const BufferData& data)
+		{
+			_subData.ByteWidth = data.desc.ByteWidth;
+			_subData.BindFlags = data.desc.BindFlags;
+			_subData.CPUAccessFlags = data.desc.CPUAccessFlags;
+			_subData.MiscFlags = data.desc.MiscFlags;
+			_subData.StructureByteStride = data.desc.StructureByteStride;
+		}
 
 	private:
-		const BufferData& _data;
+		GLTF_SubresourceData _subData;
+		GLTF_BufferDesc _bufDesc;
 	};
 
 	public delegate void BufferEventHandler(GLTF_BufferData^);
