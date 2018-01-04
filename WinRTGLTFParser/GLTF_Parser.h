@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef _GLTF_PARSER_H
+#define _GLTF_PARSER_H
 
 #include <istream>
 
@@ -43,7 +44,7 @@ namespace WinRTGLTFParser
 		GLTF_BufferDesc _bufDesc;
 	};
 
-	public delegate void BufferEventHandler(GLTF_BufferData^);
+	public delegate void BufferEventHandler(Platform::Object^ sender, GLTF_BufferData^);
 
 	public ref class GLTF_Parser sealed
     {
@@ -63,3 +64,5 @@ namespace WinRTGLTFParser
 		void ParseFile(String^ Filename);
     };
 }
+
+#endif //_GLTF_PARSER_H

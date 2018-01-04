@@ -30,7 +30,7 @@ void GLTF_Parser::ParseFile(String^ Filename)
 	::ParseFile(infile, [this](const BufferData& data)
 	{
 		auto bd = ref new GLTF_BufferData(data);
-		OnBufferEvent(bd);
+		OnBufferEvent(this, bd);
 	});
 
 	infile.close();

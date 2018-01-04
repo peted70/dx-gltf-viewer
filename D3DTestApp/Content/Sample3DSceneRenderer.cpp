@@ -2,6 +2,7 @@
 #include "Sample3DSceneRenderer.h"
 
 #include "..\Common\DirectXHelper.h"
+//#include "../../WinRTGLTFParser/GLTF_Parser.h"
 
 using namespace D3DTestApp;
 
@@ -17,6 +18,7 @@ internal:
 
 	}
 
+public:
 	void OnBuffer(Platform::Object^ sender, WinRTGLTFParser::GLTF_BufferData^ data)
 	{
 		callback_(data);
@@ -255,10 +257,13 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	auto loadModelTask = (createPSTask && createVSTask).then([this]() 
 	{
-		//GLTF_Parser^ parser = ref new GLTF_Parser();
-		//std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
-		//auto es = ref new EventShim(memfun);
-		//parser->OnBufferEvent += ref new BufferEventHandler(this, &Sample3DSceneRenderer::OnBuffer);
+		WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
+		std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
+		auto es = ref new EventShim(memfun);
+		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
+
+		auto fn = Windows::Storage::ApplicationData::Current->LocalFolder + "/Assets/BoomBox.glb";
+		parser->ParseFile(fn);
 	});
 
 	loadModelTask.then([this]() {
