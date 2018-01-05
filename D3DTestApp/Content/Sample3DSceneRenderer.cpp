@@ -262,7 +262,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		auto es = ref new EventShim(memfun);
 		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 
-		auto fn = Windows::Storage::ApplicationData::Current->LocalFolder + "/Assets/BoomBox.glb";
+		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
+		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
 		parser->ParseFile(fn);
 	});
 
@@ -349,7 +350,25 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 {
+	// Create the buffers...
+	D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
+	vertexBufferData.pSysMem = (void *)data->BufferDescription->pSysMem;
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
 
+	std::wstring type(data->BufferDescription->BufferContentType->Data());
+	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
+
+	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(data->SubResource->ByteWidth), D3D11_BIND_VERTEX_BUFFER);
+	DX::ThrowIfFailed(
+		m_deviceResources->GetD3DDevice()->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexBufferData,
+			&buffer
+			)
+		);
+
+	_buffers[type] = buffer;
 }
 
 void Sample3DSceneRenderer::ReleaseDeviceDependentResources()

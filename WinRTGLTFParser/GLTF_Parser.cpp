@@ -9,7 +9,7 @@ GLTF_Parser::GLTF_Parser()
 {
 }
 
-String^ ToStringHat(char* ch)
+String^ WinRTGLTFParser::ToStringHat(char* ch)
 {
 	std::string s_str = std::string(ch);
 	std::wstring wid_str = std::wstring(s_str.begin(), s_str.end());

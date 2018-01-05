@@ -9,6 +9,8 @@ namespace WinRTGLTFParser
 	using namespace Platform;
 	using namespace std;
 
+	String^ ToStringHat(char* ch);
+
 	public ref class GLTF_SubresourceData sealed
 	{
 	public:
@@ -25,6 +27,7 @@ namespace WinRTGLTFParser
 		property IntPtr pSysMem;
 		property unsigned int SysMemPitch;
 		property unsigned int SysMemSlicePitch;
+		property String^ BufferContentType;
 	};
 
 	public ref class GLTF_BufferData sealed
@@ -32,16 +35,36 @@ namespace WinRTGLTFParser
 	internal:
 		GLTF_BufferData(const BufferData& data)
 		{
-			_subData.ByteWidth = data.desc.ByteWidth;
-			_subData.BindFlags = data.desc.BindFlags;
-			_subData.CPUAccessFlags = data.desc.CPUAccessFlags;
-			_subData.MiscFlags = data.desc.MiscFlags;
-			_subData.StructureByteStride = data.desc.StructureByteStride;
+			_subData = ref new GLTF_SubresourceData();
+
+			_subData->ByteWidth = data.desc.ByteWidth;
+			_subData->BindFlags = data.desc.BindFlags;
+			_subData->CPUAccessFlags = data.desc.CPUAccessFlags;
+			_subData->MiscFlags = data.desc.MiscFlags;
+			_subData->StructureByteStride = data.desc.StructureByteStride;
+
+			_bufDesc = ref new GLTF_BufferDesc();
+
+			_bufDesc->pSysMem = (IntPtr)(void *)(data.subresource.pSysMem);
+			_bufDesc->SysMemPitch = data.subresource.SysMemPitch;
+			_bufDesc->SysMemSlicePitch = data.subresource.SysMemSlicePitch;
+			_bufDesc->BufferContentType = ToStringHat(const_cast<char *>(data.desc.BufferContentType));
+		}
+
+	public:
+		property GLTF_SubresourceData^ SubResource 
+		{
+			GLTF_SubresourceData^ get() { return _subData; }
+		}
+
+		property GLTF_BufferDesc^ BufferDescription
+		{
+			GLTF_BufferDesc^ get() { return _bufDesc; }
 		}
 
 	private:
-		GLTF_SubresourceData _subData;
-		GLTF_BufferDesc _bufDesc;
+		GLTF_SubresourceData^ _subData;
+		GLTF_BufferDesc^ _bufDesc;
 	};
 
 	public delegate void BufferEventHandler(Platform::Object^ sender, GLTF_BufferData^);

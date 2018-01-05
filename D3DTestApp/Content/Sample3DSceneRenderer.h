@@ -4,6 +4,8 @@
 #include "ShaderStructures.h"
 #include "..\Common\StepTimer.h"
 #include "../SharedGLTFParser/gltfparser.h"
+#include <map>
+#include <string>
 
 namespace D3DTestApp
 {
@@ -39,6 +41,8 @@ namespace D3DTestApp
 		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
+
+		std::map<std::wstring, Microsoft::WRL::ComPtr<ID3D11Buffer>> _buffers;
 
 		// System resources for cube geometry.
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
