@@ -192,6 +192,34 @@ void Sample3DSceneRenderer::Render()
 		0
 		);
 
+	unsigned int indexCount = 0;
+	for (auto& buffer : _buffers)
+	{
+		if (buffer.first.compare(L"VERTEX") == 0)
+		{
+			//indexCount = buffer.
+
+			UINT stride = sizeof(VertexPositionColor);
+			UINT offset = 0;
+			context->IASetVertexBuffers(
+				0,
+				1,
+				buffer.second.GetAddressOf(),
+				&stride,
+				&offset
+			);
+		}
+
+		if (buffer.first.compare(L"INDEX") == 0)
+		{
+			context->IASetIndexBuffer(
+				buffer.second.Get(),
+				DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
+				0
+			);
+		}
+	}
+
 	// Draw the objects.
 	context->DrawIndexed(
 		m_indexCount,
@@ -380,4 +408,9 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	m_constantBuffer.Reset();
 	m_vertexBuffer.Reset();
 	m_indexBuffer.Reset();
+
+	for (auto& buffer : _buffers)
+	{
+		buffer.second.Reset();
+	}
 }

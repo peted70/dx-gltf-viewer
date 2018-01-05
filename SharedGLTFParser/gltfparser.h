@@ -32,6 +32,7 @@ struct GLTFPARSER_API BufferDesc
 	unsigned int MiscFlags;
 	unsigned int StructureByteStride;
 	const char *BufferContentType;
+	unsigned int Count;
 };
 
 class GLTFPARSER_API BufferData

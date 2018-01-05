@@ -28,6 +28,7 @@ namespace WinRTGLTFParser
 		property unsigned int SysMemPitch;
 		property unsigned int SysMemSlicePitch;
 		property String^ BufferContentType;
+		property unsigned int Count;
 	};
 
 	public ref class GLTF_BufferData sealed
@@ -49,6 +50,9 @@ namespace WinRTGLTFParser
 			_bufDesc->SysMemPitch = data.subresource.SysMemPitch;
 			_bufDesc->SysMemSlicePitch = data.subresource.SysMemSlicePitch;
 			_bufDesc->BufferContentType = ToStringHat(const_cast<char *>(data.desc.BufferContentType));
+
+			_bufDesc->Count = data.desc.Count;
+
 		}
 
 	public:
