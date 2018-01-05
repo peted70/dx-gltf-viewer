@@ -84,5 +84,6 @@
   <ItemGroup>
     <None Include="D3DTestApp_TemporaryKey.pfx" />
     <None Include="Assets\BoomBox.glb" />
+    <None Include="Assets\Box.glb" />
   </ItemGroup>
 </Project>

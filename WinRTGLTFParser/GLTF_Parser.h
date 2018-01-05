@@ -52,7 +52,6 @@ namespace WinRTGLTFParser
 			_bufDesc->BufferContentType = ToStringHat(const_cast<char *>(data.desc.BufferContentType));
 
 			_bufDesc->Count = data.desc.Count;
-
 		}
 
 	public:

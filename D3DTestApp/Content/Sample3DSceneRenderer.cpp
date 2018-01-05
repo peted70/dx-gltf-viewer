@@ -8,6 +8,7 @@ using namespace D3DTestApp;
 
 using namespace DirectX;
 using namespace Windows::Foundation;
+using namespace Microsoft::WRL;
 
 ref class EventShim sealed
 {
@@ -78,7 +79,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.7f, -100.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -148,25 +149,38 @@ void Sample3DSceneRenderer::Render()
 		0
 		);
 
-	// Each vertex is one instance of the VertexPositionColor struct.
-	UINT stride = sizeof(VertexPositionColor);
-	UINT offset = 0;
-	context->IASetVertexBuffers(
-		0,
-		1,
-		m_vertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-		);
+	unsigned int indexCount = 0;
+	bool indexed = false;
+	for (auto& buffer : _buffers)
+	{
+		if (buffer.first.compare(L"POSITION") == 0)
+		{
+			auto bufferPtr = buffer.second.Buffer();
+			auto address = bufferPtr.GetAddressOf();
+			UINT stride = 3 * sizeof(float);
+			UINT offset = 0;
+			context->IASetVertexBuffers(
+				0,
+				1,
+				buffer.second.Buffer().GetAddressOf(),
+				&stride,
+				&offset
+			);
+		}
 
-	context->IASetIndexBuffer(
-		m_indexBuffer.Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-		0
-		);
+		if (buffer.first.compare(L"INDICES") == 0)
+		{
+			indexed = true;
+			m_indexCount = buffer.second.Data()->BufferDescription->Count;
+			context->IASetIndexBuffer(
+				buffer.second.Buffer().Get(),
+				DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
+				0
+			);
+		}
+	}
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	context->IASetInputLayout(m_inputLayout.Get());
 
 	// Attach our vertex shader.
@@ -192,40 +206,15 @@ void Sample3DSceneRenderer::Render()
 		0
 		);
 
-	unsigned int indexCount = 0;
-	for (auto& buffer : _buffers)
+
+	if (indexed)
 	{
-		if (buffer.first.compare(L"VERTEX") == 0)
-		{
-			//indexCount = buffer.
-
-			UINT stride = sizeof(VertexPositionColor);
-			UINT offset = 0;
-			context->IASetVertexBuffers(
-				0,
-				1,
-				buffer.second.GetAddressOf(),
-				&stride,
-				&offset
-			);
-		}
-
-		if (buffer.first.compare(L"INDEX") == 0)
-		{
-			context->IASetIndexBuffer(
-				buffer.second.Get(),
-				DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-				0
-			);
-		}
+		context->DrawIndexed(m_indexCount, 0, 0);
 	}
-
-	// Draw the objects.
-	context->DrawIndexed(
-		m_indexCount,
-		0,
-		0
-		);
+	else
+	{
+		context->Draw(m_indexCount, 0);
+	}
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
@@ -248,7 +237,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		DX::ThrowIfFailed(
@@ -291,7 +280,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 
 		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
-		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		//auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		auto fn = installedLocation->Path + "/Assets/Box.glb";
 		parser->ParseFile(fn);
 	});
 
@@ -378,6 +368,17 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 {
+	int bindFlags = 0;
+	if (data->BufferDescription->BufferContentType == L"POSITION")
+	{
+		bindFlags = D3D11_BIND_VERTEX_BUFFER;
+	}
+
+	if (data->BufferDescription->BufferContentType == L"INDICES")
+	{
+		bindFlags = D3D11_BIND_INDEX_BUFFER;
+	}
+
 	// Create the buffers...
 	D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
 	vertexBufferData.pSysMem = (void *)data->BufferDescription->pSysMem;
@@ -387,7 +388,7 @@ void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 	std::wstring type(data->BufferDescription->BufferContentType->Data());
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 
-	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(data->SubResource->ByteWidth), D3D11_BIND_VERTEX_BUFFER);
+	CD3D11_BUFFER_DESC vertexBufferDesc(data->SubResource->ByteWidth, bindFlags);
 	DX::ThrowIfFailed(
 		m_deviceResources->GetD3DDevice()->CreateBuffer(
 			&vertexBufferDesc,
@@ -396,7 +397,8 @@ void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 			)
 		);
 
-	_buffers[type] = buffer;
+	BufferWrapper bw(data, buffer);
+	_buffers[type] = bw;
 }
 
 void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
@@ -411,6 +413,6 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 
 	for (auto& buffer : _buffers)
 	{
-		buffer.second.Reset();
+		buffer.second.Buffer().Reset();
 	}
 }

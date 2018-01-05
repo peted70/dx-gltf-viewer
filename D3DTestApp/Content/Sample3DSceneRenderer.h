@@ -10,12 +10,14 @@
 namespace D3DTestApp
 {
 	using namespace WinRTGLTFParser;
+	using namespace std;
+	using namespace Microsoft::WRL;
 
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer
 	{
 	public:
-		Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+		Sample3DSceneRenderer(const shared_ptr<DX::DeviceResources>& deviceResources);
 		void CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		void ReleaseDeviceDependentResources();
@@ -25,24 +27,42 @@ namespace D3DTestApp
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
-		void OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data);
+		void OnBuffer(GLTF_BufferData^ data);
 
 	private:
 		void Rotate(float radians);
 
 	private:
+		class BufferWrapper
+		{
+		public:
+			BufferWrapper(GLTF_BufferData^ data, ComPtr<ID3D11Buffer> buffer) :
+				_data(data),
+				_buffer(buffer)
+			{
+			}
+			BufferWrapper() {}
+			ComPtr<ID3D11Buffer>& Buffer() { return _buffer; }
+
+			GLTF_BufferData^ Data() { return _data; }
+
+		private:
+			GLTF_BufferData^ _data;
+			ComPtr<ID3D11Buffer> _buffer;
+		};
+
 		// Cached pointer to device resources.
-		std::shared_ptr<DX::DeviceResources> m_deviceResources;
+		shared_ptr<DX::DeviceResources> m_deviceResources;
 
 		// Direct3D resources for cube geometry.
-		Microsoft::WRL::ComPtr<ID3D11InputLayout>	m_inputLayout;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_vertexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_indexBuffer;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
+		ComPtr<ID3D11InputLayout>	m_inputLayout;
+		ComPtr<ID3D11Buffer>		m_vertexBuffer;
+		ComPtr<ID3D11Buffer>		m_indexBuffer;
+		ComPtr<ID3D11VertexShader>	m_vertexShader;
+		ComPtr<ID3D11PixelShader>	m_pixelShader;
+		ComPtr<ID3D11Buffer>		m_constantBuffer;
 
-		std::map<std::wstring, Microsoft::WRL::ComPtr<ID3D11Buffer>> _buffers;
+		map<wstring, BufferWrapper> _buffers;
 
 		// System resources for cube geometry.
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
