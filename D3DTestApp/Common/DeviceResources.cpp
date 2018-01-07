@@ -218,6 +218,22 @@ void DX::DeviceResources::CreateDeviceResources()
 			&m_d2dContext
 			)
 		);
+
+	D3D11_RASTERIZER_DESC rasterDesc;
+	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.FrontCounterClockwise = true;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	ID3D11RasterizerState *ppRasterizerState;
+	m_d3dDevice->CreateRasterizerState(&rasterDesc, &ppRasterizerState);
+	GetD3DDeviceContext()->RSSetState(ppRasterizerState);
 }
 
 // These resources need to be recreated every time the window size is changed.

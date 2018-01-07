@@ -79,7 +79,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, -100.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.7f, 10.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -155,8 +155,6 @@ void Sample3DSceneRenderer::Render()
 	{
 		if (buffer.first.compare(L"POSITION") == 0)
 		{
-			auto bufferPtr = buffer.second.Buffer();
-			auto address = bufferPtr.GetAddressOf();
 			UINT stride = 3 * sizeof(float);
 			UINT offset = 0;
 			context->IASetVertexBuffers(
@@ -180,7 +178,7 @@ void Sample3DSceneRenderer::Render()
 		}
 	}
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(m_inputLayout.Get());
 
 	// Attach our vertex shader.
@@ -236,14 +234,15 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateInputLayout(
 				vertexDesc,
-				ARRAYSIZE(vertexDesc),
+				1,
+				//ARRAYSIZE(vertexDesc),
 				&fileData[0],
 				fileData.size(),
 				&m_inputLayout
@@ -374,9 +373,13 @@ void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 		bindFlags = D3D11_BIND_VERTEX_BUFFER;
 	}
 
-	if (data->BufferDescription->BufferContentType == L"INDICES")
+	else if (data->BufferDescription->BufferContentType == L"INDICES")
 	{
 		bindFlags = D3D11_BIND_INDEX_BUFFER;
+	}
+	else
+	{
+		return;
 	}
 
 	// Create the buffers...
@@ -415,4 +418,6 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	{
 		buffer.second.Buffer().Reset();
 	}
+
+	_buffers.clear();
 }
