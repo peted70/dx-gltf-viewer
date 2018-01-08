@@ -1,23 +1,32 @@
+#define DIFFUSE
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
 	matrix model;
 	matrix view;
 	matrix projection;
+#ifdef DIFFUSE
+	float4 light_direction;
+#endif
 };
 
 // Per-vertex data used as input to the vertex shader.
 struct VertexShaderInput
 {
 	float3 pos : POSITION;
-//	float3 color : COLOR0;
+#ifdef DIFFUSE
+    float3 normal : NORMAL;
+#endif
 };
 
 // Per-pixel color data passed through the pixel shader.
 struct PixelShaderInput
 {
 	float4 pos : SV_POSITION;
-//	float3 color : COLOR0;
+#ifdef DIFFUSE
+    float3 normal : NORMAL;
+    float3 lightdir : TEXCOORD1;
+#endif
 };
 
 // Simple shader to do vertex processing on the GPU.
@@ -32,8 +41,10 @@ PixelShaderInput main(VertexShaderInput input)
 	pos = mul(pos, projection);
 	output.pos = pos;
 
-	// Pass the color through without modification.
-	//output.color = input.color;
+#ifdef DIFFUSE
+    output.lightdir = normalize(light_direction);
+    output.normal = normalize(mul(input.normal, model));
+#endif
 
 	return output;
 }

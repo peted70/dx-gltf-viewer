@@ -39,6 +39,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 {
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
+	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
 }
 
 // Initializes view parameters when the window size changes.
@@ -79,7 +80,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 0.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -151,32 +152,27 @@ void Sample3DSceneRenderer::Render()
 
 	unsigned int indexCount = 0;
 	bool indexed = false;
-	for (auto& buffer : _buffers)
-	{
-		if (buffer.first.compare(L"POSITION") == 0)
-		{
-			UINT stride = 3 * sizeof(float);
-			UINT offset = 0;
-			context->IASetVertexBuffers(
-				0,
-				1,
-				buffer.second.Buffer().GetAddressOf(),
-				&stride,
-				&offset
-			);
-		}
 
-		if (buffer.first.compare(L"INDICES") == 0)
-		{
-			indexed = true;
-			m_indexCount = buffer.second.Data()->BufferDescription->Count;
-			context->IASetIndexBuffer(
-				buffer.second.Buffer().Get(),
-				DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-				0
-			);
-		}
-	}
+	// Get POSITIONS & NORMALS..
+	auto pos = _buffers.find(L"POSITION");
+	auto normals = _buffers.find(L"NORMAL");
+
+	auto posBuffer = pos->second.Buffer();
+	auto normalBuffer = normals->second.Buffer();
+
+	ID3D11Buffer *vbs[] = { *(posBuffer.GetAddressOf()), *(normalBuffer.GetAddressOf()) };
+	unsigned int strides[] = { 3 * sizeof(float), 3 * sizeof(float) };
+	unsigned int offsets[] = { 0, 0 };
+	context->IASetVertexBuffers(0, 2, vbs, strides, offsets);
+
+	auto indices = _buffers.find(L"INDICES");
+	indexed = true;
+	m_indexCount = indices->second.Data()->BufferDescription->Count;
+	context->IASetIndexBuffer(
+		indices->second.Buffer().Get(),
+		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
+		0
+	);
 
 	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(m_inputLayout.Get());
@@ -234,15 +230,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateInputLayout(
 				vertexDesc,
-				1,
-				//ARRAYSIZE(vertexDesc),
+				ARRAYSIZE(vertexDesc),
 				&fileData[0],
 				fileData.size(),
 				&m_inputLayout
@@ -279,8 +274,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 
 		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
-		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
-		//auto fn = installedLocation->Path + "/Assets/Box.glb";
+		//auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		auto fn = installedLocation->Path + "/Assets/Box.glb";
 		parser->ParseFile(fn);
 	});
 
@@ -368,7 +363,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 void Sample3DSceneRenderer::OnBuffer(WinRTGLTFParser::GLTF_BufferData^ data)
 {
 	int bindFlags = 0;
-	if (data->BufferDescription->BufferContentType == L"POSITION")
+	if (data->BufferDescription->BufferContentType == L"POSITION" ||
+		data->BufferDescription->BufferContentType == L"NORMAL")
 	{
 		bindFlags = D3D11_BIND_VERTEX_BUFFER;
 	}
