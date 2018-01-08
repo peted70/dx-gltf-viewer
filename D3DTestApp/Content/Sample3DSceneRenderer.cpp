@@ -80,7 +80,8 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		);
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	//static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.05f, .05f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -274,8 +275,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 
 		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
-		//auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
-		auto fn = installedLocation->Path + "/Assets/Box.glb";
+		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		//auto fn = installedLocation->Path + "/Assets/Box.glb";
 		parser->ParseFile(fn);
 	});
 
