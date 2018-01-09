@@ -17,6 +17,17 @@
 
 typedef long HRESULT;
 
+class GLTFPARSER_API TextureData
+{
+public:
+	TextureData() {}
+
+	const void *pSysMem;
+	unsigned int dataSize;
+	unsigned int imgWidth;
+	unsigned int imgHeight;
+};
+
 struct GLTFPARSER_API SubresourceData
 {
 	const void *pSysMem;

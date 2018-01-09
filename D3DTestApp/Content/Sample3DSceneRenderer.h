@@ -31,7 +31,7 @@ namespace D3DTestApp
 		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		bool IsTracking() { return m_tracking; }
 		void OnBuffer(GLTF_BufferData^ data);
-		void OnTexture(WinRTGLTFParser::GLTF_BufferData^ data);
+		void OnTexture(WinRTGLTFParser::GLTF_TextureData^ data);
 
 	private:
 		void Rotate(float radians);

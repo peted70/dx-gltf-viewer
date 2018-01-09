@@ -11,6 +11,25 @@ namespace WinRTGLTFParser
 
 	String^ ToStringHat(char* ch);
 
+	
+	public ref class GLTF_TextureData sealed
+	{
+	internal:
+		GLTF_TextureData(const TextureData& data)
+		{
+			pSysMem = (IntPtr)(void *)data.pSysMem;
+			DataSize = data.dataSize;
+			ImgWidth = data.imgWidth;
+			ImgHeight = data.imgHeight;
+		}
+
+	public:
+		property IntPtr pSysMem;
+		property unsigned int DataSize;
+		property unsigned int ImgWidth;
+		property unsigned int ImgHeight;
+	};
+
 	public ref class GLTF_SubresourceData sealed
 	{
 	public:
@@ -71,6 +90,7 @@ namespace WinRTGLTFParser
 	};
 
 	public delegate void BufferEventHandler(Platform::Object^ sender, GLTF_BufferData^);
+	public delegate void TextureEventHandler(Platform::Object^ sender, GLTF_TextureData^);
 
 	public ref class GLTF_Parser sealed
     {
@@ -78,6 +98,7 @@ namespace WinRTGLTFParser
 		GLTF_Parser();
 
 		event BufferEventHandler^ OnBufferEvent;
+		event TextureEventHandler^ OnTextureEvent;
 
 		/// <summary>
 		/// Will parse a .GLB file given the input filename

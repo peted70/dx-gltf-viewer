@@ -8,7 +8,7 @@ struct PixelShaderInput
 {
 	float4 pos : SV_POSITION;
 #ifdef DIFFUSE
-    float3 normal : NORMAL;
+    float3 normal : NORMAL; 
     float3 lightdir : TEXCOORD1;
     float2 texcoord : TEXCOORD0;
 #endif

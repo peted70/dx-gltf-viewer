@@ -52,7 +52,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 
 	_grid = make_unique<DXGrid>();
 	_grid->Initialise(deviceResources->GetD3DDevice());
-	_mainAxes = make_unique<Axis>(1000.0);
+	_mainAxes = make_unique<Axis>(1000.0f);
 	_mainAxes->Initialise(deviceResources->GetD3DDevice());
 }
 
@@ -601,7 +601,7 @@ std::vector<uint8_t> LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint3
 	return image;
 }
 
-void Sample3DSceneRenderer::OnTexture(WinRTGLTFParser::GLTF_BufferData^ data)
+void Sample3DSceneRenderer::OnTexture(WinRTGLTFParser::GLTF_TextureData^ data)
 {
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
@@ -611,7 +611,10 @@ void Sample3DSceneRenderer::OnTexture(WinRTGLTFParser::GLTF_BufferData^ data)
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
-	auto image = LoadBGRAImage(fn->Data(), txtDesc.Width, txtDesc.Height);
+	uint32_t width;
+	uint32_t height;
+
+	auto image = LoadBGRAImage((void *)data->pSysMem, data->DataSize, width, height);
 
 	D3D11_SUBRESOURCE_DATA initialData = {};
 	initialData.pSysMem = image.data();
