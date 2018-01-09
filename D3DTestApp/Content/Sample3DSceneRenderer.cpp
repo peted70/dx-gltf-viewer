@@ -2,7 +2,7 @@
 #include "Sample3DSceneRenderer.h"
 
 #include "..\Common\DirectXHelper.h"
-//#include "../../WinRTGLTFParser/GLTF_Parser.h"
+#include "Utility.h"
 
 // Please move me :)
 static float lastPosX;
@@ -130,6 +130,8 @@ void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, Virt
 	m_tracking = true;
 	lastPosY = positionY;
 	lastPosX = positionX;
+
+	Utility::Out(L"Start Tracking [%f %f]", lastPosX, lastPosY);
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
@@ -150,12 +152,15 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 		lastPosY = positionY;
 		lastPosX = positionX;
 
+		Utility::Out(L"TrackingUpdate [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
+
 		CreateWindowSizeDependentResources();
 	}
 }
 void Sample3DSceneRenderer::StopTracking()
 {
 	m_tracking = false;
+	Utility::Out(L"StopTracking");
 }
 
 // Renders one frame using the vertex and pixel shaders.
