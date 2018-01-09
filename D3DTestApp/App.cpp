@@ -2,6 +2,7 @@
 #include "App.h"
 
 #include <ppltasks.h>
+#include "Utility.h"
 
 using namespace D3DTestApp;
 
@@ -89,6 +90,7 @@ void App::SetWindow(CoreWindow^ window)
 
 void App::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ args)
 {
+	Utility::Out(L"OnPointerPressed [%f %f]", args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 	// When the pointer is pressed begin tracking the pointer movement.
 	m_main->StartTracking(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y,
 		args->KeyModifiers);
@@ -99,6 +101,7 @@ void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
 	// Update the pointer tracking code.
 	if (m_main->IsTracking())
 	{
+		Utility::Out(L"OnPointerMoved [%f %f]", args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 		m_main->TrackingUpdate(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y,
 			args->KeyModifiers);
 	}
@@ -106,8 +109,10 @@ void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
 
 void App::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
 {
+	Utility::Out(L"OnPointerReleased [%f %f]", args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 	// Stop tracking pointer movement when the pointer is released.
-	m_main->StopTracking();
+	m_main->StopTracking(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y,
+		args->KeyModifiers);
 }
 
 

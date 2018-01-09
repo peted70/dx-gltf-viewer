@@ -81,7 +81,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		fovAngleY,
 		aspectRatio,
 		0.01f,
-		100.0f
+		1000.0f
 		);
 
 	XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
@@ -110,9 +110,9 @@ void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 	if (!m_tracking)
 	{
 		// Convert degrees to radians, then convert seconds to rotation angle
-		float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
-		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
-		float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
+		//float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
+		//double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
+		//float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 
 		Rotate(0.0f);
 	}
@@ -127,11 +127,26 @@ void Sample3DSceneRenderer::Rotate(float radians)
 
 void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
+	//Utility::Out(L"StartTracking [%f %f]", positionX, positionY);
+
 	m_tracking = true;
 	lastPosY = positionY;
 	lastPosX = positionX;
 
-	Utility::Out(L"Start Tracking [%f %f]", lastPosX, lastPosY);
+	if ((int)(mod & VirtualKeyModifiers::Control) != 0)
+	{
+		_zoom += (positionY - lastPosY) / 10.0f;
+	}
+	else
+	{
+		_pitch += (positionY - lastPosY) / 100.0f;
+		_yaw += (positionX - lastPosX) / 100.0f;
+	}
+
+	lastPosY = positionY;
+	lastPosX = positionX;
+
+	//Utility::Out(L"StartTracking [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
@@ -139,28 +154,29 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 {
 	if (m_tracking)
 	{
+		//Utility::Out(L"TrackingUpdate [%f %f]", positionX, positionY);
+
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
-			_zoom += (positionY - lastPosY) / 10;
+			_zoom += (positionY - lastPosY) / 10.0f;
 		}
 		else
 		{
-			_pitch += (positionY - lastPosY) / 100;
-			_yaw += (positionX - lastPosX) / 100;
+			_pitch += (positionY - lastPosY) / 100.0f;
+			_yaw += (positionX - lastPosX) / 100.0f;
 		}
 
 		lastPosY = positionY;
 		lastPosX = positionX;
 
-		Utility::Out(L"TrackingUpdate [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
-
 		CreateWindowSizeDependentResources();
 	}
 }
-void Sample3DSceneRenderer::StopTracking()
+void Sample3DSceneRenderer::StopTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
+	//Utility::Out(L"StopTracking [%f %f]", positionX, positionY);
 	m_tracking = false;
-	Utility::Out(L"StopTracking");
+	//Utility::Out(L"StopTracking [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
 }
 
 // Renders one frame using the vertex and pixel shaders.
@@ -174,8 +190,8 @@ void Sample3DSceneRenderer::Render()
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	DrawGrid(context);
 	DrawAxis(context, _mainAxes.get());
+	DrawGrid(context);
 
 	context->RSSetState(_pRasterState);
 

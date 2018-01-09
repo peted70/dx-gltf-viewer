@@ -28,7 +28,7 @@ namespace D3DTestApp
 		void Render();
 		void StartTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod);
-		void StopTracking();
+		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		bool IsTracking() { return m_tracking; }
 		void OnBuffer(GLTF_BufferData^ data);
 

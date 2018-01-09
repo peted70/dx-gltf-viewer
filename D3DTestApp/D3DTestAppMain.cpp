@@ -58,7 +58,7 @@ void D3DTestAppMain::Update()
 void D3DTestAppMain::ProcessInput()
 {
 	// TODO: Add per frame input handling here.
-	m_sceneRenderer->TrackingUpdate(m_pointerLocationX, m_pointerLocationY, _keyModifiers);
+	//m_sceneRenderer->TrackingUpdate(m_pointerLocationX, m_pointerLocationY, _keyModifiers);
 }
 
 // Renders the current frame according to the current application state.

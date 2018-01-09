@@ -29,8 +29,14 @@ namespace D3DTestApp
 		{
 			m_pointerLocationX = positionX; m_pointerLocationY = positionY;
 			_keyModifiers = mod;
+			m_sceneRenderer->TrackingUpdate(positionX, positionY, mod);
 		}
-		void StopTracking() { m_sceneRenderer->StopTracking(); }
+		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod) 
+		{ 
+			m_pointerLocationX = positionX; m_pointerLocationY = positionY;
+			_keyModifiers = mod;
+			m_sceneRenderer->StopTracking(positionX, positionY, mod);
+		}
 		bool IsTracking() { return m_sceneRenderer->IsTracking(); }
 
 	private:
