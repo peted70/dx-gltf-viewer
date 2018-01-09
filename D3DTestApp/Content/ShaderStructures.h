@@ -17,10 +17,15 @@ namespace D3DTestApp
 
 	};
 
+	struct LineDrawingConstantBuffer
+	{
+		DirectX::XMFLOAT3 color;
+	};
+
 	// Used to send per-vertex data to the vertex shader.
 	struct VertexPositionColor
 	{
 		DirectX::XMFLOAT3 pos;
-		//DirectX::XMFLOAT3 color;
+		DirectX::XMFLOAT3 color;
 	};
 }

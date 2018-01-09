@@ -67,11 +67,17 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="D3DTestAppMain.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Axis.cpp" />
+    <ClCompile Include="DXGrid.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="D3DTestAppMain.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Axis.h" />
+    <ClInclude Include="DXGrid.h" />
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

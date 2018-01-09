@@ -35,11 +35,18 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	m_degreesPerSecond(45),
 	m_indexCount(0),
 	m_tracking(false),
-	m_deviceResources(deviceResources)
+	m_deviceResources(deviceResources),
+	_yaw(0.0f),
+	_pitch(0.0f),
+	_roll(0.0f),
+	_zoom(1.0f)
 {
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
+
+	_grid = make_unique<DXGrid>();
+	_mainAxes = make_unique<Axis>(2000000.0);
 }
 
 // Initializes view parameters when the window size changes.
@@ -79,12 +86,14 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		XMMatrixTranspose(perspectiveMatrix * orientationMatrix)
 		);
 
-	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	//static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
-	static const XMVECTORF32 eye = { 0.0f, 0.05f, .05f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
+	auto camMatrix = XMMatrixRotationRollPitchYaw(_pitch, _yaw, _roll);
+
+	XMVECTORF32 alongZ = { 0.0f, 0.0f, _zoom };
+
+	auto eye = XMVector3TransformCoord(alongZ, camMatrix);
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 }
 
@@ -139,6 +148,9 @@ void Sample3DSceneRenderer::Render()
 	}
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
+
+	//DrawGrid(context);
+	//DrawAxis(context, _mainAxes.get());
 
 	// Prepare the constant buffer to send it to the graphics device.
 	context->UpdateSubresource1(
@@ -212,6 +224,60 @@ void Sample3DSceneRenderer::Render()
 	}
 }
 
+void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
+{
+	XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixIdentity()));
+
+	_lineDrawingConstantBufferData.color.x = 0.3f;
+	_lineDrawingConstantBufferData.color.y = 0.3f;
+	_lineDrawingConstantBufferData.color.z = 0.3f;
+
+	// Prepare the constant buffer to send it to the graphics device.
+	context->UpdateSubresource(_lineDrawingConstantBuffer.Get(), 0, NULL, &_lineDrawingConstantBufferData, 0, 0);
+
+	_grid->RenderBuffers(context);
+
+	context->IASetInputLayout(m_inputLayout.Get());
+
+	// Attach our vertex shader.
+	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+
+	// Send the constant buffer to the graphics device.
+	context->VSSetConstantBuffers(0, 1, _lineDrawingConstantBuffer.GetAddressOf());
+
+	// Attach our pixel shader.
+	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+
+	// Draw the objects.
+	context->DrawIndexed(_grid->IndexCount(), 0, 0);
+}
+
+void Sample3DSceneRenderer::DrawAxis(ID3D11DeviceContext2 *context, Axis *axis)
+{
+	_lineDrawingConstantBufferData.color.x = 1.0f;
+	_lineDrawingConstantBufferData.color.y = 1.0f;
+	_lineDrawingConstantBufferData.color.z = 1.0f;
+
+	// Prepare the constant buffer to send it to the graphics device.
+	context->UpdateSubresource(_lineDrawingConstantBuffer.Get(), 0, NULL, &_lineDrawingConstantBufferData, 0, 0);
+
+	axis->RenderBuffers(context);
+
+	context->IASetInputLayout(m_inputLayout.Get());
+
+	// Attach our vertex shader.
+	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+
+	// Send the constant buffer to the graphics device.
+	context->VSSetConstantBuffers(0, 1, _lineDrawingConstantBuffer.GetAddressOf());
+
+	// Attach our pixel shader.
+	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+
+	// Draw the objects.
+	context->DrawIndexed(axis->IndexCount(), 0, 0);
+}
+
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
 {
 	// Load shaders asynchronously.
@@ -265,6 +331,15 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				&m_constantBuffer
 				)
 			);
+
+		CD3D11_BUFFER_DESC lineDrawingConstantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&lineDrawingConstantBufferDesc,
+				nullptr,
+				&_lineDrawingConstantBuffer
+			)
+		);
 	});
 
 	auto loadModelTask = (createPSTask && createVSTask).then([this]() 
@@ -408,6 +483,8 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	m_inputLayout.Reset();
 	m_pixelShader.Reset();
 	m_constantBuffer.Reset();
+	_lineDrawingConstantBuffer.Reset();
+
 	m_vertexBuffer.Reset();
 	m_indexBuffer.Reset();
 
