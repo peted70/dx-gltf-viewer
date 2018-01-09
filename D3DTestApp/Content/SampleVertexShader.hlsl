@@ -17,6 +17,7 @@ struct VertexShaderInput
 	float3 pos : POSITION;
 #ifdef DIFFUSE
     float3 normal : NORMAL;
+    float2 texcoord : TEXCOORD0;
 #endif
 };
 
@@ -27,6 +28,7 @@ struct PixelShaderInput
 #ifdef DIFFUSE
     float3 normal : NORMAL;
     float3 lightdir : TEXCOORD1;
+    float2 texcoord : TEXCOORD0;
 #endif
 };
 
@@ -41,6 +43,8 @@ PixelShaderInput main(VertexShaderInput input)
 	pos = mul(pos, view);
 	pos = mul(pos, projection);
 	output.pos = pos;
+
+    output.texcoord = input.texcoord;
 
 #ifdef DIFFUSE
     output.lightdir = normalize(light_direction);

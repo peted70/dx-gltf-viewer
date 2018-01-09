@@ -31,6 +31,7 @@ namespace D3DTestApp
 		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		bool IsTracking() { return m_tracking; }
 		void OnBuffer(GLTF_BufferData^ data);
+		void OnTexture(WinRTGLTFParser::GLTF_BufferData^ data);
 
 	private:
 		void Rotate(float radians);
@@ -72,6 +73,9 @@ namespace D3DTestApp
 		ComPtr<ID3D11InputLayout>	_lineDrawingInputLayout;
 		ComPtr<ID3D11VertexShader>	_simpleVertexShader;
 		ComPtr<ID3D11PixelShader>	_simplePixelShader;
+
+		ComPtr<ID3D11SamplerState>          _spSampler;
+		ComPtr<ID3D11ShaderResourceView>    _spTexture;
 
 		map<wstring, BufferWrapper> _buffers;
 
