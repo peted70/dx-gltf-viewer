@@ -43,6 +43,8 @@ void D3DTestAppMain::CreateWindowSizeDependentResources()
 // Updates the application state once per frame.
 void D3DTestAppMain::Update() 
 {
+	ProcessInput();
+
 	// Update scene objects.
 	m_timer.Tick([&]()
 	{
@@ -50,6 +52,13 @@ void D3DTestAppMain::Update()
 		m_sceneRenderer->Update(m_timer);
 		m_fpsTextRenderer->Update(m_timer);
 	});
+}
+
+// Process all input from the user before updating game state
+void D3DTestAppMain::ProcessInput()
+{
+	// TODO: Add per frame input handling here.
+	m_sceneRenderer->TrackingUpdate(m_pointerLocationX, m_pointerLocationY, _keyModifiers);
 }
 
 // Renders the current frame according to the current application state.

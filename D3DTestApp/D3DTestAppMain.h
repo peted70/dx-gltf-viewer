@@ -21,7 +21,21 @@ namespace D3DTestApp
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
 
+		void StartTracking(float positionX, float positionY, Windows::System::VirtualKeyModifiers mod)
+		{
+			m_sceneRenderer->StartTracking(positionX, positionY, mod);
+		}
+		void TrackingUpdate(float positionX, float positionY, Windows::System::VirtualKeyModifiers mod)
+		{
+			m_pointerLocationX = positionX; m_pointerLocationY = positionY;
+			_keyModifiers = mod;
+		}
+		void StopTracking() { m_sceneRenderer->StopTracking(); }
+		bool IsTracking() { return m_sceneRenderer->IsTracking(); }
+
 	private:
+		void ProcessInput();
+
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
@@ -31,5 +45,10 @@ namespace D3DTestApp
 
 		// Rendering loop timer.
 		DX::StepTimer m_timer;
+
+		// Track current input pointer position.
+		float m_pointerLocationX;
+		float m_pointerLocationY;
+		Windows::System::VirtualKeyModifiers _keyModifiers;
 	};
 }

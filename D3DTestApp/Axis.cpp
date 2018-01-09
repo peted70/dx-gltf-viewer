@@ -73,7 +73,7 @@ void Axis::Initialise(ID3D11Device *device)
 		return;
 	}
 
-	D3D11_RASTERIZER_DESC rasterizerState;
+	D3D11_RASTERIZER_DESC rasterizerState;	
 	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
 	rasterizerState.CullMode = D3D11_CULL_NONE;
 	rasterizerState.FrontCounterClockwise = true;

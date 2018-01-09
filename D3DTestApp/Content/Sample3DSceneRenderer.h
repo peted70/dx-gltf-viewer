@@ -14,6 +14,7 @@ namespace D3DTestApp
 	using namespace WinRTGLTFParser;
 	using namespace std;
 	using namespace Microsoft::WRL;
+	using namespace Windows::System;
 
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer
@@ -25,8 +26,8 @@ namespace D3DTestApp
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();
-		void StartTracking();
-		void TrackingUpdate(float positionX);
+		void StartTracking(float positionX, float positionY, VirtualKeyModifiers mod);
+		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
 		void OnBuffer(GLTF_BufferData^ data);
@@ -66,7 +67,11 @@ namespace D3DTestApp
 		ComPtr<ID3D11VertexShader>	m_vertexShader;
 		ComPtr<ID3D11PixelShader>	m_pixelShader;
 		ComPtr<ID3D11Buffer>		m_constantBuffer;
+
 		ComPtr<ID3D11Buffer>		_lineDrawingConstantBuffer;
+		ComPtr<ID3D11InputLayout>	_lineDrawingInputLayout;
+		ComPtr<ID3D11VertexShader>	_simpleVertexShader;
+		ComPtr<ID3D11PixelShader>	_simplePixelShader;
 
 		map<wstring, BufferWrapper> _buffers;
 
@@ -88,6 +93,8 @@ namespace D3DTestApp
 
 		unique_ptr<DXGrid> _grid;
 		unique_ptr<Axis> _mainAxes;
+
+		ID3D11RasterizerState * _pRasterState;
 	};
 }
 

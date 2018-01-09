@@ -66,6 +66,13 @@ void App::SetWindow(CoreWindow^ window)
 	window->Closed += 
 		ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &App::OnWindowClosed);
 
+	window->PointerPressed +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerPressed);
+	window->PointerMoved +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerMoved);
+	window->PointerReleased +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerReleased);
+
 	DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
 
 	currentDisplayInformation->DpiChanged +=
@@ -79,6 +86,30 @@ void App::SetWindow(CoreWindow^ window)
 
 	m_deviceResources->SetWindow(window);
 }
+
+void App::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	// When the pointer is pressed begin tracking the pointer movement.
+	m_main->StartTracking(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y,
+		args->KeyModifiers);
+}
+
+void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	// Update the pointer tracking code.
+	if (m_main->IsTracking())
+	{
+		m_main->TrackingUpdate(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y,
+			args->KeyModifiers);
+	}
+}
+
+void App::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	// Stop tracking pointer movement when the pointer is released.
+	m_main->StopTracking();
+}
+
 
 // Initializes scene resources, or loads a previously saved app state.
 void App::Load(Platform::String^ entryPoint)
@@ -148,7 +179,7 @@ void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 {
 	// Restore any data or state that was unloaded on suspend. By default, data
-	// and state are persisted when resuming from suspend. Note that this event
+	// and state are persisted when resuming from sufspend. Note that this event
 	// does not occur if the app was previously terminated.
 
 	// Insert your code here.

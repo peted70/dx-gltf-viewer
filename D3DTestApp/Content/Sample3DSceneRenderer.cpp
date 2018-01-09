@@ -4,6 +4,11 @@
 #include "..\Common\DirectXHelper.h"
 //#include "../../WinRTGLTFParser/GLTF_Parser.h"
 
+// Please move me :)
+static float lastPosX;
+static float lastPosY;
+static float lastY;
+
 using namespace D3DTestApp;
 
 using namespace DirectX;
@@ -46,7 +51,9 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
 
 	_grid = make_unique<DXGrid>();
+	_grid->Initialise(deviceResources->GetD3DDevice());
 	_mainAxes = make_unique<Axis>(2000000.0);
+	_mainAxes->Initialise(deviceResources->GetD3DDevice());
 }
 
 // Initializes view parameters when the window size changes.
@@ -107,7 +114,7 @@ void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
 		float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 
-		Rotate(radians);
+		Rotate(0.0f);
 	}
 }
 
@@ -118,21 +125,34 @@ void Sample3DSceneRenderer::Rotate(float radians)
 	XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationY(radians)));
 }
 
-void Sample3DSceneRenderer::StartTracking()
+void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
 	m_tracking = true;
+	lastPosY = positionY;
+	lastPosX = positionX;
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
-void Sample3DSceneRenderer::TrackingUpdate(float positionX)
+void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod)
 {
 	if (m_tracking)
 	{
-		float radians = XM_2PI * 2.0f * positionX / m_deviceResources->GetOutputSize().Width;
-		Rotate(radians);
+		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
+		{
+			_zoom += (positionY - lastPosY) / 10;
+		}
+		else
+		{
+			_pitch += (positionY - lastPosY) / 100;
+			_yaw += (positionX - lastPosX) / 100;
+		}
+
+		lastPosY = positionY;
+		lastPosX = positionX;
+
+		CreateWindowSizeDependentResources();
 	}
 }
-
 void Sample3DSceneRenderer::StopTracking()
 {
 	m_tracking = false;
@@ -149,8 +169,10 @@ void Sample3DSceneRenderer::Render()
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	//DrawGrid(context);
-	//DrawAxis(context, _mainAxes.get());
+	DrawGrid(context);
+	DrawAxis(context, _mainAxes.get());
+
+	context->RSSetState(_pRasterState);
 
 	// Prepare the constant buffer to send it to the graphics device.
 	context->UpdateSubresource1(
@@ -226,27 +248,25 @@ void Sample3DSceneRenderer::Render()
 
 void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
 {
-	XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixIdentity()));
-
-	_lineDrawingConstantBufferData.color.x = 0.3f;
-	_lineDrawingConstantBufferData.color.y = 0.3f;
-	_lineDrawingConstantBufferData.color.z = 0.3f;
+	m_constantBufferData.color.x = 0.3f;
+	m_constantBufferData.color.y = 0.3f;
+	m_constantBufferData.color.z = 0.3f;
 
 	// Prepare the constant buffer to send it to the graphics device.
-	context->UpdateSubresource(_lineDrawingConstantBuffer.Get(), 0, NULL, &_lineDrawingConstantBufferData, 0, 0);
+	context->UpdateSubresource(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0);
 
 	_grid->RenderBuffers(context);
 
-	context->IASetInputLayout(m_inputLayout.Get());
+	context->IASetInputLayout(_lineDrawingInputLayout.Get());
 
 	// Attach our vertex shader.
-	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+	context->VSSetShader(_simpleVertexShader.Get(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers(0, 1, _lineDrawingConstantBuffer.GetAddressOf());
+	context->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 
 	// Attach our pixel shader.
-	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	context->PSSetShader(_simplePixelShader.Get(), nullptr, 0);
 
 	// Draw the objects.
 	context->DrawIndexed(_grid->IndexCount(), 0, 0);
@@ -254,25 +274,25 @@ void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
 
 void Sample3DSceneRenderer::DrawAxis(ID3D11DeviceContext2 *context, Axis *axis)
 {
-	_lineDrawingConstantBufferData.color.x = 1.0f;
-	_lineDrawingConstantBufferData.color.y = 1.0f;
-	_lineDrawingConstantBufferData.color.z = 1.0f;
+	m_constantBufferData.color.x = 1.0f;
+	m_constantBufferData.color.y = 1.0f;
+	m_constantBufferData.color.z = 1.0f;
 
 	// Prepare the constant buffer to send it to the graphics device.
-	context->UpdateSubresource(_lineDrawingConstantBuffer.Get(), 0, NULL, &_lineDrawingConstantBufferData, 0, 0);
+	context->UpdateSubresource(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0);
 
 	axis->RenderBuffers(context);
 
-	context->IASetInputLayout(m_inputLayout.Get());
+	context->IASetInputLayout(_lineDrawingInputLayout.Get());
 
 	// Attach our vertex shader.
-	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+	context->VSSetShader(_simpleVertexShader.Get(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers(0, 1, _lineDrawingConstantBuffer.GetAddressOf());
+	context->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
 
 	// Attach our pixel shader.
-	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	context->PSSetShader(_simplePixelShader.Get(), nullptr, 0);
 
 	// Draw the objects.
 	context->DrawIndexed(axis->IndexCount(), 0, 0);
@@ -280,7 +300,20 @@ void Sample3DSceneRenderer::DrawAxis(ID3D11DeviceContext2 *context, Axis *axis)
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
 {
-	// Load shaders asynchronously.
+	D3D11_RASTERIZER_DESC rasterizerState;
+	rasterizerState.FillMode = D3D11_FILL_SOLID;
+	rasterizerState.CullMode = D3D11_CULL_BACK;
+	rasterizerState.FrontCounterClockwise = true;
+	rasterizerState.DepthBias = false;
+	rasterizerState.DepthBiasClamp = 0;
+	rasterizerState.SlopeScaledDepthBias = 0;
+	rasterizerState.DepthClipEnable = false;
+	rasterizerState.ScissorEnable = false;
+	rasterizerState.MultisampleEnable = true;
+	rasterizerState.AntialiasedLineEnable = true;
+	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState);
+
+	// Load shaders asynchronously for model rendering...
 	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
 	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 
@@ -331,8 +364,52 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				&m_constantBuffer
 				)
 			);
+	});
 
-		CD3D11_BUFFER_DESC lineDrawingConstantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	// Load shaders asynchronously for line rendering...
+	auto loadVSTask2 = DX::ReadDataAsync(L"SimpleVertexShader.cso");
+	auto loadPSTask2 = DX::ReadDataAsync(L"SimplePixelShader.cso");
+
+	// After the vertex shader file is loaded, create the shader and input layout.
+	auto createVSTask2 = loadVSTask2.then([this](const std::vector<byte>& fileData) {
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateVertexShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&_simpleVertexShader
+			)
+		);
+
+		static const D3D11_INPUT_ELEMENT_DESC SimpleVertexDesc[] =
+		{
+			{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateInputLayout(
+				SimpleVertexDesc,
+				ARRAYSIZE(SimpleVertexDesc),
+				&fileData[0],
+				fileData.size(),
+				&_lineDrawingInputLayout
+			)
+		);
+	});
+
+	// After the pixel shader file is loaded, create the shader and constant buffer.
+	auto createPSTask2 = loadPSTask2.then([this](const std::vector<byte>& fileData) {
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&_simplePixelShader
+			)
+		);
+
+		CD3D11_BUFFER_DESC lineDrawingConstantBufferDesc(sizeof(LineDrawingConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&lineDrawingConstantBufferDesc,
@@ -342,7 +419,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
-	auto loadModelTask = (createPSTask && createVSTask).then([this]() 
+	auto loadModelTask = (createPSTask && createVSTask && createPSTask2 && createVSTask2).then([this]()
 	{
 		WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
 		std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);

@@ -92,4 +92,8 @@
     <None Include="Assets\BoomBox.glb" />
     <None Include="Assets\Box.glb" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Content\SimplePixelShader.hlsl" />
+    <FxCompile Include="Content\SimpleVertexShader.hlsl" />
+  </ItemGroup>
 </Project>
