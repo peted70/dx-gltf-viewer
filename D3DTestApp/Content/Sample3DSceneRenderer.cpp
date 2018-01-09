@@ -52,7 +52,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 
 	_grid = make_unique<DXGrid>();
 	_grid->Initialise(deviceResources->GetD3DDevice());
-	_mainAxes = make_unique<Axis>(2000000.0);
+	_mainAxes = make_unique<Axis>(1000.0);
 	_mainAxes->Initialise(deviceResources->GetD3DDevice());
 }
 
@@ -132,21 +132,6 @@ void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, Virt
 	m_tracking = true;
 	lastPosY = positionY;
 	lastPosX = positionX;
-
-	if ((int)(mod & VirtualKeyModifiers::Control) != 0)
-	{
-		_zoom += (positionY - lastPosY) / 10.0f;
-	}
-	else
-	{
-		_pitch += (positionY - lastPosY) / 100.0f;
-		_yaw += (positionX - lastPosX) / 100.0f;
-	}
-
-	lastPosY = positionY;
-	lastPosX = positionX;
-
-	//Utility::Out(L"StartTracking [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
@@ -172,11 +157,10 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 		CreateWindowSizeDependentResources();
 	}
 }
+
 void Sample3DSceneRenderer::StopTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
-	//Utility::Out(L"StopTracking [%f %f]", positionX, positionY);
 	m_tracking = false;
-	//Utility::Out(L"StopTracking [%f %f] - Zoom {%f}", lastPosX, lastPosY, _zoom);
 }
 
 // Renders one frame using the vertex and pixel shaders.
@@ -190,8 +174,8 @@ void Sample3DSceneRenderer::Render()
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	DrawAxis(context, _mainAxes.get());
 	DrawGrid(context);
+	DrawAxis(context, _mainAxes.get());
 
 	context->RSSetState(_pRasterState);
 
@@ -269,9 +253,9 @@ void Sample3DSceneRenderer::Render()
 
 void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
 {
-	m_constantBufferData.color.x = 0.3f;
-	m_constantBufferData.color.y = 0.3f;
-	m_constantBufferData.color.z = 0.3f;
+	m_constantBufferData.color.x = 0.45f;
+	m_constantBufferData.color.y = 0.45f;
+	m_constantBufferData.color.z = 0.45f;
 
 	// Prepare the constant buffer to send it to the graphics device.
 	context->UpdateSubresource(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0);
@@ -295,9 +279,9 @@ void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
 
 void Sample3DSceneRenderer::DrawAxis(ID3D11DeviceContext2 *context, Axis *axis)
 {
-	m_constantBufferData.color.x = 1.0f;
-	m_constantBufferData.color.y = 1.0f;
-	m_constantBufferData.color.z = 1.0f;
+	m_constantBufferData.color.x = .15f;
+	m_constantBufferData.color.y = .15f;
+	m_constantBufferData.color.z = .15f;
 
 	// Prepare the constant buffer to send it to the graphics device.
 	context->UpdateSubresource(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0);

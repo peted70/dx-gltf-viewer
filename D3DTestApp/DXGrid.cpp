@@ -13,9 +13,9 @@ DXGrid::DXGrid()
 
 void DXGrid::Initialise(ID3D11Device *device)
 {
-	int gridWidth = 20;
-	float cellWidth = 5.0f;
-	float cellHeight = 5.0f;
+	int gridWidth = 10;
+	float cellWidth = 1.0f;
+	float cellHeight = 1.0f;
 
 	VertexPositionColor *vertices;
 	unsigned long* indices;
