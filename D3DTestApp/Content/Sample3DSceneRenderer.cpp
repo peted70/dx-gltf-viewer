@@ -702,4 +702,5 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	}
 
 	_buffers.clear();
+	_spTexture.Reset();
 }
