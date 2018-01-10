@@ -54,4 +54,5 @@ public:
 	BufferDesc desc;
 };
 
-HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, std::function<void(const BufferData&)> bufferCallback);
+HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, std::function<void(const BufferData&)> bufferCallback,
+	std::function<void(const TextureData&)> textureCallback);

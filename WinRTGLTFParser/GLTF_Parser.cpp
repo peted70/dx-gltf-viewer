@@ -27,11 +27,17 @@ void GLTF_Parser::ParseFile(String^ Filename)
 		throw Platform::Exception::CreateException(E_FAIL);
 	}
 
-	::ParseFile(infile, [this](const BufferData& data)
-	{
-		auto bd = ref new GLTF_BufferData(data);
-		OnBufferEvent(this, bd);
-	});
+	::ParseFile(infile, 
+		[this](const BufferData& data)
+		{
+			auto bd = ref new GLTF_BufferData(data);
+			OnBufferEvent(this, bd);
+		},
+		[this](const TextureData& data)
+		{
+			auto td = ref new GLTF_TextureData(data);
+			OnTextureEvent(this, td);
+		});
 
 	infile.close();
 }
