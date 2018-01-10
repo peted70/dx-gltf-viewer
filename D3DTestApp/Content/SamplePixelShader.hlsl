@@ -23,7 +23,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float4 value = shaderTexture.Sample(samplerState, input.texcoord);
 
 #ifdef DIFFUSE
-    diffuseColor = diffuseColor * saturate(dot(input.lightdir, input.normal));
+    diffuseColor = /*diffuseColor */ saturate(dot(input.lightdir, input.normal));
 #endif
 
     return (0.5f * diffuseColor) + (0.5f * value);

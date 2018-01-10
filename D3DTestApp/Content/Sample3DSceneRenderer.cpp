@@ -18,8 +18,10 @@ using namespace Microsoft::WRL;
 ref class EventShim sealed
 {
 internal:
-	EventShim(std::function<void(WinRTGLTFParser::GLTF_BufferData^)> callback):
-		callback_(std::move(callback)) 
+	EventShim(std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bcallback,
+			  std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tcallback) :
+		bufferCallback(std::move(bcallback)) ,
+		textureCallback(std::move(tcallback))
 	{
 
 	}
@@ -27,11 +29,16 @@ internal:
 public:
 	void OnBuffer(Platform::Object^ sender, WinRTGLTFParser::GLTF_BufferData^ data)
 	{
-		callback_(data);
+		bufferCallback(data);
+	}
+	void OnTexture(Platform::Object^ sender, WinRTGLTFParser::GLTF_TextureData^ data)
+	{
+		textureCallback(data);
 	}
 
 private:
-	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> callback_;
+	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bufferCallback;
+	std::function<void(WinRTGLTFParser::GLTF_TextureData^)> textureCallback;
 };
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
@@ -457,8 +464,11 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	{
 		WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
 		std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
-		auto es = ref new EventShim(memfun);
+		std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&Sample3DSceneRenderer::OnTexture, this, std::placeholders::_1);
+		
+		auto es = ref new EventShim(memfun, tmemfun);
 		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
+		parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
 
 		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
 		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
@@ -615,6 +625,9 @@ void Sample3DSceneRenderer::OnTexture(WinRTGLTFParser::GLTF_TextureData^ data)
 	uint32_t height;
 
 	auto image = LoadBGRAImage((void *)data->pSysMem, data->DataSize, width, height);
+
+	txtDesc.Width = width;
+	txtDesc.Height = height;
 
 	D3D11_SUBRESOURCE_DATA initialData = {};
 	initialData.pSysMem = image.data();
