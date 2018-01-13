@@ -171,7 +171,7 @@ void DirectXPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
 	// Update the pointer tracking code.
 	if (m_main->IsTracking())
 	{
-		m_main->TrackingUpdate(e->CurrentPoint->Position.X);
+		m_main->TrackingUpdate(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y, e->KeyModifiers);
 	}
 }
 

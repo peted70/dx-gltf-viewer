@@ -6,6 +6,9 @@
 //------------------------------------------------------------------------------
 #include "pch.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4100) // unreferenced formal parameter
+
 #if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
 #endif
@@ -27,23 +30,23 @@ void ::ModelViewer::DirectXPage::Connect(int __connectionId, ::Platform::Object^
 {
     switch (__connectionId)
     {
-        case 1:
-            {
-                this->swapChainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
-            }
-            break;
-        case 2:
-            {
-                this->bottomAppBar = safe_cast<::Windows::UI::Xaml::Controls::AppBar^>(__target);
-            }
-            break;
-        case 3:
-            {
-                ::Windows::UI::Xaml::Controls::AppBarButton^ element3 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
-                (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element3))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ModelViewer::DirectXPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::AppBarButton_Click);
-            }
-            break;
+    case 1:
+        {
+            this->swapChainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
+        }
+        break;
+    case 2:
+        {
+            this->bottomAppBar = safe_cast<::Windows::UI::Xaml::Controls::AppBar^>(__target);
+        }
+        break;
+    case 3:
+        {
+            ::Windows::UI::Xaml::Controls::AppBarButton^ element3 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element3))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ModelViewer::DirectXPage::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::AppBarButton_Click);
+        }
+        break;
     }
     _contentLoaded = true;
 }
@@ -54,5 +57,7 @@ void ::ModelViewer::DirectXPage::Connect(int __connectionId, ::Platform::Object^
     __target;               // unreferenced
     return nullptr;
 }
+
+#pragma warning(pop)
 
 

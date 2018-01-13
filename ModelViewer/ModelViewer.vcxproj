@@ -35,7 +35,7 @@
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformMinVersion>10.0.16299.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -213,6 +213,9 @@
     <ClInclude Include="Content\SampleFpsTextRenderer.h" />
     <ClInclude Include="Content\ShaderStructures.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RootPage.xaml.h">
+      <DependentUpon>RootPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\GraphContainerNode.h" />
     <ClInclude Include="Scene\GraphNode.h" />
@@ -241,6 +244,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RootPage.xaml.cpp">
+      <DependentUpon>RootPage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\GraphContainerNode.cpp" />
     <ClCompile Include="Scene\GraphNode.cpp" />
@@ -252,6 +258,14 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Assets\BoomBox.glb">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Box.glb">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </None>
     <None Include="ModelViewer_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +289,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="DirectXPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RootPage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

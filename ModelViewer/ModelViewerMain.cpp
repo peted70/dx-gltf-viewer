@@ -90,7 +90,7 @@ void ModelViewerMain::Update()
 void ModelViewerMain::ProcessInput()
 {
 	// TODO: Add per frame input handling here.
-	m_sceneRenderer->TrackingUpdate(m_pointerLocationX);
+	m_sceneRenderer->TrackingUpdate(m_pointerLocationX, m_pointerLocationY, m_mod);
 }
 
 // Renders the current frame according to the current application state.

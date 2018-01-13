@@ -104,9 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ModelViewer_TemporaryKey.pfx" />
+    <None Include="Assets\BoomBox.glb" />
+    <None Include="Assets\Box.glb" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />
+    <Page Include="RootPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Content\SimplePixelShader.hlsl" />

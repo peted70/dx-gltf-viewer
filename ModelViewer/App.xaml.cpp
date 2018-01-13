@@ -4,6 +4,7 @@
 //
 
 #include "pch.h"
+#include "RootPage.xaml.h"
 #include "DirectXPage.xaml.h"
 
 using namespace ModelViewer;
@@ -48,14 +49,14 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 	}
 #endif
 
-	if (m_directXPage == nullptr)
+	if (m_rootPage == nullptr)
 	{
-		m_directXPage = ref new DirectXPage();
+		m_rootPage = ref new ModelViewer::RootPage();
 	}
 
 	if (e->PreviousExecutionState == ApplicationExecutionState::Terminated)
 	{
-		m_directXPage->LoadInternalState(ApplicationData::Current->LocalSettings->Values);
+		m_rootPage->LoadInternalState(ApplicationData::Current->LocalSettings->Values);
 	}
 
 	auto rootFrame = dynamic_cast<Frame^>(Window::Current->Content);
@@ -75,8 +76,9 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 			// When the navigation stack isn't restored navigate to the first page,
 			// configuring the new page by passing required information as a navigation
 			// parameter
-			rootFrame->Navigate(TypeName(DirectXPage::typeid), e->Arguments);
+			rootFrame->Navigate(TypeName(RootPage::typeid), e->Arguments);
 		}
+
 		// Place the frame in the current Window
 		Window::Current->Content = rootFrame;
 		// Ensure the current window is active
@@ -89,11 +91,15 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 			// When the navigation stack isn't restored navigate to the first page,
 			// configuring the new page by passing required information as a navigation
 			// parameter
-			rootFrame->Navigate(TypeName(DirectXPage::typeid), e->Arguments);
+			rootFrame->Navigate(TypeName(RootPage::typeid), e->Arguments);
 		}
+
+
 		// Ensure the current window is active
 		Window::Current->Activate();
 	}
+
+	//m_rootPage->GetContentFrame()->Content = ref new DirectXPage();
 }
 
 /// <summary>
@@ -108,7 +114,7 @@ void App::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
 	(void) sender;	// Unused parameter
 	(void) e;	// Unused parameter
 
-	m_directXPage->SaveInternalState(ApplicationData::Current->LocalSettings->Values);
+	m_rootPage->SaveInternalState(ApplicationData::Current->LocalSettings->Values);
 }
 
 /// <summary>
@@ -121,7 +127,7 @@ void App::OnResuming(Object ^sender, Object ^args)
 	(void) sender; // Unused parameter
 	(void) args; // Unused parameter
 
-	m_directXPage->LoadInternalState(ApplicationData::Current->LocalSettings->Values);
+	m_rootPage->LoadInternalState(ApplicationData::Current->LocalSettings->Values);
 }
 
 /// <summary>
