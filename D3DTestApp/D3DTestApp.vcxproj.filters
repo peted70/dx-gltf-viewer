@@ -70,6 +70,8 @@
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="DXGrid.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="GraphNode.cpp" />
+    <ClCompile Include="GraphContainerNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -78,6 +80,8 @@
     <ClInclude Include="Axis.h" />
     <ClInclude Include="DXGrid.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="GraphNode.h" />
+    <ClInclude Include="GraphContainerNode.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

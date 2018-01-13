@@ -577,6 +577,7 @@ std::vector<uint8_t> LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint3
 
 	DX::ThrowIfFailed(frame->GetSize(&width, &height));
 
+
 	WICPixelFormatGUID pixelFormat;
 	DX::ThrowIfFailed(frame->GetPixelFormat(&pixelFormat));
 
