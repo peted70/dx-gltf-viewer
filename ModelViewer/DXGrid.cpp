@@ -2,7 +2,7 @@
 #include "DXGrid.h"
 #include "Content\ShaderStructures.h"
 
-using namespace D3DTestApp;
+using namespace ModelViewer;
 using namespace DirectX;
 
 DXGrid::DXGrid()

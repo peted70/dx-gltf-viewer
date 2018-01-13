@@ -2,7 +2,7 @@
 #include "Axis.h"
 #include "Content\ShaderStructures.h"
 
-using namespace D3DTestApp;
+using namespace ModelViewer;
 using namespace DirectX;
 
 Axis::Axis(float axisLength) : _axisLength(axisLength)
