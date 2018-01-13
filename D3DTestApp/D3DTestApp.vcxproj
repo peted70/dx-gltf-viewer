@@ -207,9 +207,12 @@
     <ClInclude Include="Content\SampleFpsTextRenderer.h" />
     <ClInclude Include="Content\ShaderStructures.h" />
     <ClInclude Include="DXGrid.h" />
-    <ClInclude Include="GraphContainerNode.h" />
-    <ClInclude Include="GraphNode.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Scene\CameraNode.h" />
+    <ClInclude Include="Scene\GraphContainerNode.h" />
+    <ClInclude Include="Scene\GraphNode.h" />
+    <ClInclude Include="Scene\LightNode.h" />
+    <ClInclude Include="Scene\MeshNode.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -220,8 +223,6 @@
     <ClCompile Include="Content\SampleFpsTextRenderer.cpp" />
     <ClCompile Include="Content\Sample3DSceneRenderer.cpp" />
     <ClCompile Include="DXGrid.cpp" />
-    <ClCompile Include="GraphContainerNode.cpp" />
-    <ClCompile Include="GraphNode.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -230,6 +231,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scene\CameraNode.cpp" />
+    <ClCompile Include="Scene\GraphContainerNode.cpp" />
+    <ClCompile Include="Scene\GraphNode.cpp" />
+    <ClCompile Include="Scene\LightNode.cpp" />
+    <ClCompile Include="Scene\MeshNode.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
