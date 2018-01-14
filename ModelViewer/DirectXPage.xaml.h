@@ -12,6 +12,10 @@
 
 namespace ModelViewer
 {
+	using namespace Windows::UI::Xaml::Input;
+	using namespace Windows::UI::Core;
+	using namespace Platform;
+
 	/// <summary>
 	/// A page that hosts a DirectX SwapChainPanel.
 	/// </summary>
@@ -26,7 +30,7 @@ namespace ModelViewer
 
 	private:
 		// XAML low-level rendering event handler.
-		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
+		void OnRendering(Object^ sender, Object^ args);
 
 		// Window event handlers.
 		void OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
@@ -54,6 +58,7 @@ namespace ModelViewer
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 		std::unique_ptr<ModelViewerMain> m_main; 
 		bool m_windowVisible;
+		bool m_controlPressed;
 	};
 }
 

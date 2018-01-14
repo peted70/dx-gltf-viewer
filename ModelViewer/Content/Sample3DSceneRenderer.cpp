@@ -134,7 +134,7 @@ void Sample3DSceneRenderer::Rotate(float radians)
 
 void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
-	//Utility::Out(L"StartTracking [%f %f]", positionX, positionY);
+	Utility::Out(L"StartTracking [%f %f]", positionX, positionY);
 
 	m_tracking = true;
 	lastPosY = positionY;
@@ -146,7 +146,7 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 {
 	if (m_tracking)
 	{
-		//Utility::Out(L"TrackingUpdate [%f %f]", positionX, positionY);
+		Utility::Out(L"TrackingUpdate [%f %f] %d", positionX, positionY, mod);
 
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
@@ -167,6 +167,8 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 
 void Sample3DSceneRenderer::StopTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
+	Utility::Out(L"StopTracking [%f %f]", positionX, positionY);
+
 	m_tracking = false;
 }
 

@@ -14,14 +14,21 @@ namespace ModelViewer
 		ModelViewerMain(const std::shared_ptr<DX::DeviceResources>& deviceResources);
 		~ModelViewerMain();
 		void CreateWindowSizeDependentResources();
-		void StartTracking() { m_sceneRenderer->StartTracking(m_pointerLocationX, m_pointerLocationY, m_mod); }
+		void StartTracking(float positionX, float positionY, VirtualKeyModifiers mod) 
+		{ 
+			m_sceneRenderer->StartTracking(positionX, positionY, mod);
+		}
 		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod)
 		{ 
-			m_pointerLocationX = positionX;
-			m_pointerLocationY = positionY;
-			m_mod = mod;
+			//m_pointerLocationX = positionX;
+			//m_pointerLocationY = positionY;
+			//m_mod = mod;
+			m_sceneRenderer->TrackingUpdate(positionX, positionY, mod);
 		}
-		void StopTracking() { m_sceneRenderer->StopTracking(m_pointerLocationX, m_pointerLocationY, m_mod); }
+		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod) 
+		{ 
+			m_sceneRenderer->StopTracking(positionX, positionY, mod);
+		}
 		bool IsTracking() { return m_sceneRenderer->IsTracking(); }
 		void StartRenderLoop();
 		void StopRenderLoop();
