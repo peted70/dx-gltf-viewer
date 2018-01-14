@@ -10,10 +10,12 @@
 #include "XamlTypeInfo.g.h"
 
 #include "App.xaml.h"
+#include "BlankPage.xaml.h"
 #include "DirectXPage.xaml.h"
 #include "RootPage.xaml.h"
 #include "XamlBindingInfo.g.hpp"
 #include "App.g.hpp"
+#include "BlankPage.g.hpp"
 #include "DirectXPage.g.hpp"
 #include "RootPage.g.hpp"
 
@@ -72,22 +74,28 @@ const TypeInfo TypeInfos[] =
     //   0
     L"ModelViewer.RootPage", L"",
     &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
-    2, // Windows.UI.Xaml.Controls.Page
+    3, // Windows.UI.Xaml.Controls.Page
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   1
-    L"ModelViewer.DirectXPage", L"",
-    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
-    2, // Windows.UI.Xaml.Controls.Page
+    L"ModelViewer.BlankPage", L"",
+    &ActivateType<::ModelViewer::BlankPage>, nullptr, nullptr, nullptr,
+    3, // Windows.UI.Xaml.Controls.Page
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   2
+    L"ModelViewer.DirectXPage", L"",
+    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
+    3, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   3
     L"Windows.UI.Xaml.Controls.Page", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //   3
+    //   4
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
@@ -124,22 +132,22 @@ const UINT TypeInfoLookup[] = {
       0,   //  19
       0,   //  20
       1,   //  21
-      1,   //  22
-      1,   //  23
-      2,   //  24
-      2,   //  25
-      2,   //  26
-      2,   //  27
-      2,   //  28
-      2,   //  29
-      3,   //  30
-      3,   //  31
-      3,   //  32
-      3,   //  33
-      3,   //  34
-      3,   //  35
-      3,   //  36
-      4,   //  37
+      2,   //  22
+      2,   //  23
+      3,   //  24
+      3,   //  25
+      3,   //  26
+      3,   //  27
+      3,   //  28
+      3,   //  29
+      4,   //  30
+      4,   //  31
+      4,   //  32
+      4,   //  33
+      4,   //  34
+      4,   //  35
+      4,   //  36
+      5,   //  37
 };
 
 const TypeInfo* GetTypeInfo(::Platform::String^ typeName)

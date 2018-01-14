@@ -6,6 +6,7 @@
 #include "pch.h"
 #include "RootPage.xaml.h"
 #include "DirectXPage.xaml.h"
+#include "BlankPage.xaml.h"
 
 using namespace ModelViewer;
 
@@ -69,5 +70,5 @@ void ModelViewer::RootPage::MoreInfoBtn_Click(Platform::Object^ sender, Windows:
 
 void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	ContentFrame->Content = ref new DirectXPage();
+	ContentFrame->Navigate(DirectXPage::typeid);
 }
