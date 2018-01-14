@@ -12,7 +12,6 @@ namespace Windows {
         namespace Xaml {
             namespace Controls {
                 ref class SwapChainPanel;
-                ref class AppBar;
             }
         }
     }
@@ -39,7 +38,6 @@ namespace ModelViewer
     
     
         private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapChainPanel;
-        private: ::Windows::UI::Xaml::Controls::AppBar^ bottomAppBar;
     };
 }
 

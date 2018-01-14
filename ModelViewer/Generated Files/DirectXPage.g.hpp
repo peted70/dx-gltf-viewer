@@ -35,18 +35,6 @@ void ::ModelViewer::DirectXPage::Connect(int __connectionId, ::Platform::Object^
             this->swapChainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
         }
         break;
-    case 2:
-        {
-            this->bottomAppBar = safe_cast<::Windows::UI::Xaml::Controls::AppBar^>(__target);
-        }
-        break;
-    case 3:
-        {
-            ::Windows::UI::Xaml::Controls::AppBarButton^ element3 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element3))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ModelViewer::DirectXPage::*)
-                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::AppBarButton_Click);
-        }
-        break;
     }
     _contentLoaded = true;
 }

@@ -32,7 +32,6 @@ DirectXPage::DirectXPage():
 
 	// Register event handlers for page lifecycle.
 	CoreWindow^ window = Window::Current->CoreWindow;
-
 	window->VisibilityChanged +=
 		ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &DirectXPage::OnVisibilityChanged);
 
@@ -162,8 +161,7 @@ void DirectXPage::AppBarButton_Click(Object^ sender, RoutedEventArgs^ e)
 
 void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
 {
-	// When the pointer is pressed begin tracking the pointer movement.
-	m_main->StartTracking();
+	m_main->StartTracking(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y, e->KeyModifiers);
 }
 
 void DirectXPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
@@ -178,7 +176,7 @@ void DirectXPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
 void DirectXPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
 {
 	// Stop tracking pointer movement when the pointer is released.
-	m_main->StopTracking();
+	m_main->StopTracking(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y, e->KeyModifiers);
 }
 
 void DirectXPage::OnCompositionScaleChanged(SwapChainPanel^ sender, Object^ args)
