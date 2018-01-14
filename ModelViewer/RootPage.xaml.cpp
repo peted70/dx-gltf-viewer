@@ -7,10 +7,13 @@
 #include "RootPage.xaml.h"
 #include "DirectXPage.xaml.h"
 #include "BlankPage.xaml.h"
+#include <ppltasks.h>
 
 using namespace ModelViewer;
 
 using namespace Platform;
+using namespace Windows::Storage::Pickers;
+using namespace Windows::Storage;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::UI::Xaml;
@@ -55,20 +58,33 @@ void ModelViewer::RootPage::NavView_ItemInvoked(Windows::UI::Xaml::Controls::Nav
 
 }
 
-
 void ModelViewer::RootPage::NavView_SelectionChanged(Windows::UI::Xaml::Controls::NavigationView^ sender, Windows::UI::Xaml::Controls::NavigationViewSelectionChangedEventArgs^ args)
 {
 
 }
-
 
 void ModelViewer::RootPage::MoreInfoBtn_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
 }
 
-
 void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	ContentFrame->Navigate(DirectXPage::typeid);
+}
+
+void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	auto fop = ref new FileOpenPicker();
+	create_task(fop->PickSingleFileAsync()).then([this](StorageFile^ file)
+	{
+		if (file)
+		{
+			//do some stuff
+		}
+		else
+		{
+			//do some stuff
+		}
+	});
 }

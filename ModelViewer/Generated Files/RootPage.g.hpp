@@ -48,12 +48,19 @@ void ::ModelViewer::RootPage::Connect(int __connectionId, ::Platform::Object^ __
         break;
     case 3:
         {
+            ::Windows::UI::Xaml::Controls::AppBarButton^ element3 = safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::AppBarButton^>(element3))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ModelViewer::RootPage::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&RootPage::ImportClick);
+        }
+        break;
+    case 4:
+        {
             this->MoreInfoBtn = safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(__target);
             (safe_cast<::Windows::UI::Xaml::Controls::HyperlinkButton^>(this->MoreInfoBtn))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ModelViewer::RootPage::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&RootPage::MoreInfoBtn_Click);
         }
         break;
-    case 4:
+    case 5:
         {
             this->ContentFrame = safe_cast<::Windows::UI::Xaml::Controls::Frame^>(__target);
         }
