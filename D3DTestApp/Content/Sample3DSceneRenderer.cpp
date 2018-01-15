@@ -186,6 +186,9 @@ void Sample3DSceneRenderer::Render()
 
 	context->RSSetState(_pRasterState);
 
+	_sceneNode->Draw();
+	return;
+
 	// Prepare the constant buffer to send it to the graphics device.
 	context->UpdateSubresource1(
 		m_constantBuffer.Get(),

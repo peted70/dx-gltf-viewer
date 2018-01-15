@@ -80,6 +80,8 @@
     <ClCompile Include="Scene\LightNode.cpp" />
     <ClCompile Include="Scene\MeshNode.cpp" />
     <ClCompile Include="RootPage.xaml.cpp" />
+    <ClCompile Include="BlankPage.xaml.cpp" />
+    <ClCompile Include="ModelFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -95,6 +97,8 @@
     <ClInclude Include="Scene\LightNode.h" />
     <ClInclude Include="Scene\MeshNode.h" />
     <ClInclude Include="RootPage.xaml.h" />
+    <ClInclude Include="BlankPage.xaml.h" />
+    <ClInclude Include="ModelFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

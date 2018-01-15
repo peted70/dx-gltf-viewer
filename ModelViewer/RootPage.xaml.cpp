@@ -8,6 +8,13 @@
 #include "DirectXPage.xaml.h"
 #include "BlankPage.xaml.h"
 #include <ppltasks.h>
+#include <experimental/resumable>
+#include <pplawait.h>
+#include <future>
+#include <thread>
+#include <iostream>
+#include "Scene\GraphNode.h"
+#include "ModelFactory.h"
 
 using namespace ModelViewer;
 
@@ -24,7 +31,7 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
-
+using namespace std;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -73,18 +80,22 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	ContentFrame->Navigate(DirectXPage::typeid);
 }
 
-void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+task<GraphNode *> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
-	create_task(fop->PickSingleFileAsync()).then([this](StorageFile^ file)
+	fop->FileTypeFilter->Append(".glb");
+
+	auto file = co_await fop->PickSingleFileAsync();
+	auto ret = co_await std::async([&file]() { return ModelFactory::CreateFromFileAsync(file->Name); });
+
+	co_return nullptr;
+}
+
+void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	auto tsk = LoadFileAsync();
+	tsk.then([this](GraphNode *node) 
 	{
-		if (file)
-		{
-			//do some stuff
-		}
-		else
-		{
-			//do some stuff
-		}
+		// Add the GraphNode to the scene
 	});
 }
