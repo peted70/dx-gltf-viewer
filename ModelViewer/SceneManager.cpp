@@ -3,10 +3,15 @@
 
 SceneManager::SceneManager()
 {
-	_sceneNode = make_shared<GraphContainerNode>();
+	_sceneNode = make_shared<RootNode>();
 }
 
-shared_ptr<GraphContainerNode> SceneManager::Current()
+shared_ptr<RootNode> SceneManager::Current()
 {
 	return _sceneNode;
+}
+
+void SceneManager::SetDevResources(const std::shared_ptr<DX::DeviceResources>& deviceResources)
+{
+	_deviceResources = deviceResources;
 }

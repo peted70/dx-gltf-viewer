@@ -34,7 +34,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
 
-	SceneManager::Instance().Current()->Initialise(m_deviceResources);
+	SceneManager::Instance().SetDevResources(deviceResources);
 
 	_grid = make_unique<DXGrid>();
 	_grid->Initialise(deviceResources->GetD3DDevice());
@@ -167,7 +167,7 @@ void Sample3DSceneRenderer::Render()
 	context->RSSetState(_pRasterState);
 
 	// Prepare the constant buffer to send it to the graphics device.
-	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, m_constantBufferData, 0, 0, 0);
+	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 
 	SceneManager::Instance().Current()->Draw(context);
 	return;

@@ -22,7 +22,7 @@ void MeshNode::CreateDeviceDependentResources()
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, _spSampler.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, _spSampler.ReleaseAndGetAddressOf()));
 
 	D3D11_RASTERIZER_DESC rasterizerState;
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
@@ -35,7 +35,7 @@ void MeshNode::CreateDeviceDependentResources()
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
-	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
 
 	// Load shaders asynchronously for model rendering...
 	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
@@ -45,7 +45,7 @@ void MeshNode::CreateDeviceDependentResources()
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
 	{
 		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateVertexShader(
+			DevResources()->GetD3DDevice()->CreateVertexShader(
 				&fileData[0],
 				fileData.size(),
 				nullptr,
@@ -59,7 +59,7 @@ void MeshNode::CreateDeviceDependentResources()
 		};
 
 		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateInputLayout(
+			DevResources()->GetD3DDevice()->CreateInputLayout(
 				vertexDesc,
 				ARRAYSIZE(vertexDesc),
 				&fileData[0],
@@ -71,7 +71,7 @@ void MeshNode::CreateDeviceDependentResources()
 	auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) 
 	{
 		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreatePixelShader(
+			DevResources()->GetD3DDevice()->CreatePixelShader(
 				&fileData[0],
 				fileData.size(),
 				nullptr,
@@ -173,7 +173,7 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(data->SubResource->ByteWidth, bindFlags);
 	DX::ThrowIfFailed(
-		m_deviceResources->GetD3DDevice()->CreateBuffer(
+		DevResources()->GetD3DDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexBufferData,
 			&buffer
@@ -208,11 +208,11 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 
 	ComPtr<ID3D11Texture2D> tex;
 	DX::ThrowIfFailed(
-		m_deviceResources->GetD3DDevice()->CreateTexture2D(&txtDesc, &initialData,
+		DevResources()->GetD3DDevice()->CreateTexture2D(&txtDesc, &initialData,
 			tex.GetAddressOf()));
 
 	DX::ThrowIfFailed(
-		m_deviceResources->GetD3DDevice()->CreateShaderResourceView(tex.Get(),
+		DevResources()->GetD3DDevice()->CreateShaderResourceView(tex.Get(),
 			nullptr, _spTexture.ReleaseAndGetAddressOf()));
 }
 

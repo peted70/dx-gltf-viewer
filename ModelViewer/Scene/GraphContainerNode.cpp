@@ -32,3 +32,7 @@ void GraphContainerNode::Initialise(const std::shared_ptr<DX::DeviceResources>& 
 	_deviceResources = deviceResources;
 }
 
+void GraphContainerNode::AddChild(shared_ptr<GraphNode> child)
+{
+	_children.push_back(child);
+}

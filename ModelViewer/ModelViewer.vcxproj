@@ -221,11 +221,13 @@
     <ClInclude Include="RootPage.xaml.h">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\GraphContainerNode.h" />
     <ClInclude Include="Scene\GraphNode.h" />
     <ClInclude Include="Scene\LightNode.h" />
     <ClInclude Include="Scene\MeshNode.h" />
+    <ClInclude Include="Scene\RootNode.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -256,11 +258,13 @@
     <ClCompile Include="RootPage.xaml.cpp">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\GraphContainerNode.cpp" />
     <ClCompile Include="Scene\GraphNode.cpp" />
     <ClCompile Include="Scene\LightNode.cpp" />
     <ClCompile Include="Scene\MeshNode.cpp" />
+    <ClCompile Include="Scene\RootNode.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>

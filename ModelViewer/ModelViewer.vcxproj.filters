@@ -95,6 +95,8 @@
     <ClCompile Include="Scene\MeshNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene\RootNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -123,6 +125,8 @@
     <ClInclude Include="Scene\MeshNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Scene\RootNode.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
