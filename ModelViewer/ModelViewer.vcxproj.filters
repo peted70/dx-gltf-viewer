@@ -99,6 +99,7 @@
     <ClInclude Include="RootPage.xaml.h" />
     <ClInclude Include="BlankPage.xaml.h" />
     <ClInclude Include="ModelFactory.h" />
+    <ClInclude Include="EventShim.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
@@ -112,6 +113,7 @@
     <None Include="ModelViewer_TemporaryKey.pfx" />
     <None Include="Assets\BoomBox.glb" />
     <None Include="Assets\Box.glb" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />

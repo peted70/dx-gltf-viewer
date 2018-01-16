@@ -8,6 +8,7 @@
 #include <string>
 #include "DXGrid.h"
 #include "Axis.h"
+#include "./Scene/GraphContainerNode.h"
 
 namespace ModelViewer
 {
@@ -99,6 +100,8 @@ namespace ModelViewer
 		unique_ptr<Axis> _mainAxes;
 
 		ID3D11RasterizerState * _pRasterState;
+
+		shared_ptr<GraphContainerNode> _sceneNode;
 	};
 }
 

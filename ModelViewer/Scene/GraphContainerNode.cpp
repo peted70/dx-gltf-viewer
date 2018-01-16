@@ -11,10 +11,19 @@ GraphContainerNode::~GraphContainerNode()
 {
 }
 
-void GraphContainerNode::Draw()
+void GraphContainerNode::Draw(ID3D11DeviceContext2 *context)
 {
 	for (auto child : _children)
 	{
-		child->Draw();
+		child->Draw(context);
 	}
 }
+
+void GraphContainerNode::CreateDeviceDependentResources()
+{
+	for (auto child : _children)
+	{
+		child->CreateDeviceDependentResources();
+	}
+}
+

@@ -80,7 +80,7 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	ContentFrame->Navigate(DirectXPage::typeid);
 }
 
-task<GraphNode *> LoadFileAsync()
+task<shared_ptr<GraphNode>> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
@@ -88,13 +88,13 @@ task<GraphNode *> LoadFileAsync()
 	auto file = co_await fop->PickSingleFileAsync();
 	auto ret = co_await std::async([&file]() { return ModelFactory::CreateFromFileAsync(file->Name); });
 
-	co_return nullptr;
+	co_return ret;
 }
 
 void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	auto tsk = LoadFileAsync();
-	tsk.then([this](GraphNode *node) 
+	tsk.then([this](shared_ptr<GraphNode> node) 
 	{
 		// Add the GraphNode to the scene
 	});

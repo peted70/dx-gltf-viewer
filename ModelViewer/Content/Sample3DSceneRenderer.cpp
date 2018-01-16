@@ -4,6 +4,8 @@
 #include "..\Common\DirectXHelper.h"
 #include "Utility.h"
 
+#include "..\EventShim.h"
+
 // Please move me :)
 static float lastPosX;
 static float lastPosY;
@@ -14,32 +16,6 @@ using namespace ModelViewer;
 using namespace DirectX;
 using namespace Windows::Foundation;
 using namespace Microsoft::WRL;
-
-ref class EventShim sealed
-{
-internal:
-	EventShim(std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bcallback,
-			  std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tcallback) :
-		bufferCallback(std::move(bcallback)) ,
-		textureCallback(std::move(tcallback))
-	{
-
-	}
-
-public:
-	void OnBuffer(Platform::Object^ sender, WinRTGLTFParser::GLTF_BufferData^ data)
-	{
-		bufferCallback(data);
-	}
-	void OnTexture(Platform::Object^ sender, WinRTGLTFParser::GLTF_TextureData^ data)
-	{
-		textureCallback(data);
-	}
-
-private:
-	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bufferCallback;
-	std::function<void(WinRTGLTFParser::GLTF_TextureData^)> textureCallback;
-};
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
@@ -57,6 +33,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
 
+	_sceneNode = make_shared<GraphContainerNode>();
 	_grid = make_unique<DXGrid>();
 	_grid->Initialise(deviceResources->GetD3DDevice());
 	_mainAxes = make_unique<Axis>(1000.0f);
@@ -168,7 +145,6 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 void Sample3DSceneRenderer::StopTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
 	Utility::Out(L"StopTracking [%f %f]", positionX, positionY);
-
 	m_tracking = false;
 }
 
@@ -199,79 +175,8 @@ void Sample3DSceneRenderer::Render()
 		0
 		);
 
-	unsigned int indexCount = 0;
-	bool indexed = false;
-
-	// Get POSITIONS & NORMALS..
-	auto pos = _buffers.find(L"POSITION");
-	auto normals = _buffers.find(L"NORMAL");
-	auto texcoords = _buffers.find(L"TEXCOORD_0");
-
-	auto posBuffer = pos->second.Buffer();
-	auto normalBuffer = normals->second.Buffer();
-	auto texcoordBuffer = texcoords->second.Buffer();
-
-	ID3D11Buffer *vbs[] = 
-	{ 
-		*(posBuffer.GetAddressOf()), 
-		*(normalBuffer.GetAddressOf()), 
-		*(texcoordBuffer.GetAddressOf()) 
-	};
-
-	unsigned int strides[] = { 3 * sizeof(float), 3 * sizeof(float), 2 * sizeof(float) };
-	unsigned int offsets[] = { 0, 0, 0 };
-	context->IASetVertexBuffers(0, 3, vbs, strides, offsets);
-
-	auto indices = _buffers.find(L"INDICES");
-	indexed = true;
-	m_indexCount = indices->second.Data()->BufferDescription->Count;
-	context->IASetIndexBuffer(
-		indices->second.Buffer().Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-		0
-	);
-
-	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_inputLayout.Get());
-
-	// Attach our vertex shader.
-	context->VSSetShader(
-		m_vertexShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers1(
-		0,
-		1,
-		m_constantBuffer.GetAddressOf(),
-		nullptr,
-		nullptr
-		);
-
-	// Attach our pixel shader.
-	context->PSSetShader(
-		m_pixelShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Set texture and sampler.
-	auto sampler = _spSampler.Get();
-	context->PSSetSamplers(0, 1, &sampler);
-
-	auto texture = _spTexture.Get();
-	context->PSSetShaderResources(0, 1, &texture);
-
-	if (indexed)
-	{
-		context->DrawIndexed(m_indexCount, 0, 0);
-	}
-	else
-	{
-		context->Draw(m_indexCount, 0);
-	}
+	_sceneNode->Draw(context);
+	return;
 }
 
 void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
