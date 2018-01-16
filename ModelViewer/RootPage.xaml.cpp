@@ -86,7 +86,11 @@ task<shared_ptr<GraphNode>> LoadFileAsync()
 	fop->FileTypeFilter->Append(".glb");
 
 	auto file = co_await fop->PickSingleFileAsync();
-	auto ret = co_await ModelFactory::CreateFromFileAsync(file->Path);
+
+	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
+	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
+	auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
+
 	//auto ret = co_await std::async([&file]() { return ModelFactory::CreateFromFileAsync(file->Name); });
 
 	co_return ret;

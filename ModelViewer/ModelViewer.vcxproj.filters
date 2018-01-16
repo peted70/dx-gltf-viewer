@@ -136,7 +136,6 @@
     <None Include="ModelViewer_TemporaryKey.pfx" />
     <None Include="Assets\BoomBox.glb" />
     <None Include="Assets\Box.glb" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />

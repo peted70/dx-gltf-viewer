@@ -100,8 +100,6 @@ namespace ModelViewer
 		unique_ptr<Axis> _mainAxes;
 
 		ID3D11RasterizerState * _pRasterState;
-
-		shared_ptr<GraphContainerNode> _sceneNode;
 	};
 }
 

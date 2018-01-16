@@ -27,3 +27,8 @@ void GraphContainerNode::CreateDeviceDependentResources()
 	}
 }
 
+void GraphContainerNode::Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources)
+{
+	_deviceResources = deviceResources;
+}
+
