@@ -11,7 +11,7 @@ ModelFactory::~ModelFactory()
 {
 }
 
-future<shared_ptr<GraphNode>> ModelFactory::CreateFromFileAsync(String^ filename)
+future<shared_ptr<MeshNode>> ModelFactory::CreateFromFileAsync(String^ filename)
 {
 	WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
 

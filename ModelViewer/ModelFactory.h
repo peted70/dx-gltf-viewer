@@ -16,6 +16,6 @@ public:
 	ModelFactory();
 	~ModelFactory();
 
-	static future<shared_ptr<GraphNode>> CreateFromFileAsync(String^ filename);
+	static future<shared_ptr<MeshNode>> CreateFromFileAsync(String^ filename);
 };
 

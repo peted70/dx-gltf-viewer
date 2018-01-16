@@ -369,18 +369,18 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	auto loadModelTask = (createPSTask && createVSTask && createPSTask2 && createVSTask2).then([this]()
 	{
-		WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
-		std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
-		std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&Sample3DSceneRenderer::OnTexture, this, std::placeholders::_1);
-		
-		auto es = ref new EventShim(memfun, tmemfun);
-		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
-		parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
+		//WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
+		//std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
+		//std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&Sample3DSceneRenderer::OnTexture, this, std::placeholders::_1);
+		//
+		//auto es = ref new EventShim(memfun, tmemfun);
+		//parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
+		//parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
 
-		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
-		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		//Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
+		//auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
 		//auto fn = installedLocation->Path + "/Assets/Box.glb";
-		parser->ParseFile(fn);
+		//parser->ParseFile(fn);
 	});
 
 	loadModelTask.then([this]() {
