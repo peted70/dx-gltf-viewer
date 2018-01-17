@@ -82,27 +82,48 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	ContentFrame->Navigate(DirectXPage::typeid);
 }
 
-task<MeshNode *> LoadFileAsync()
+//task<MeshNode *> LoadFileAsync()
+//{
+//	auto fop = ref new FileOpenPicker();
+//	fop->FileTypeFilter->Append(".glb");
+//
+//	auto file = co_await fop->PickSingleFileAsync();
+//
+//	Utility::Out(L"filename = %s", file->Path->Data());
+//
+//	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
+//	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
+//	//auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
+//
+//	auto ret = co_await std::async([&tempFile]() { return ModelFactory::CreateFromFileAsync(tempFile->Path); });
+//
+//	co_return ret.get();
+//}
+
+task<MeshNode *> LoadFile2Async()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
 
-	auto file = co_await fop->PickSingleFileAsync();
-
-	Utility::Out(L"filename = %s", file->Path->Data());
-
-	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
-	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
-	//auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
-
-	auto ret = co_await std::async([&tempFile]() { return ModelFactory::CreateFromFileAsync(tempFile->Path); });
-
-	co_return ret.get();
+	return create_task(fop->PickSingleFileAsync())
+		.then([](StorageFile^ file)
+		{
+			Utility::Out(L"filename = %s", file->Path->Data());
+			auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
+			return create_task(file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName));
+		})
+		.then([](StorageFile^ file)
+		{
+			return create_task(std::async([&file]() { return ModelFactory::CreateFromFileAsync(file->Path); }));
+		}).then([](MeshNode *node)
+		{
+			return node;
+		});
 }
 
 void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	auto tsk = LoadFileAsync();
+	auto tsk = LoadFile2Async();
 	tsk.then([this](MeshNode *node)
 	{
 		auto nd = make_shared<MeshNode>();
