@@ -4,6 +4,9 @@
 #include "..\Common\DirectXHelper.h"
 #include "Utility.h"
 
+#include "..\EventShim.h"
+#include "SceneManager.h"
+
 // Please move me :)
 static float lastPosX;
 static float lastPosY;
@@ -14,32 +17,6 @@ using namespace ModelViewer;
 using namespace DirectX;
 using namespace Windows::Foundation;
 using namespace Microsoft::WRL;
-
-ref class EventShim sealed
-{
-internal:
-	EventShim(std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bcallback,
-			  std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tcallback) :
-		bufferCallback(std::move(bcallback)) ,
-		textureCallback(std::move(tcallback))
-	{
-
-	}
-
-public:
-	void OnBuffer(Platform::Object^ sender, WinRTGLTFParser::GLTF_BufferData^ data)
-	{
-		bufferCallback(data);
-	}
-	void OnTexture(Platform::Object^ sender, WinRTGLTFParser::GLTF_TextureData^ data)
-	{
-		textureCallback(data);
-	}
-
-private:
-	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> bufferCallback;
-	std::function<void(WinRTGLTFParser::GLTF_TextureData^)> textureCallback;
-};
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
@@ -56,6 +33,8 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 	m_constantBufferData.light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
+
+	SceneManager::Instance().SetDevResources(deviceResources);
 
 	_grid = make_unique<DXGrid>();
 	_grid->Initialise(deviceResources->GetD3DDevice());
@@ -168,7 +147,6 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 void Sample3DSceneRenderer::StopTracking(float positionX, float positionY, VirtualKeyModifiers mod)
 {
 	Utility::Out(L"StopTracking [%f %f]", positionX, positionY);
-
 	m_tracking = false;
 }
 
@@ -189,89 +167,10 @@ void Sample3DSceneRenderer::Render()
 	context->RSSetState(_pRasterState);
 
 	// Prepare the constant buffer to send it to the graphics device.
-	context->UpdateSubresource1(
-		m_constantBuffer.Get(),
-		0,
-		NULL,
-		&m_constantBufferData,
-		0,
-		0,
-		0
-		);
+	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 
-	unsigned int indexCount = 0;
-	bool indexed = false;
-
-	// Get POSITIONS & NORMALS..
-	auto pos = _buffers.find(L"POSITION");
-	auto normals = _buffers.find(L"NORMAL");
-	auto texcoords = _buffers.find(L"TEXCOORD_0");
-
-	auto posBuffer = pos->second.Buffer();
-	auto normalBuffer = normals->second.Buffer();
-	auto texcoordBuffer = texcoords->second.Buffer();
-
-	ID3D11Buffer *vbs[] = 
-	{ 
-		*(posBuffer.GetAddressOf()), 
-		*(normalBuffer.GetAddressOf()), 
-		*(texcoordBuffer.GetAddressOf()) 
-	};
-
-	unsigned int strides[] = { 3 * sizeof(float), 3 * sizeof(float), 2 * sizeof(float) };
-	unsigned int offsets[] = { 0, 0, 0 };
-	context->IASetVertexBuffers(0, 3, vbs, strides, offsets);
-
-	auto indices = _buffers.find(L"INDICES");
-	indexed = true;
-	m_indexCount = indices->second.Data()->BufferDescription->Count;
-	context->IASetIndexBuffer(
-		indices->second.Buffer().Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-		0
-	);
-
-	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_inputLayout.Get());
-
-	// Attach our vertex shader.
-	context->VSSetShader(
-		m_vertexShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers1(
-		0,
-		1,
-		m_constantBuffer.GetAddressOf(),
-		nullptr,
-		nullptr
-		);
-
-	// Attach our pixel shader.
-	context->PSSetShader(
-		m_pixelShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Set texture and sampler.
-	auto sampler = _spSampler.Get();
-	context->PSSetSamplers(0, 1, &sampler);
-
-	auto texture = _spTexture.Get();
-	context->PSSetShaderResources(0, 1, &texture);
-
-	if (indexed)
-	{
-		context->DrawIndexed(m_indexCount, 0, 0);
-	}
-	else
-	{
-		context->Draw(m_indexCount, 0);
-	}
+	SceneManager::Instance().Current()->Draw(context);
+	return;
 }
 
 void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
@@ -464,18 +363,18 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	auto loadModelTask = (createPSTask && createVSTask && createPSTask2 && createVSTask2).then([this]()
 	{
-		WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
-		std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
-		std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&Sample3DSceneRenderer::OnTexture, this, std::placeholders::_1);
-		
-		auto es = ref new EventShim(memfun, tmemfun);
-		parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
-		parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
+		//WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
+		//std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&Sample3DSceneRenderer::OnBuffer, this, std::placeholders::_1);
+		//std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&Sample3DSceneRenderer::OnTexture, this, std::placeholders::_1);
+		//
+		//auto es = ref new EventShim(memfun, tmemfun);
+		//parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
+		//parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
 
-		Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
-		auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
+		//Windows::Storage::StorageFolder^ installedLocation = Windows::ApplicationModel::Package::Current->InstalledLocation;
+		//auto fn = installedLocation->Path + "/Assets/BoomBox.glb";
 		//auto fn = installedLocation->Path + "/Assets/Box.glb";
-		parser->ParseFile(fn);
+		//parser->ParseFile(fn);
 	});
 
 	loadModelTask.then([this]() {

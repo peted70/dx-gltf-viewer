@@ -8,6 +8,7 @@
 #include <string>
 #include "DXGrid.h"
 #include "Axis.h"
+#include "./Scene/GraphContainerNode.h"
 
 namespace ModelViewer
 {

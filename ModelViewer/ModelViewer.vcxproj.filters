@@ -62,6 +62,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{40b40dfc-ec76-408c-aa57-04666d2cf4c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -74,12 +77,26 @@
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="DXGrid.cpp" />
     <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="Scene\CameraNode.cpp" />
-    <ClCompile Include="Scene\GraphContainerNode.cpp" />
-    <ClCompile Include="Scene\GraphNode.cpp" />
-    <ClCompile Include="Scene\LightNode.cpp" />
-    <ClCompile Include="Scene\MeshNode.cpp" />
     <ClCompile Include="RootPage.xaml.cpp" />
+    <ClCompile Include="BlankPage.xaml.cpp" />
+    <ClCompile Include="ModelFactory.cpp" />
+    <ClCompile Include="Scene\CameraNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GraphContainerNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GraphNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LightNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\MeshNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene\RootNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -89,12 +106,27 @@
     <ClInclude Include="Axis.h" />
     <ClInclude Include="DXGrid.h" />
     <ClInclude Include="Utility.h" />
-    <ClInclude Include="Scene\CameraNode.h" />
-    <ClInclude Include="Scene\GraphContainerNode.h" />
-    <ClInclude Include="Scene\GraphNode.h" />
-    <ClInclude Include="Scene\LightNode.h" />
-    <ClInclude Include="Scene\MeshNode.h" />
     <ClInclude Include="RootPage.xaml.h" />
+    <ClInclude Include="BlankPage.xaml.h" />
+    <ClInclude Include="ModelFactory.h" />
+    <ClInclude Include="EventShim.h" />
+    <ClInclude Include="Scene\CameraNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GraphContainerNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GraphNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LightNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\MeshNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Scene\RootNode.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

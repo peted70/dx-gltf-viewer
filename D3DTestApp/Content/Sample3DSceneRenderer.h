@@ -8,7 +8,7 @@
 #include <string>
 #include "DXGrid.h"
 #include "Axis.h"
-
+	
 namespace D3DTestApp
 {
 	using namespace WinRTGLTFParser;

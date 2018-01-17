@@ -11,10 +11,28 @@ GraphContainerNode::~GraphContainerNode()
 {
 }
 
-void GraphContainerNode::Draw()
+void GraphContainerNode::Draw(ID3D11DeviceContext2 *context)
 {
 	for (auto child : _children)
 	{
-		child->Draw();
+		child->Draw(context);
 	}
+}
+
+void GraphContainerNode::CreateDeviceDependentResources()
+{
+	for (auto child : _children)
+	{
+		child->CreateDeviceDependentResources();
+	}
+}
+
+void GraphContainerNode::Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources)
+{
+	_deviceResources = deviceResources;
+}
+
+void GraphContainerNode::AddChild(shared_ptr<GraphNode> child)
+{
+	_children.push_back(child);
 }
