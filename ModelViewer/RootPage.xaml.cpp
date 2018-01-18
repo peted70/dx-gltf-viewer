@@ -99,8 +99,11 @@ future<MeshNode *> LoadFileAsync()
 
 std::future<void> Load()
 {
+	Utility::Out(L"At Start of Load");
 	auto node = co_await LoadFileAsync();
+	Utility::Out(L"Loaded");
 	auto nd = make_shared<MeshNode>(*node);
+	Utility::Out(L"Made shared pointer %x", nd.get());
 
 	// Add the GraphNode to the scene
 	auto current = SceneManager::Instance().Current();

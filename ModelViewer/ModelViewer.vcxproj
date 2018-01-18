@@ -204,6 +204,7 @@
     <ClInclude Include="BlankPage.xaml.h">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
     <ClInclude Include="DXGrid.h" />
     <ClInclude Include="EventShim.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="BlankPage.xaml.cpp">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
     <ClCompile Include="DXGrid.cpp" />
     <ClCompile Include="ModelFactory.cpp" />

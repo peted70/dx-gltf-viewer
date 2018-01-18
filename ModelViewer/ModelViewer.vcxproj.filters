@@ -97,6 +97,7 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\RootNode.cpp" />
+    <ClCompile Include="BufferManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -127,6 +128,7 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\RootNode.h" />
+    <ClInclude Include="BufferManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
