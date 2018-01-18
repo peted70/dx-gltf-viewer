@@ -15,6 +15,7 @@ public:
 
 	virtual void Draw(ID3D11DeviceContext2 *context);
 	virtual void CreateDeviceDependentResources();
+	virtual void Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources);
 
 	void CreateBuffer(GLTF_BufferData^ data);
 	void CreateTexture(GLTF_TextureData^ data);
@@ -52,5 +53,6 @@ private:
 	ComPtr<ID3D11RasterizerState> _pRasterState;
 
 	uint32	m_indexCount;
+	bool m_loadingComplete;
 };
 

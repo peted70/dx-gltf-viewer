@@ -2,12 +2,19 @@
 #include "MeshNode.h"
 #include "Common\DirectXHelper.h"
 
-MeshNode::MeshNode()
+MeshNode::MeshNode() : 
+	m_loadingComplete(false)
 {
 }
 
 MeshNode::~MeshNode()
 {
+}
+
+void MeshNode::Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources)
+{
+	GraphContainerNode::Initialise(deviceResources);
+	CreateDeviceDependentResources();
 }
 
 void MeshNode::CreateDeviceDependentResources()
@@ -77,10 +84,17 @@ void MeshNode::CreateDeviceDependentResources()
 				nullptr,
 				&m_pixelShader));
 	});
+
+	createPSTask.then([this]() {
+		m_loadingComplete = true;
+	});
 }
 
 void MeshNode::Draw(ID3D11DeviceContext2 *context)
 {
+	if (!m_loadingComplete)
+		return;
+
 	unsigned int indexCount = 0;
 	bool indexed = false;
 

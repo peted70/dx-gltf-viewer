@@ -105,7 +105,7 @@ std::future<void> Load()
 	// Add the GraphNode to the scene
 	auto current = SceneManager::Instance().Current();
 	auto sel = current->SelectedNode();
-	sel->AddChild(nd);
+	current->AddChild(nd);
 }
 
 void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
