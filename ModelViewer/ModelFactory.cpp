@@ -28,7 +28,7 @@ future<MeshNode *> ModelFactory::CreateFromFileAsync(String^ filename)
 	parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 	parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
 
-	parser->ParseFile(filename);
+	co_await async([&parser, filename, &mesh]() { parser->ParseFile(filename); return mesh.get(); });
 
 	co_return mesh.get();
 }

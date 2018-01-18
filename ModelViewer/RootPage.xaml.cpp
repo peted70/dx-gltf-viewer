@@ -82,53 +82,33 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	ContentFrame->Navigate(DirectXPage::typeid);
 }
 
-//task<MeshNode *> LoadFileAsync()
-//{
-//	auto fop = ref new FileOpenPicker();
-//	fop->FileTypeFilter->Append(".glb");
-//
-//	auto file = co_await fop->PickSingleFileAsync();
-//
-//	Utility::Out(L"filename = %s", file->Path->Data());
-//
-//	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
-//	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
-//	//auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
-//
-//	auto ret = co_await std::async([&tempFile]() { return ModelFactory::CreateFromFileAsync(tempFile->Path); });
-//
-//	co_return ret.get();
-//}
-
-task<MeshNode *> LoadFile2Async()
+future<MeshNode *> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
 
-	return create_task(fop->PickSingleFileAsync())
-		.then([](StorageFile^ file)
-		{
-			Utility::Out(L"filename = %s", file->Path->Data());
-			auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
-			return create_task(file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName));
-		})
-		.then([](StorageFile^ file)
-		{
-			return create_task(std::async([&file]() { return ModelFactory::CreateFromFileAsync(file->Path); }));
-		}).then([](MeshNode *node)
-		{
-			return node;
-		});
+	auto file = co_await fop->PickSingleFileAsync();
+
+	Utility::Out(L"filename = %s", file->Path->Data());
+
+	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
+	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
+	auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
+	co_return ret;
+}
+
+std::future<void> Load()
+{
+	auto node = co_await LoadFileAsync();
+	auto nd = make_shared<MeshNode>(*node);
+
+	// Add the GraphNode to the scene
+	auto current = SceneManager::Instance().Current();
+	auto sel = current->SelectedNode();
+	sel->AddChild(nd);
 }
 
 void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	auto tsk = LoadFile2Async();
-	tsk.then([this](MeshNode *node)
-	{
-		auto nd = make_shared<MeshNode>();
-		nd.reset(node);
-		// Add the GraphNode to the scene
-		SceneManager::Instance().Current()->SelectedNode()->AddChild(nd);
-	});
+	Load();
 }
