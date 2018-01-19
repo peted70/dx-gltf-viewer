@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MeshNode.h"
 #include "Common\DirectXHelper.h"
+#include "BufferManager.h"
 
 MeshNode::MeshNode() : 
 	m_loadingComplete(false)
@@ -72,6 +73,7 @@ void MeshNode::CreateDeviceDependentResources()
 				&fileData[0],
 				fileData.size(),
 				&m_inputLayout));
+		Utility::Out(L"Loaded Vertex Shader");
 	});
 
 	// After the pixel shader file is loaded, create the shader and constant buffer.
@@ -83,10 +85,13 @@ void MeshNode::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_pixelShader));
+		Utility::Out(L"Loaded Pixel Shader");
 	});
 
-	createPSTask.then([this]() {
+	//concurrency::when_all()
+	(createPSTask && createVSTask).then([this]() {
 		m_loadingComplete = true;
+		Utility::Out(L"Loading Complete");
 	});
 }
 
@@ -94,6 +99,8 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 {
 	if (!m_loadingComplete)
 		return;
+
+	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
 	unsigned int indexCount = 0;
 	bool indexed = false;
@@ -131,10 +138,12 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	context->IASetInputLayout(m_inputLayout.Get());
 
 	// Attach our vertex shader.
+	assert(m_vertexShader.Get());
 	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
-	//context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+	context->VSSetConstantBuffers1(0, 1, BufferManager::Instance().MVPBuffer().ConstantBuffer().GetAddressOf(),
+		nullptr, nullptr);
 
 	// Attach our pixel shader.
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);

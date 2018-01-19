@@ -31,8 +31,6 @@ namespace ModelViewer
 		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod);
 		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		bool IsTracking() { return m_tracking; }
-		void OnBuffer(GLTF_BufferData^ data);
-		void OnTexture(WinRTGLTFParser::GLTF_TextureData^ data);
 
 	private:
 		void Rotate(float radians);
@@ -68,7 +66,6 @@ namespace ModelViewer
 		ComPtr<ID3D11Buffer>		m_indexBuffer;
 		ComPtr<ID3D11VertexShader>	m_vertexShader;
 		ComPtr<ID3D11PixelShader>	m_pixelShader;
-		ComPtr<ID3D11Buffer>		m_constantBuffer;
 
 		ComPtr<ID3D11Buffer>		_lineDrawingConstantBuffer;
 		ComPtr<ID3D11InputLayout>	_lineDrawingInputLayout;
@@ -81,7 +78,6 @@ namespace ModelViewer
 		map<wstring, BufferWrapper> _buffers;
 
 		// System resources for cube geometry.
-		ModelViewProjectionConstantBuffer	m_constantBufferData;
 		LineDrawingConstantBuffer _lineDrawingConstantBufferData;
 
 		uint32	m_indexCount;

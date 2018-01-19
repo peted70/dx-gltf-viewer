@@ -12,7 +12,7 @@ ModelFactory::~ModelFactory()
 {
 }
 
-future<MeshNode *> ModelFactory::CreateFromFileAsync(String^ filename)
+future<shared_ptr<MeshNode>> ModelFactory::CreateFromFileAsync(String^ filename)
 {
 	WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
 
@@ -30,5 +30,5 @@ future<MeshNode *> ModelFactory::CreateFromFileAsync(String^ filename)
 
 	co_await async([&parser, filename, &mesh]() { parser->ParseFile(filename); return mesh.get(); });
 
-	co_return mesh.get();
+	co_return mesh;
 }
