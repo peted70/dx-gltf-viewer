@@ -82,7 +82,7 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	ContentFrame->Navigate(DirectXPage::typeid);
 }
 
-future<MeshNode *> LoadFileAsync()
+future<shared_ptr<MeshNode>> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
@@ -93,6 +93,7 @@ future<MeshNode *> LoadFileAsync()
 
 	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
 	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
+
 	auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
 	co_return ret;
 }
@@ -102,13 +103,11 @@ std::future<void> Load()
 	Utility::Out(L"At Start of Load");
 	auto node = co_await LoadFileAsync();
 	Utility::Out(L"Loaded");
-	auto nd = make_shared<MeshNode>(*node);
-	Utility::Out(L"Made shared pointer %x", nd.get());
 
 	// Add the GraphNode to the scene
 	auto current = SceneManager::Instance().Current();
 	auto sel = current->SelectedNode();
-	current->AddChild(nd);
+	current->AddChild(node);
 }
 
 void ModelViewer::RootPage::ImportClick(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)

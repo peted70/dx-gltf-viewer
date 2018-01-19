@@ -73,6 +73,7 @@ void MeshNode::CreateDeviceDependentResources()
 				&fileData[0],
 				fileData.size(),
 				&m_inputLayout));
+		Utility::Out(L"Loaded Vertex Shader");
 	});
 
 	// After the pixel shader file is loaded, create the shader and constant buffer.
@@ -84,11 +85,13 @@ void MeshNode::CreateDeviceDependentResources()
 				fileData.size(),
 				nullptr,
 				&m_pixelShader));
+		Utility::Out(L"Loaded Pixel Shader");
 	});
 
 	//concurrency::when_all()
 	(createPSTask && createVSTask).then([this]() {
 		m_loadingComplete = true;
+		Utility::Out(L"Loading Complete");
 	});
 }
 

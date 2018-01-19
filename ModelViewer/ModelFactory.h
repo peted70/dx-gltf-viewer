@@ -17,6 +17,6 @@ public:
 	ModelFactory();
 	~ModelFactory();
 
-	static future<MeshNode *> CreateFromFileAsync(String^ filename);
+	static future<shared_ptr<MeshNode>> CreateFromFileAsync(String^ filename);
 };
 
