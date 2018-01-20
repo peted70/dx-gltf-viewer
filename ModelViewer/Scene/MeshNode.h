@@ -3,6 +3,7 @@
 #include "GraphContainerNode.h"
 #include "Common\DeviceResources.h"
 #include <map>
+#include "NodeMaterial.h"
 
 using namespace WinRTGLTFParser;
 using namespace Microsoft::WRL;
@@ -19,6 +20,7 @@ public:
 
 	void CreateBuffer(GLTF_BufferData^ data);
 	void CreateTexture(GLTF_TextureData^ data);
+	void CreateMaterial(GLTF_MaterialData^ data);
 
 private:
 	vector<uint8_t> LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height);
@@ -51,6 +53,8 @@ private:
 	ComPtr<ID3D11VertexShader> m_vertexShader;
 	ComPtr<ID3D11PixelShader> m_pixelShader;
 	ComPtr<ID3D11RasterizerState> _pRasterState;
+
+	shared_ptr<NodeMaterial> _material;
 
 	uint32	m_indexCount;
 	bool m_loadingComplete;

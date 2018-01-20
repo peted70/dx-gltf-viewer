@@ -33,6 +33,11 @@ void GLTF_Parser::ParseFile(String^ Filename)
 			auto bd = ref new GLTF_BufferData(data);
 			OnBufferEvent(this, bd);
 		},
+		[this](const MaterialData& data)
+		{
+			auto md = ref new GLTF_MaterialData(data);
+			OnMaterialEvent(this, md);
+		},
 		[this](const TextureData& data)
 		{
 			auto td = ref new GLTF_TextureData(data);

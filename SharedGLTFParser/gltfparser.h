@@ -17,6 +17,21 @@
 
 typedef long HRESULT;
 
+class GLTFPARSER_API MaterialData
+{
+public:
+	MaterialData() {}
+
+	const char *MaterialName;
+	float emmissiveFactor[3];
+
+	int Pbrmetallicroughness_Basecolortexture;
+	int Pbrmetallicroughness_Metallicroughnesstexture;
+	int Normaltexture;
+	int Occlusiontexture;
+	int Emissivetexture;
+};
+
 class GLTFPARSER_API TextureData
 {
 public:
@@ -54,5 +69,7 @@ public:
 	BufferDesc desc;
 };
 
-HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, std::function<void(const BufferData&)> bufferCallback,
+HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, 
+	std::function<void(const BufferData&)> bufferCallback,
+	std::function<void(const MaterialData&)> materialCallback,
 	std::function<void(const TextureData&)> textureCallback);

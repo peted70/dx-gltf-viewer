@@ -207,12 +207,16 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	_buffers[type] = bw;
 }
 
+void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
+{
+}
+
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 {
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
-	txtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; // sunset.jpg is in sRGB colorspace
+	txtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; 
 	txtDesc.SampleDesc.Count = 1;
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
