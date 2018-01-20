@@ -16,9 +16,28 @@ namespace WinRTGLTFParser
 	internal:
 		GLTF_MaterialData(const MaterialData& data)
 		{
+			MaterialName = ToStringHat(const_cast<char *>(data.MaterialName));
+			emmissiveFactor = ref new Array<float>(3);
+			emmissiveFactor[0] = data.emmissiveFactor[0];
+			emmissiveFactor[1] = data.emmissiveFactor[1];
+			emmissiveFactor[2] = data.emmissiveFactor[2];
+
+			Pbrmetallicroughness_Basecolortexture = data.Pbrmetallicroughness_Basecolortexture;
+			Pbrmetallicroughness_Metallicroughnesstexture = data.Pbrmetallicroughness_Metallicroughnesstexture;
+			Normaltexture = data.Normaltexture;
+			Occlusiontexture = data.Occlusiontexture;
+			Emissivetexture = data.Emissivetexture;
 		}
 
 	public:
+		property String^ MaterialName;
+		property Array<float>^ emmissiveFactor;
+
+		property unsigned int Pbrmetallicroughness_Basecolortexture;
+		property unsigned int Pbrmetallicroughness_Metallicroughnesstexture;
+		property unsigned int Normaltexture;
+		property unsigned int Occlusiontexture;
+		property unsigned int Emissivetexture;
 	};
 
 	public ref class GLTF_TextureData sealed
