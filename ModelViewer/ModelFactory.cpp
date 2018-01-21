@@ -23,10 +23,12 @@ future<shared_ptr<MeshNode>> ModelFactory::CreateFromFileAsync(String^ filename)
 
 	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&MeshNode::CreateBuffer, mesh, std::placeholders::_1);
 	std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&MeshNode::CreateTexture, mesh, std::placeholders::_1);
+	std::function<void(WinRTGLTFParser::GLTF_MaterialData^)> mmemfun = std::bind(&MeshNode::CreateMaterial, mesh, std::placeholders::_1);
 
-	auto es = ref new EventShim(memfun, tmemfun);
+	auto es = ref new EventShim(memfun, mmemfun, tmemfun);
 	parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
 	parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
+	parser->OnMaterialEvent += ref new MaterialEventHandler(es, &EventShim::OnMaterial);
 
 	co_await async([&parser, filename, &mesh]() { parser->ParseFile(filename); return mesh.get(); });
 
