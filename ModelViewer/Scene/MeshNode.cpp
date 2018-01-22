@@ -148,11 +148,13 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	// Attach our pixel shader.
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
+	auto textureWrapper = _material->GetTexture(1);
+
 	// Set texture and sampler.
-	auto sampler = _spSampler.Get();
+	auto sampler = textureWrapper->GetSampler().Get();
 	context->PSSetSamplers(0, 1, &sampler);
 
-	auto texture = _spTexture.Get();
+	auto texture = textureWrapper->GetShaderResourceView().Get();
 	context->PSSetShaderResources(0, 1, &texture);
 
 	if (indexed)
@@ -209,8 +211,8 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 
 void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
 {
-	auto material = make_shared<NodeMaterial>();
-	material->Initialise(data);
+	_material = make_shared<NodeMaterial>();
+	_material->Initialise(data);
 }
 
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
@@ -240,9 +242,25 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 		DevResources()->GetD3DDevice()->CreateTexture2D(&txtDesc, &initialData,
 			tex.GetAddressOf()));
 
+	ComPtr<ID3D11ShaderResourceView> textureResourceView;
 	DX::ThrowIfFailed(
 		DevResources()->GetD3DDevice()->CreateShaderResourceView(tex.Get(),
-			nullptr, _spTexture.ReleaseAndGetAddressOf()));
+			nullptr, textureResourceView.ReleaseAndGetAddressOf()));
+
+	// Create sampler.
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	ComPtr<ID3D11SamplerState> texSampler;
+	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, texSampler.ReleaseAndGetAddressOf()));
+
+	_material->AddTexture(data->Idx, tex, textureResourceView, texSampler);
 }
 
 std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)

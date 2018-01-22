@@ -6,6 +6,27 @@ using namespace Microsoft::WRL;
 using namespace std;
 using namespace WinRTGLTFParser;
 
+class TextureWrapper
+{
+public:
+	TextureWrapper(ComPtr<ID3D11Texture2D> tex,
+		ComPtr<ID3D11ShaderResourceView> textureResourceView,
+		ComPtr<ID3D11SamplerState> texSampler) :
+		_tex(tex),
+		_textureResourceView(textureResourceView),
+		_textureSampler(texSampler)
+	{}
+
+	ComPtr<ID3D11SamplerState> GetSampler() { return _textureSampler; }
+	ComPtr<ID3D11ShaderResourceView> GetShaderResourceView() { return _textureResourceView; }
+	ComPtr<ID3D11Texture2D> GetTexture() { return _tex; }
+
+private:
+	ComPtr<ID3D11SamplerState> _textureSampler;
+	ComPtr<ID3D11ShaderResourceView> _textureResourceView;
+	ComPtr<ID3D11Texture2D> _tex;
+};
+
 class NodeMaterial
 {
 public:
@@ -13,19 +34,14 @@ public:
 	~NodeMaterial();
 
 	void Initialise(GLTF_MaterialData^ data);
+	void AddTexture(unsigned int idx, 
+					ComPtr<ID3D11Texture2D> tex, 
+					ComPtr<ID3D11ShaderResourceView> textureResourceView, 
+					ComPtr<ID3D11SamplerState> texSampler);
+	shared_ptr<TextureWrapper> GetTexture(unsigned int idx) { return _textures[idx]; }
 
 private:
-	class TextureWrapper
-	{
-	public:
-		TextureWrapper() {}
-
-	private:
-		ComPtr<ID3D11SamplerState> _textureSampler;
-		ComPtr<ID3D11ShaderResourceView> _texture;
-	};
-
-	map<wstring, TextureWrapper> _textures;
+	map<unsigned int, shared_ptr<TextureWrapper>> _textures;
 	wstring _name;
 
 	float _emmissiveFactor[3] = {0.0f, 0.0f, 0.0f};

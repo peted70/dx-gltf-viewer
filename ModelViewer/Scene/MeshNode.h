@@ -58,5 +58,7 @@ private:
 
 	uint32	m_indexCount;
 	bool m_loadingComplete;
+
+	shared_ptr<NodeMaterial> _currentMaterial;
 };
 

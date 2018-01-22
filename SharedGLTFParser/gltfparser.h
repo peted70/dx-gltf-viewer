@@ -41,6 +41,7 @@ public:
 	unsigned int dataSize;
 	unsigned int imgWidth;
 	unsigned int imgHeight;
+	unsigned int idx;
 };
 
 struct GLTFPARSER_API SubresourceData
