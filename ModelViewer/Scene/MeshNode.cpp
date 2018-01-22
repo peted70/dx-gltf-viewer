@@ -209,6 +209,8 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 
 void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
 {
+	auto material = make_shared<NodeMaterial>();
+	material->Initialise(data);
 }
 
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
