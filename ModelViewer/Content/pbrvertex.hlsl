@@ -1,3 +1,5 @@
+#define NORMALS
+
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
@@ -14,8 +16,10 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 struct VertexShaderInput
 {
     float4 position : POSITION;
-#ifdef DIFFUSE
+#ifdef NORMALS
     float3 normal : NORMAL;
+#endif
+#ifdef DIFFUSE
     float2 texcoord : TEXCOORD0;
 #endif
 };
@@ -24,9 +28,13 @@ struct VertexShaderInput
 struct PixelShaderInput
 {
     float4 position : SV_POSITION;
-#ifdef DIFFUSE
+#ifdef NORMALS
     float3 normal : NORMAL;
+#endif
+#ifdef DIFFUSE
     float3 lightdir : TEXCOORD1;
+#endif
+#ifdef UV
     float2 texcoord : TEXCOORD0;
 #endif
 };
@@ -46,7 +54,6 @@ attribute vec2 a_UV;
 uniform mat4 u_MVPMatrix;
 uniform mat4 u_ModelMatrix;
 
-varying vec3 v_Position;
 varying vec2 v_UV;
 
 #ifdef HAS_NORMALS
@@ -59,10 +66,16 @@ varying vec3 v_Normal;
 
 PixelShaderInput main(VertexShaderInput input)
 {
+    PixelShaderInput output;
 
 	// Transform the vertex position into projected space.
     float4 pos = mul(input.position, model);
-    v_Position = float3(pos.xyz) / pos.w;
+    output.position = float3(pos.xyz) / pos.w;
+
+#ifdef NORMALS
+    // If we have normals...
+    output.normal = mul(float4(input.normal.xyz, 0.0), model);
+#endif
 
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
