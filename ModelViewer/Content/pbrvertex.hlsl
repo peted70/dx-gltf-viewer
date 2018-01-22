@@ -1,4 +1,35 @@
-attribute vec4 a_Position;
+// A constant buffer that stores the three basic column-major matrices for composing geometry.
+cbuffer ModelViewProjectionConstantBuffer : register(b0)
+{
+    matrix model;
+    matrix view;
+    matrix projection;
+#ifdef DIFFUSE
+	float4 light_direction;
+    float3 color;
+#endif
+};
+
+// Per-vertex data used as input to the vertex shader.
+struct VertexShaderInput
+{
+    float4 position : POSITION;
+#ifdef DIFFUSE
+    float3 normal : NORMAL;
+    float2 texcoord : TEXCOORD0;
+#endif
+};
+
+// Per-pixel color data passed through the pixel shader.
+struct PixelShaderInput
+{
+    float4 position : SV_POSITION;
+#ifdef DIFFUSE
+    float3 normal : NORMAL;
+    float3 lightdir : TEXCOORD1;
+    float2 texcoord : TEXCOORD0;
+#endif
+};
 
 #ifdef HAS_NORMALS
 attribute vec4 a_Normal;
@@ -15,8 +46,8 @@ attribute vec2 a_UV;
 uniform mat4 u_MVPMatrix;
 uniform mat4 u_ModelMatrix;
 
-varying vec3v_Position;
-varying vec2v_UV;
+varying vec3 v_Position;
+varying vec2 v_UV;
 
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
@@ -26,10 +57,12 @@ varying vec3 v_Normal;
 #endif
 #endif
 
-float4 main(float4 pos : POSITION) : SV_POSITION
+PixelShaderInput main(VertexShaderInput input)
 {
-    vec4 pos = u_ModelMatrix * a_Position;
-    v_Position = vec3(pos.xyz) / pos.w;
+
+	// Transform the vertex position into projected space.
+    float4 pos = mul(input.position, model);
+    v_Position = float3(pos.xyz) / pos.w;
 
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
