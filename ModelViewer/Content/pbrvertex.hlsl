@@ -90,7 +90,8 @@ PixelShaderInput main(VertexShaderInput input)
   v_Normal = normalize(vec3(u_ModelMatrix * vec4(a_Normal.xyz, 0.0)));
 #endif
 #endif
-    	// Transform the vertex position into projected space.
+
+    // Transform the vertex position into projected space.
     pos = mul(pos, model);
     pos = mul(pos, view);
     pos = mul(pos, projection);
