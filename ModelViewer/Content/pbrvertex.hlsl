@@ -1,4 +1,5 @@
 #define NORMALS
+#define UV
 
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
@@ -19,7 +20,7 @@ struct VertexShaderInput
 #ifdef NORMALS
     float3 normal : NORMAL;
 #endif
-#ifdef DIFFUSE
+#ifdef UV
     float2 texcoord : TEXCOORD0;
 #endif
 };
@@ -28,6 +29,8 @@ struct VertexShaderInput
 struct PixelShaderInput
 {
     float4 position : SV_POSITION;
+    float3 poswithoutw : POSITION;
+
 #ifdef NORMALS
     float3 normal : NORMAL;
 #endif
@@ -47,14 +50,8 @@ attribute vec4 a_Normal;
 attribute vec4 a_Tangent;
 #endif
 
-#ifdef HAS_UV
-attribute vec2 a_UV;
-#endif
-
 uniform mat4 u_MVPMatrix;
 uniform mat4 u_ModelMatrix;
-
-varying vec2 v_UV;
 
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
@@ -70,11 +67,17 @@ PixelShaderInput main(VertexShaderInput input)
 
 	// Transform the vertex position into projected space.
     float4 pos = mul(input.position, model);
-    output.position = float3(pos.xyz) / pos.w;
+    output.poswithoutw = float3(pos.xyz) / pos.w;
 
 #ifdef NORMALS
     // If we have normals...
     output.normal = mul(float4(input.normal.xyz, 0.0), model);
+#endif
+
+#ifdef UV
+    output.texcoord = input.texcoord;
+#else
+    output.texcoord = float2(0.0ff, 0.0f);
 #endif
 
 #ifdef HAS_NORMALS
@@ -87,12 +90,11 @@ PixelShaderInput main(VertexShaderInput input)
   v_Normal = normalize(vec3(u_ModelMatrix * vec4(a_Normal.xyz, 0.0)));
 #endif
 #endif
+    	// Transform the vertex position into projected space.
+    pos = mul(pos, model);
+    pos = mul(pos, view);
+    pos = mul(pos, projection);
+    output.position = pos;
 
-#ifdef HAS_UV
-  v_UV = a_UV;
-#else
-    v_UV = vec2(0., 0.);
-#endif
-
-    return u_MVPMatrix * a_Position; // needs w for proper perspective correction
+    return output;
 }
