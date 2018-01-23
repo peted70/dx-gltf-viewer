@@ -14,6 +14,21 @@
 
 #define NORMALS
 #define UV
+#define HAS_METALROUGHNESSMAP
+#define HAS_OCCLUSIONMAP
+#define HAS_EMISSIVEMAP
+
+Texture2D baseColourTexture;
+SamplerState baseColourSampler;
+
+Texture2D normalTexture;
+SamplerState normalSampler;
+
+Texture2D occlusionTexture;
+SamplerState occlusionSampler;
+
+Texture2D shaderTexture;
+SamplerState samplerState;
 
 //#extension GL_EXT_shader_texture_lod: enable
 //#extension GL_OES_standard_derivatives : enable
@@ -113,7 +128,7 @@ min16float4 SRGBtoLINEAR(min16float4 srgbIn)
     min16float3 linOut = pow(srgbIn.xyz,min16float3(2.2));
 #else //SRGB_FAST_APPROXIMATION
     min16float3 bLess = step(min16float3(0.04045),srgbIn.xyz);
-    min16float3 linOut = mix( srgbIn.xyz/min16float3(12.92), pow((srgbIn.xyz+min16float3(0.055))/min16float3(1.055),min16float3(2.4)), bLess );
+    min16float3 linOut = lerp( srgbIn.xyz/min16float3(12.92), pow((srgbIn.xyz+min16float3(0.055))/min16float3(1.055),min16float3(2.4)), bLess );
 #endif //SRGB_FAST_APPROXIMATION
     return min16float4(linOut,srgbIn.w);;
 #else //MANUAL_SRGB
@@ -263,7 +278,7 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     min16float3 diffuseColor = baseColor.rgb * (min16float3(1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
-    min16float3 specularColor = mix(f0, baseColor.rgb, metallic);
+    min16float3 specularColor = lerp(f0, baseColor.rgb, metallic);
 
     // Compute reflectance.
     min16float reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
@@ -286,20 +301,19 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     min16float LdotH = clamp(dot(l, h), 0.0, 1.0);
     min16float VdotH = clamp(dot(v, h), 0.0, 1.0);
 
-    PBRInfo pbrInputs = PBRInfo(
-        NdotL,
-        NdotV,
-        NdotH,
-        LdotH,
-        VdotH,
-        perceptualRoughness,
-        metallic,
-        specularEnvironmentR0,
-        specularEnvironmentR90,
-        alphaRoughness,
-        diffuseColor,
-        specularColor
-    );
+    PBRInfo pbrInputs;
+    pbrInputs.NdotL = NdotL;
+    pbrInputs.NdotV = NdotV;
+    pbrInputs.NdotH = NdotH;
+    pbrInputs.LdotH = LdotH;
+    pbrInputs.VdotH = VdotH;
+    pbrInputs.perceptualRoughness = perceptualRoughness;
+    pbrInputs.metalness = metallic;
+    pbrInputs.reflectance0 = specularEnvironmentR0;
+    pbrInputs.reflectance90 = specularEnvironmentR90;
+    pbrInputs.alphaRoughness = alphaRoughness;
+    pbrInputs.diffuseColor = diffuseColor;
+    pbrInputs.specularColor = specularColor;
 
     // Calculate the shading terms for the microfacet specular shading model
     min16float3 F = specularReflection(pbrInputs);
@@ -319,7 +333,7 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     // Apply optional PBR terms for additional (optional) shading
 #ifdef HAS_OCCLUSIONMAP
     min16float ao = texture2D(u_OcclusionSampler, v_UV).r;
-    color = mix(color, color * ao, u_OcclusionStrength);
+    color = lerp(color, color * ao, u_OcclusionStrength);
 #endif
 
 #ifdef HAS_EMISSIVEMAP
@@ -327,17 +341,17 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     color += emissive;
 #endif
 
-    // This section uses mix to override final color for reference app visualization
+    // This section uses lerp to override final color for reference app visualization
     // of various parameters in the lighting equation.
-    color = mix(color, F, u_ScaleFGDSpec.x);
-    color = mix(color, min16float3(G), u_ScaleFGDSpec.y);
-    color = mix(color, min16float3(D), u_ScaleFGDSpec.z);
-    color = mix(color, specContrib, u_ScaleFGDSpec.w);
+    color = lerp(color, F, u_ScaleFGDSpec.x);
+    color = lerp(color, min16float3(G), u_ScaleFGDSpec.y);
+    color = lerp(color, min16float3(D), u_ScaleFGDSpec.z);
+    color = lerp(color, specContrib, u_ScaleFGDSpec.w);
 
-    color = mix(color, diffuseContrib, u_ScaleDiffBaseMR.x);
-    color = mix(color, baseColor.rgb, u_ScaleDiffBaseMR.y);
-    color = mix(color, min16float3(metallic), u_ScaleDiffBaseMR.z);
-    color = mix(color, min16float3(perceptualRoughness), u_ScaleDiffBaseMR.w);
+    color = lerp(color, diffuseContrib, u_ScaleDiffBaseMR.x);
+    color = lerp(color, baseColor.rgb, u_ScaleDiffBaseMR.y);
+    color = lerp(color, min16float3(metallic), u_ScaleDiffBaseMR.z);
+    color = lerp(color, min16float3(perceptualRoughness), u_ScaleDiffBaseMR.w);
 
     return min16float4(pow(color, min16float3(1.0 / 2.2)), baseColor.a);
 }
