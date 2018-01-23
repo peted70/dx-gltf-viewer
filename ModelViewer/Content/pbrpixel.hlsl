@@ -18,17 +18,26 @@
 #define HAS_OCCLUSIONMAP
 #define HAS_EMISSIVEMAP
 
+// First three are 3 channel textures
 Texture2D baseColourTexture;
 SamplerState baseColourSampler;
 
 Texture2D normalTexture;
 SamplerState normalSampler;
 
+Texture2D emissionTexture;
+SamplerState emissionSampler;
+
+// The following three textures are packed into a single channel
+// of one input image..
 Texture2D occlusionTexture;
 SamplerState occlusionSampler;
 
-Texture2D shaderTexture;
-SamplerState samplerState;
+Texture2D roughnessTexture;
+SamplerState roughnessState;
+
+Texture2D metallicTexture;
+SamplerState metallicState;
 
 //#extension GL_EXT_shader_texture_lod: enable
 //#extension GL_OES_standard_derivatives : enable
@@ -332,12 +341,18 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
 
     // Apply optional PBR terms for additional (optional) shading
 #ifdef HAS_OCCLUSIONMAP
-    min16float ao = texture2D(u_OcclusionSampler, v_UV).r;
+    min16float ao = occlusionTexture.Sample(occlusionSampler, input.texcoord).r;
     color = lerp(color, color * ao, u_OcclusionStrength);
 #endif
 
 #ifdef HAS_EMISSIVEMAP
-    min16float3 emissive = SRGBtoLINEAR(texture2D(u_EmissiveSampler, v_UV)).rgb * u_EmissiveFactor;
+    min16float3 emissive = SRGBtoLINEAR(emissionTexture.Sample(emissionSampler, input.texcoord).rgb * 
+    
+    //texture2D( u_EmissiveSampler, v_UV)).
+    //rgb * u_EmissiveFactor;
+    //min16float3 emissive = SRGBtoLINEAR(
+    //texture2D( u_EmissiveSampler, v_UV)).
+    //rgb * u_EmissiveFactor;
     color += emissive;
 #endif
 
