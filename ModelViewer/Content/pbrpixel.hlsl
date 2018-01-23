@@ -24,17 +24,17 @@ uniform min16float3 u_LightColor;
 // Per-pixel color data passed through the pixel shader.
 struct PixelShaderInput
 {
-    min16min16float4 position : SV_POSITION;
-    min16min16float3 poswithoutw : POSITION;
+    min16float4 position : SV_POSITION;
+    min16float3 poswithoutw : POSITION;
 
 #ifdef NORMALS
-    min16min16float3 normal : NORMAL;
+    min16float3 normal : NORMAL;
 #endif
 #ifdef DIFFUSE
-    min16min16float3 lightdir : TEXCOORD1;
+    min16float3 lightdir : TEXCOORD1;
 #endif
 #ifdef UV
-    min16min16float2 texcoord : TEXCOORD0;
+    min16float2 texcoord : TEXCOORD0;
 #endif
 };
 
@@ -50,12 +50,12 @@ uniform sampler2D u_BaseColorSampler;
 
 #ifdef HAS_NORMALMAP
 uniform sampler2D u_NormalSampler;
-uniform min16min16float u_NormalScale;
+uniform min16float u_NormalScale;
 #endif
 
 #ifdef HAS_EMISSIVEMAP
 uniform sampler2D u_EmissiveSampler;
-uniform min16min16float3 u_EmissiveFactor;
+uniform min16float3 u_EmissiveFactor;
 #endif
 
 #ifdef HAS_METALROUGHNESSMAP
@@ -123,12 +123,12 @@ min16float4 SRGBtoLINEAR(min16float4 srgbIn)
 
 // Find the normal for this fragment, pulling either from a predefined normal map
 // or from the interpolated mesh normal and tangent attributes.
-min16float3 getNormal()
+min16float3 getNormal(float3 position)
 {
     // Retrieve the tangent space matrix
 #ifndef HAS_TANGENTS
-    min16float3 pos_dx = dFdx(v_Position);
-    min16float3 pos_dy = dFdy(v_Position);
+    min16float3 pos_dx = dFdx(position);
+    min16float3 pos_dy = dFdy(position);
     min16float3 tex_dx = dFdx(min16float3(v_UV, 0.0));
     min16float3 tex_dy = dFdy(min16float3(v_UV, 0.0));
     min16float3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
@@ -274,8 +274,8 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     min16float3 specularEnvironmentR0 = specularColor.rgb;
     min16float3 specularEnvironmentR90 = min16float3(1.0, 1.0, 1.0) * reflectance90;
 
-    min16float3 n = getNormal(); // normal at surface point
-    min16float3 v = normalize(u_Camera - v_Position); // Vector from surface point to camera
+    min16float3 n = getNormal(input.poswithoutw); // normal at surface point
+    min16float3 v = normalize(u_Camera - input.poswithoutw); // Vector from surface point to camera
     min16float3 l = normalize(u_LightDirection); // Vector from surface point to light
     min16float3 h = normalize(l + v); // Half vector between both l and v
     min16float3 reflection = -normalize(reflect(v, n));
