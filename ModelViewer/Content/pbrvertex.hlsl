@@ -50,9 +50,6 @@ attribute vec4 a_Normal;
 attribute vec4 a_Tangent;
 #endif
 
-uniform mat4 u_MVPMatrix;
-uniform mat4 u_ModelMatrix;
-
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
 varying mat3 v_TBN;

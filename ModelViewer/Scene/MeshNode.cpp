@@ -148,14 +148,22 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	// Attach our pixel shader.
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
-	auto textureWrapper = _material->GetTexture(1);
+	// Iterate through all textures and set them as shader resources...
+	int numTextures = _material->GetNumTextures();
+	for (int i = 0; i < numTextures; ++i)
+	{
+		// TODO: These need to be set in the order that the pixel shader
+		// expects them so will need to have an identifier in the texture that
+		// identifies the purpose of the texture and match them up here..
+		auto textureWrapper = _material->GetTexture(i);
 
-	// Set texture and sampler.
-	auto sampler = textureWrapper->GetSampler().Get();
-	context->PSSetSamplers(0, 1, &sampler);
+		// Set texture and sampler.
+		auto sampler = textureWrapper->GetSampler().Get();
+		context->PSSetSamplers(i, 1, &sampler);
 
-	auto texture = textureWrapper->GetShaderResourceView().Get();
-	context->PSSetShaderResources(0, 1, &texture);
+		auto texture = textureWrapper->GetShaderResourceView().Get();
+		context->PSSetShaderResources(i, 1, &texture);
+	}
 
 	if (indexed)
 	{
@@ -217,6 +225,10 @@ void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
 
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 {
+	// Don't want to allocate textures we have already allocated..
+	if (_material->HasTexture(data->Idx))
+		return;
+
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
