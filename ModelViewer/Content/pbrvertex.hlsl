@@ -7,10 +7,6 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
     matrix model;
     matrix view;
     matrix projection;
-#ifdef DIFFUSE
-	float4 light_direction;
-    float3 color;
-#endif
 };
 
 // Per-vertex data used as input to the vertex shader.
@@ -33,9 +29,6 @@ struct PixelShaderInput
 
 #ifdef NORMALS
     float3 normal : NORMAL;
-#endif
-#ifdef DIFFUSE
-    float3 lightdir : TEXCOORD1;
 #endif
 #ifdef UV
     float2 texcoord : TEXCOORD0;
