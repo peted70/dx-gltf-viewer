@@ -28,6 +28,18 @@ void NodeMaterial::AddTexture(unsigned int idx,
 							  ComPtr<ID3D11ShaderResourceView> textureResourceView, 
 							  ComPtr<ID3D11SamplerState> texSampler)
 {
-	auto tw = make_shared<TextureWrapper>(TextureWrapper(type, tex, textureResourceView, texSampler));
-	_textures[idx] = tw;
+	shared_ptr<TextureWrapper> tw;
+
+	// if we have the index already reference it otherwise create a new one..
+	auto found = std::find_if(_textures.begin(), _textures.end(), 
+		[idx](const std::pair<unsigned int, shared_ptr<TextureWrapper>> tx) { return tx.second->GetIndex() == idx; });
+	if (found != _textures.end())
+	{
+		tw = found->second;
+	}
+	else
+	{
+		tw = make_shared<TextureWrapper>(TextureWrapper(idx, tex, textureResourceView, texSampler));
+	}
+	_textures[type] = tw;
 }

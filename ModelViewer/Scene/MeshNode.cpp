@@ -152,17 +152,17 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
 	// Iterate through all textures and set them as shader resources...
-	int numTextures = _material->GetNumTextures();
-	for (int i = 0; i < numTextures; ++i)
+	auto textures = _material->Textures();
+
+	for (auto txItr = textures.begin(); txItr != textures.end(); ++txItr)
 	{
-		// The type defines which shader register the sampler and texture gets
-		// assigned to. These must align with what the pixel shader is expecting.
-		auto textureWrapper = _material->GetTexture(i);
-		unsigned int type = textureWrapper->GetType();
+		auto type = txItr->first;
+		auto textureWrapper = txItr->second;
 
 		// Set texture and sampler.
 		auto sampler = textureWrapper->GetSampler().Get();
 		context->PSSetSamplers(type, 1, &sampler);
+		//Utility::Out(L"Set texture sampler at slot %d", type);
 
 		auto texture = textureWrapper->GetShaderResourceView().Get();
 		context->PSSetShaderResources(type, 1, &texture);
@@ -229,8 +229,9 @@ void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 {
 	// Don't want to allocate textures we have already allocated..
-	if (_material->HasTexture(data->Idx))
-		return;
+	// Disabled temporarily
+	//if (_material->HasTexture(data->Idx))
+	//	return;
 
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};

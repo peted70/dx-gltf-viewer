@@ -9,11 +9,11 @@ using namespace WinRTGLTFParser;
 class TextureWrapper
 {
 public:
-	TextureWrapper(unsigned int type,
+	TextureWrapper(unsigned int idx,
 		ComPtr<ID3D11Texture2D> tex,
 		ComPtr<ID3D11ShaderResourceView> textureResourceView,
 		ComPtr<ID3D11SamplerState> texSampler) :
-		_type(type),
+		_idx(idx),
 		_tex(tex),
 		_textureResourceView(textureResourceView),
 		_textureSampler(texSampler)
@@ -22,13 +22,13 @@ public:
 	ComPtr<ID3D11SamplerState> GetSampler() { return _textureSampler; }
 	ComPtr<ID3D11ShaderResourceView> GetShaderResourceView() { return _textureResourceView; }
 	ComPtr<ID3D11Texture2D> GetTexture() { return _tex; }
-	unsigned int GetType() { return _type; }
+	unsigned int GetIndex() { return _idx; }
 
 private:
 	ComPtr<ID3D11SamplerState> _textureSampler;
 	ComPtr<ID3D11ShaderResourceView> _textureResourceView;
 	ComPtr<ID3D11Texture2D> _tex;
-	unsigned int _type;
+	unsigned int _idx;
 };
 
 class NodeMaterial
@@ -46,6 +46,8 @@ public:
 	shared_ptr<TextureWrapper> GetTexture(unsigned int idx) { return _textures[idx]; }
 	bool HasTexture(unsigned int idx) { return _textures.find(idx) != _textures.end(); }
 	unsigned int GetNumTextures() { return _textures.size(); }
+
+	map<unsigned int, shared_ptr<TextureWrapper>>& Textures() { return _textures; }
 
 private:
 	map<unsigned int, shared_ptr<TextureWrapper>> _textures;

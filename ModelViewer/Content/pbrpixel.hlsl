@@ -20,6 +20,7 @@
 #define HAS_BASECOLORMAP
 #define HAS_NORMALMAP
 #define HAS_NORMALS
+#define MANUAL_SRGB
 
 // First three are 3 channel textures
 Texture2D baseColourTexture : register(t0);
@@ -120,8 +121,8 @@ min16float4 SRGBtoLINEAR(min16float4 srgbIn)
 #ifdef SRGB_FAST_APPROXIMATION
     min16float3 linOut = pow(srgbIn.xyz,min16float3(2.2));
 #else //SRGB_FAST_APPROXIMATION
-    min16float3 bLess = step(min16float3(0.04045),srgbIn.xyz);
-    min16float3 linOut = lerp( srgbIn.xyz/min16float3(12.92), pow((srgbIn.xyz+min16float3(0.055))/min16float3(1.055),min16float3(2.4)), bLess );
+    min16float3 bLess = step(min16float3(0.04045, 0.04045, 0.04045), srgbIn.xyz);
+    min16float3 linOut = lerp(srgbIn.xyz / min16float3(12.92, 12.92, 12.92), pow((srgbIn.xyz + min16float3(0.055, 0.055, 0.055)) / min16float3(1.055, 1.055, 1.055), min16float3(2.4, 2.4, 2.4)), bLess);
 #endif //SRGB_FAST_APPROXIMATION
     return min16float4(linOut,srgbIn.w);;
 #else //MANUAL_SRGB
