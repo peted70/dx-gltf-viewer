@@ -17,6 +17,8 @@
 #define HAS_METALROUGHNESSMAP
 #define HAS_OCCLUSIONMAP
 #define HAS_EMISSIVEMAP
+#define HAS_BASECOLORMAP
+#define HAS_NORMALMAP
 
 // First three are 3 channel textures
 Texture2D baseColourTexture : register(t0);
@@ -144,15 +146,15 @@ min16float4 SRGBtoLINEAR(min16float4 srgbIn)
 
 // Find the normal for this fragment, pulling either from a predefined normal map
 // or from the interpolated mesh normal and tangent attributes.
-min16float3 getNormal(float3 position)
+min16float3 getNormal(float3 position, float2 uv)
 {
     // Retrieve the tangent space matrix
 #ifndef HAS_TANGENTS
-    min16float3 pos_dx = dFdx(position);
-    min16float3 pos_dy = dFdy(position);
-    min16float3 tex_dx = dFdx(min16float3(v_UV, 0.0));
-    min16float3 tex_dy = dFdy(min16float3(v_UV, 0.0));
-    min16float3 t = (tex_dy.t * pos_dx - tex_dx.t * pos_dy) / (tex_dx.s * tex_dy.t - tex_dy.s * tex_dx.t);
+    min16float3 pos_dx = ddx(position);
+    min16float3 pos_dy = ddy(position);
+    min16float3 tex_dx = ddx(min16float3(uv, 0.0));
+    min16float3 tex_dy = ddy(min16float3(uv, 0.0));
+    min16float3 t = (tex_dy.y * pos_dx - tex_dx.y * pos_dy) / (tex_dx.x * tex_dy.y - tex_dy.x * tex_dx.y);
 
 #ifdef HAS_NORMALS
     min16float3 ng = normalize(v_Normal);
@@ -162,15 +164,19 @@ min16float3 getNormal(float3 position)
 
     t = normalize(t - ng * dot(ng, t));
     min16float3 b = normalize(cross(ng, t));
-    mat3 tbn = mat3(t, b, ng);
+    float3x3 tbn = float3x3(t, b, ng);
 
 #else // HAS_TANGENTS
     mat3 tbn = v_TBN;
 #endif
 
 #ifdef HAS_NORMALMAP
-    min16float3 n = texture2D(u_NormalSampler, v_UV).rgb;
-    n = normalize(tbn * ((2.0 * n - 1.0) * min16float3(u_NormalScale, u_NormalScale, 1.0)));
+    min16float3 n = normalTexture.Sample(normalSampler, uv).rgb;
+
+    // Need to check the multiplication is equivalent..
+    n = normalize(mul(tbn, ((2.0 * n - 1.0) * min16float3(u_NormalScale, u_NormalScale, 1.0))));
+
+    //n = normalize(tbn * ((2.0 * n - 1.0) * min16float3(u_NormalScale, u_NormalScale, 1.0)));
 #else
     min16float3 n = tbn[2].xyz;
 #endif
@@ -178,6 +184,7 @@ min16float3 getNormal(float3 position)
     return n;
 }
 
+#ifdef USE_IBL
 // Calculation of the lighting contribution from an optional Image Based Light source.
 // Precomputed Environment Maps are required uniform inputs and are computed as outlined in [1].
 // See our README.md on Environment Maps [3] for additional discussion.
@@ -208,6 +215,7 @@ min16float3 getIBLContribution(PBRInfo pbrInputs, min16float3 n, min16float3 ref
 
     return diffuse + specular;
 }
+#endif
 
 // Basic Lambertian diffuse
 // Implementation from Lambert's Photometria https://archive.org/details/lambertsphotome00lambgoog
@@ -260,7 +268,7 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
 #ifdef HAS_METALROUGHNESSMAP
     // Roughness is stored in the 'g' channel, metallic is stored in the 'b' channel.
     // This layout intentionally reserves the 'r' channel for (optional) occlusion map data
-    min16float4 mrSample = texture2D(u_MetallicRoughnessSampler, v_UV);
+    min16float4 mrSample = metallicRoughnessTexture.Sample(metallicRoughnessSampler, input.texcoord);
     perceptualRoughness = mrSample.g * perceptualRoughness;
     metallic = mrSample.b * metallic;
 #endif
@@ -275,13 +283,13 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     // The albedo may be defined from a base texture or a flat color
 
 #ifdef HAS_BASECOLORMAP
-    min16float4 baseColor = SRGBtoLINEAR(texture2D(u_BaseColorSampler, v_UV)) * u_BaseColorFactor;
+    min16float4 baseColor = SRGBtoLINEAR(baseColourTexture.Sample(baseColourSampler, input.texcoord)) * u_BaseColorFactor;
 #else
     min16float4 baseColor = u_BaseColorFactor;
 #endif
 
-    min16float3 f0 = min16float3(0.04);
-    min16float3 diffuseColor = baseColor.rgb * (min16float3(1.0) - f0);
+    min16float3 f0 = min16float3(0.04, 0.04, 0.04);
+    min16float3 diffuseColor = baseColor.rgb * (min16float3(1.0, 1.0, 1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
     min16float3 specularColor = lerp(f0, baseColor.rgb, metallic);
@@ -295,7 +303,7 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
     min16float3 specularEnvironmentR0 = specularColor.rgb;
     min16float3 specularEnvironmentR90 = min16float3(1.0, 1.0, 1.0) * reflectance90;
 
-    min16float3 n = getNormal(input.poswithoutw); // normal at surface point
+    min16float3 n = getNormal(input.poswithoutw, input.texcoord); // normal at surface point
     min16float3 v = normalize(u_Camera - input.poswithoutw); // Vector from surface point to camera
     min16float3 l = normalize(u_LightDirection); // Vector from surface point to light
     min16float3 h = normalize(l + v); // Half vector between both l and v
@@ -343,27 +351,21 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
 #endif
 
 #ifdef HAS_EMISSIVEMAP
-    min16float3 emissive = SRGBtoLINEAR(emissionTexture.Sample(emissionSampler, input.texcoord).rgb * 
-    
-    //texture2D( u_EmissiveSampler, v_UV)).
-    //rgb * u_EmissiveFactor;
-    //min16float3 emissive = SRGBtoLINEAR(
-    //texture2D( u_EmissiveSampler, v_UV)).
-    //rgb * u_EmissiveFactor;
+    min16float3 emissive = SRGBtoLINEAR(emissionTexture.Sample(emissionSampler, input.texcoord)).rgb * u_EmissiveFactor;
     color += emissive;
 #endif
 
     // This section uses lerp to override final color for reference app visualization
     // of various parameters in the lighting equation.
     color = lerp(color, F, u_ScaleFGDSpec.x);
-    color = lerp(color, min16float3(G), u_ScaleFGDSpec.y);
-    color = lerp(color, min16float3(D), u_ScaleFGDSpec.z);
+    color = lerp(color, min16float3(G, G, G), u_ScaleFGDSpec.y);
+    color = lerp(color, min16float3(D, D, D), u_ScaleFGDSpec.z);
     color = lerp(color, specContrib, u_ScaleFGDSpec.w);
 
     color = lerp(color, diffuseContrib, u_ScaleDiffBaseMR.x);
     color = lerp(color, baseColor.rgb, u_ScaleDiffBaseMR.y);
-    color = lerp(color, min16float3(metallic), u_ScaleDiffBaseMR.z);
-    color = lerp(color, min16float3(perceptualRoughness), u_ScaleDiffBaseMR.w);
+    color = lerp(color, min16float3(metallic, metallic, metallic), u_ScaleDiffBaseMR.z);
+    color = lerp(color, min16float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), u_ScaleDiffBaseMR.w);
 
-    return min16float4(pow(color, min16float3(1.0 / 2.2)), baseColor.a);
+    return min16float4(pow(color, min16float3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2)), baseColor.a);
 }

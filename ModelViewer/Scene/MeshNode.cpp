@@ -152,9 +152,8 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	int numTextures = _material->GetNumTextures();
 	for (int i = 0; i < numTextures; ++i)
 	{
-		// TODO: These need to be set in the order that the pixel shader
-		// expects them so will need to have an identifier in the texture that
-		// identifies the purpose of the texture and match them up here..
+		// The type defines which shader register the sampler and texture gets
+		// assigned to. These must align with what the pixel shader is expecting.
 		auto textureWrapper = _material->GetTexture(i);
 		unsigned int type = textureWrapper->GetType();
 
