@@ -19,25 +19,22 @@
 #define HAS_EMISSIVEMAP
 
 // First three are 3 channel textures
-Texture2D baseColourTexture;
-SamplerState baseColourSampler;
+Texture2D baseColourTexture : register(t0);
+SamplerState baseColourSampler : register(s0);
 
-Texture2D normalTexture;
-SamplerState normalSampler;
+Texture2D normalTexture : register(t1);
+SamplerState normalSampler : register(s1);
 
-Texture2D emissionTexture;
-SamplerState emissionSampler;
+Texture2D emissionTexture : register(t2);
+SamplerState emissionSampler : register(s2);
+
+Texture2D occlusionTexture : register(t3);
+SamplerState occlusionSampler : register(s3);
 
 // The following three textures are packed into a single channel
 // of one input image..
-Texture2D occlusionTexture;
-SamplerState occlusionSampler;
-
-Texture2D roughnessTexture;
-SamplerState roughnessState;
-
-Texture2D metallicTexture;
-SamplerState metallicState;
+Texture2D metallicRoughnessTexture : register(t4);
+SamplerState metallicRoughnessSampler : register(s4);
 
 //#extension GL_EXT_shader_texture_lod: enable
 //#extension GL_OES_standard_derivatives : enable

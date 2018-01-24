@@ -23,10 +23,11 @@ void NodeMaterial::Initialise(GLTF_MaterialData^ data)
 }
 
 void NodeMaterial::AddTexture(unsigned int idx, 
+							  unsigned int type,	
 							  ComPtr<ID3D11Texture2D> tex, 
 							  ComPtr<ID3D11ShaderResourceView> textureResourceView, 
 							  ComPtr<ID3D11SamplerState> texSampler)
 {
-	auto tw = make_shared<TextureWrapper>(TextureWrapper(tex, textureResourceView, texSampler));
+	auto tw = make_shared<TextureWrapper>(TextureWrapper(type, tex, textureResourceView, texSampler));
 	_textures[idx] = tw;
 }

@@ -50,6 +50,7 @@ namespace WinRTGLTFParser
 			ImgWidth = data.imgWidth;
 			ImgHeight = data.imgHeight;
 			Idx = data.idx;
+			Type = data.type;
 		}
 
 	public:
@@ -58,6 +59,7 @@ namespace WinRTGLTFParser
 		property unsigned int ImgWidth;
 		property unsigned int ImgHeight;
 		property unsigned int Idx;
+		property unsigned int Type;
 	};
 
 	public ref class GLTF_SubresourceData sealed

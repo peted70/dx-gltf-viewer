@@ -156,13 +156,14 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 		// expects them so will need to have an identifier in the texture that
 		// identifies the purpose of the texture and match them up here..
 		auto textureWrapper = _material->GetTexture(i);
+		unsigned int type = textureWrapper->GetType();
 
 		// Set texture and sampler.
 		auto sampler = textureWrapper->GetSampler().Get();
-		context->PSSetSamplers(i, 1, &sampler);
+		context->PSSetSamplers(type, 1, &sampler);
 
 		auto texture = textureWrapper->GetShaderResourceView().Get();
-		context->PSSetShaderResources(i, 1, &texture);
+		context->PSSetShaderResources(type, 1, &texture);
 	}
 
 	if (indexed)
@@ -272,7 +273,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	ComPtr<ID3D11SamplerState> texSampler;
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, texSampler.ReleaseAndGetAddressOf()));
 
-	_material->AddTexture(data->Idx, tex, textureResourceView, texSampler);
+	_material->AddTexture(data->Idx, data->Type, tex, textureResourceView, texSampler);
 }
 
 std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)

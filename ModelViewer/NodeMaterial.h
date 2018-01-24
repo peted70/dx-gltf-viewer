@@ -9,7 +9,8 @@ using namespace WinRTGLTFParser;
 class TextureWrapper
 {
 public:
-	TextureWrapper(ComPtr<ID3D11Texture2D> tex,
+	TextureWrapper(unsigned int type,
+		ComPtr<ID3D11Texture2D> tex,
 		ComPtr<ID3D11ShaderResourceView> textureResourceView,
 		ComPtr<ID3D11SamplerState> texSampler) :
 		_tex(tex),
@@ -20,11 +21,13 @@ public:
 	ComPtr<ID3D11SamplerState> GetSampler() { return _textureSampler; }
 	ComPtr<ID3D11ShaderResourceView> GetShaderResourceView() { return _textureResourceView; }
 	ComPtr<ID3D11Texture2D> GetTexture() { return _tex; }
+	unsigned int GetType() { return _type; }
 
 private:
 	ComPtr<ID3D11SamplerState> _textureSampler;
 	ComPtr<ID3D11ShaderResourceView> _textureResourceView;
 	ComPtr<ID3D11Texture2D> _tex;
+	unsigned int _type;
 };
 
 class NodeMaterial
@@ -35,6 +38,7 @@ public:
 
 	void Initialise(GLTF_MaterialData^ data);
 	void AddTexture(unsigned int idx, 
+					unsigned int type,
 					ComPtr<ID3D11Texture2D> tex, 
 					ComPtr<ID3D11ShaderResourceView> textureResourceView, 
 					ComPtr<ID3D11SamplerState> texSampler);
