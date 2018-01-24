@@ -58,9 +58,20 @@ public:
 	{
 		return _mvpBuffer;
 	}
+	ConstantBufferData<cbPerObject>& PerObjBuffer()
+	{
+		return _cbPerObject;
+	}
+	ConstantBufferData<cbPerFrame>& PerFrameBuffer()
+	{
+		return _cbPerFrame;
+	}
 
 private:
 	BufferManager();
+
 	ConstantBufferData<ModelViewProjectionConstantBuffer> _mvpBuffer;
+	ConstantBufferData<cbPerObject> _cbPerObject;
+	ConstantBufferData<cbPerFrame> _cbPerFrame;
 };
 

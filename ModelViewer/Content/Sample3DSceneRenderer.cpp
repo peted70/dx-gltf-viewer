@@ -35,6 +35,28 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 
 	BufferManager::Instance().MVPBuffer().BufferData().light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(1.7f, 11.0f, 5.7f);
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(1.0f, 1.0f, 1.0f);
+
+	// Just testing by initialising these here...
+	BufferManager::Instance().PerObjBuffer().BufferData().normalScale = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.x = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.y = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.z = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().occlusionStrength = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.x = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.y = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.x = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.y = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.z = 1.0f;
+
+	// Need to find out how to set these...
+	//XMFLOAT3 camera;
+
+	//// debugging flags used for shader output of intermediate PBR variables
+	//XMFLOAT4 scaleDiffBaseMR;
+	//XMFLOAT4 scaleFGDSpec;
+	//XMFLOAT4 scaleIBLAmbient;
 
 	SceneManager::Instance().SetDevResources(deviceResources);
 
@@ -297,6 +319,8 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			);
 
 		BufferManager::Instance().MVPBuffer().Initialise(*m_deviceResources);
+		BufferManager::Instance().PerFrameBuffer().Initialise(*m_deviceResources);
+		BufferManager::Instance().PerObjBuffer().Initialise(*m_deviceResources);
 	});
 
 	// Load shaders asynchronously for line rendering...
@@ -366,6 +390,8 @@ void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
 	m_pixelShader.Reset();
 
 	BufferManager::Instance().MVPBuffer().Release();
+	BufferManager::Instance().PerFrameBuffer().Release();
+	BufferManager::Instance().PerObjBuffer().Release();
 
 	_lineDrawingConstantBuffer.Reset();
 

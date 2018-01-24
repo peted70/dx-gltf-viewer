@@ -13,6 +13,7 @@ public:
 		ComPtr<ID3D11Texture2D> tex,
 		ComPtr<ID3D11ShaderResourceView> textureResourceView,
 		ComPtr<ID3D11SamplerState> texSampler) :
+		_type(type),
 		_tex(tex),
 		_textureResourceView(textureResourceView),
 		_textureSampler(texSampler)

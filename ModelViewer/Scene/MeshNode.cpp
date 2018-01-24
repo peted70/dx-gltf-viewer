@@ -46,8 +46,11 @@ void MeshNode::CreateDeviceDependentResources()
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
 
 	// Load shaders asynchronously for model rendering...
-	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
-	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
+	//auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
+	//auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
+	auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
+	auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
+
 
 	// After the vertex shader file is loaded, create the shader and input layout.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
