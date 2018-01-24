@@ -12,7 +12,8 @@ template<class T>
 class ConstantBufferData
 {
 public:
-	ConstantBufferData()
+	ConstantBufferData(unsigned int slot) :
+		_slot(slot)
 	{
 	}
 
@@ -30,6 +31,9 @@ public:
 	void Release() { m_constantBuffer.Reset(); }
 	void Update(const DeviceResources& devResources)
 	{
+		if (m_constantBuffer == nullptr)
+			return;
+
 		assert(ConstantBuffer().Get());
 		auto context = devResources.GetD3DDeviceContext();
 		context->UpdateSubresource1(ConstantBuffer().Get(), 0, NULL, &(BufferData()), 0, 0, 0);
@@ -39,6 +43,7 @@ public:
 	ComPtr<ID3D11Buffer> ConstantBuffer() { return m_constantBuffer; }
 
 private:
+	unsigned int _slot;
 	T _bufferData;
 	ComPtr<ID3D11Buffer> m_constantBuffer;
 };

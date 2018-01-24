@@ -150,6 +150,8 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 
 	// Attach our pixel shader.
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	context->PSSetConstantBuffers(0, 1, BufferManager::Instance().PerFrameBuffer().ConstantBuffer().GetAddressOf());
+	context->PSSetConstantBuffers(1, 1, BufferManager::Instance().PerObjBuffer().ConstantBuffer().GetAddressOf());
 
 	// Iterate through all textures and set them as shader resources...
 	auto textures = _material->Textures();

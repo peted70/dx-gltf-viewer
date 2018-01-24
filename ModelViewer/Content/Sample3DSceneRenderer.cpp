@@ -35,28 +35,37 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 
 	BufferManager::Instance().MVPBuffer().BufferData().light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
-	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(1.7f, 11.0f, 5.7f);
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(0.0f, 0.5f, 0.5f);
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	// Just testing by initialising these here...
 	BufferManager::Instance().PerObjBuffer().BufferData().normalScale = 1.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.x = 1.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.y = 1.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.z = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	BufferManager::Instance().PerObjBuffer().BufferData().occlusionStrength = 1.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.x = 1.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.y = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues = XMFLOAT2(1.0f, 1.0f);
+
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.x = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.y = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.z = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.w = 1.0f;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.x = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.y = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.z = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.w = 1.0f;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.x = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.y = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.z = 0.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = 1.0f;
+	
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.x = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.y = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.z = 1.0f;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.w = 1.0f;
 
 	// Need to find out how to set these...
 	//XMFLOAT3 camera;
-
-	//// debugging flags used for shader output of intermediate PBR variables
-	//XMFLOAT4 scaleDiffBaseMR;
-	//XMFLOAT4 scaleFGDSpec;
-	//XMFLOAT4 scaleIBLAmbient;
 
 	SceneManager::Instance().SetDevResources(deviceResources);
 
@@ -113,6 +122,12 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	auto eye = XMVector3TransformCoord(alongZ, camMatrix);
 	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().view, 
 		XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
+
+	XMFLOAT4 eyevec;
+	XMStoreFloat4(&eyevec, eye);
+	BufferManager::Instance().PerObjBuffer().BufferData().camera.x = eyevec.x;
+	BufferManager::Instance().PerObjBuffer().BufferData().camera.y = eyevec.y;
+	BufferManager::Instance().PerObjBuffer().BufferData().camera.z = eyevec.z;
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
@@ -190,6 +205,9 @@ void Sample3DSceneRenderer::Render()
 	DrawAxis(context, _mainAxes.get());
 
 	context->RSSetState(_pRasterState);
+
+	BufferManager::Instance().PerObjBuffer().Update(*m_deviceResources);
+	BufferManager::Instance().PerFrameBuffer().Update(*m_deviceResources);
 
 	SceneManager::Instance().Current()->Draw(context);
 	return;

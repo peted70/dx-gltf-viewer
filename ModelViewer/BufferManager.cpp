@@ -16,6 +16,9 @@
 //	context->UpdateSubresource1(ConstantBuffer().Get(), 0, NULL, &(BufferData()), 0, 0, 0);
 //}
 
-BufferManager::BufferManager()
+BufferManager::BufferManager() :
+	_cbPerObject(0),
+	_cbPerFrame(1),
+	_mvpBuffer(0)
 {
 }
