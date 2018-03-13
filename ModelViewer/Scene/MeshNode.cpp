@@ -50,6 +50,7 @@ void MeshNode::CreateDeviceDependentResources()
 	//auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 	auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
 	auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
+	//auto loadPSTask = DX::ReadDataAsync(L"PixelTranslated.cso");
 
 
 	// After the vertex shader file is loaded, create the shader and input layout.
@@ -238,7 +239,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
-	txtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; 
+	txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	txtDesc.SampleDesc.Count = 1;
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -310,7 +311,7 @@ std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataS
 	std::vector<uint8_t> image;
 	image.resize(size_t(imageSize));
 
-	if (memcmp(&pixelFormat, &GUID_WICPixelFormat32bppBGRA, sizeof(GUID)) == 0)
+	if (memcmp(&pixelFormat, &GUID_WICPixelFormat32bppRGBA, sizeof(GUID)) == 0)
 	{
 		DX::ThrowIfFailed(frame->CopyPixels(0, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));
 	}
@@ -320,7 +321,7 @@ std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataS
 		DX::ThrowIfFailed(wicFactory->CreateFormatConverter(formatConverter.GetAddressOf()));
 
 		BOOL canConvert = FALSE;
-		DX::ThrowIfFailed(formatConverter->CanConvert(pixelFormat, GUID_WICPixelFormat32bppBGRA, &canConvert));
+		DX::ThrowIfFailed(formatConverter->CanConvert(pixelFormat, GUID_WICPixelFormat32bppRGBA, &canConvert));
 		if (!canConvert)
 		{
 			throw std::exception("CanConvert");

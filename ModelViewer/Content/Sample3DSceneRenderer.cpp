@@ -19,6 +19,29 @@ using namespace DirectX;
 using namespace Windows::Foundation;
 using namespace Microsoft::WRL;
 
+void updateMathScales(string selected)
+{
+	float mathDiff = (selected == "mathDiff") ? 1.0 : 0.0;
+	float baseColor = (selected == "baseColor") ? 1.0 : 0.0;
+	float metallic = (selected == "metallic") ? 1.0 : 0.0;
+	float roughness = (selected == "roughness") ? 1.0 : 0.0;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.x = mathDiff;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.y = baseColor;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.z = metallic;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.w = roughness;
+
+	float mathF = (selected == "mathF") ? 1.0 : 0.0;
+	float mathG = (selected == "mathG") ? 1.0 : 0.0;
+	float mathD = (selected == "mathD") ? 1.0 : 0.0;
+	float mathSpec = (selected == "mathSpec") ? 1.0 : 0.0;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.x = mathF;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.y = mathG;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.z = mathD;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = mathSpec;
+};
+
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),
@@ -35,7 +58,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 
 	BufferManager::Instance().MVPBuffer().BufferData().light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
-	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(0.0f, 0.5f, 0.5f);
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(-0.5f, 0.5f, -0.5f);
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	// Just testing by initialising these here...
@@ -49,16 +72,8 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.z = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.w = 1.0f;
 
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.x = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.y = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.z = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.w = 1.0f;
+	updateMathScales("baseColor");
 
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.x = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.y = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.z = 0.0f;
-	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = 1.0f;
-	
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.x = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.y = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.z = 1.0f;

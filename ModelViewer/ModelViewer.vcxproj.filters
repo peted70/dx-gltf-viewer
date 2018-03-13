@@ -153,5 +153,8 @@
   <ItemGroup>
     <FxCompile Include="Content\SimplePixelShader.hlsl" />
     <FxCompile Include="Content\SimpleVertexShader.hlsl" />
+    <FxCompile Include="Content\pbrpixel.hlsl" />
+    <FxCompile Include="Content\pbrvertex.hlsl" />
+    <FxCompile Include="Content\PixelTranslated.hlsl" />
   </ItemGroup>
 </Project>

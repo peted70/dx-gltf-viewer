@@ -12,26 +12,26 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 // Per-vertex data used as input to the vertex shader.
 struct VertexShaderInput
 {
-    min16float4 position : POSITION;
+    float4 position : POSITION;
 #ifdef NORMALS
-    min16float3 normal : NORMAL;
+    float3 normal : NORMAL;
 #endif
 #ifdef UV
-    min16float2 texcoord : TEXCOORD0;
+    float2 texcoord : TEXCOORD0;
 #endif
 };
 
 // Per-pixel color data passed through the pixel shader.
 struct PixelShaderInput
 {
-    min16float4 position : SV_POSITION;
-    min16float3 poswithoutw : POSITION;
+    float4 position : SV_POSITION;
+    float3 poswithoutw : POSITION;
 
 #ifdef NORMALS
-    min16float3 normal : NORMAL;
+    float3 normal : NORMAL;
 #endif
 #ifdef UV
-    min16float2 texcoord : TEXCOORD0;
+    float2 texcoord : TEXCOORD0;
 #endif
 };
 
@@ -61,7 +61,7 @@ PixelShaderInput main(VertexShaderInput input)
 
 #ifdef NORMALS
     // If we have normals...
-    output.normal = mul(float4(input.normal.xyz, 0.0), model);
+    output.normal = normalize(mul(float4(input.normal.xyz, 0.0), model));
 #endif
 
 #ifdef UV
@@ -82,7 +82,6 @@ PixelShaderInput main(VertexShaderInput input)
 #endif
 
     // Transform the vertex position into projected space.
-    pos = mul(pos, model);
     pos = mul(pos, view);
     pos = mul(pos, projection);
     output.position = pos;
