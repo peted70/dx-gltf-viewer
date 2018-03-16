@@ -184,7 +184,7 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
-			_zoom += (positionY - lastPosY) / 10.0f;
+			_zoom += (positionY - lastPosY) / 40.0f;
 		}
 		else
 		{

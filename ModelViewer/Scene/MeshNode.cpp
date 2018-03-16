@@ -239,7 +239,9 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
-	txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+	// TODO: Fix this - understand when to use sRGB and RGB 
+	txtDesc.Format = (data->Type == 4 || data->Type == 3) ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
 	txtDesc.SampleDesc.Count = 1;
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -247,7 +249,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	uint32_t width;
 	uint32_t height;
 
-	auto image = LoadBGRAImage((void *)data->pSysMem, data->DataSize, width, height);
+	auto image = LoadRGBAImage((void *)data->pSysMem, data->DataSize, width, height);
 
 	txtDesc.Width = width;
 	txtDesc.Height = height;
@@ -282,7 +284,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	_material->AddTexture(data->Idx, data->Type, tex, textureResourceView, texSampler);
 }
 
-std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)
+std::vector<uint8_t> MeshNode::LoadRGBAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)
 {
 	ComPtr<IWICImagingFactory> wicFactory;
 	DX::ThrowIfFailed(CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
@@ -327,7 +329,7 @@ std::vector<uint8_t> MeshNode::LoadBGRAImage(void *imgFileData, int imgFileDataS
 			throw std::exception("CanConvert");
 		}
 
-		DX::ThrowIfFailed(formatConverter->Initialize(frame.Get(), GUID_WICPixelFormat32bppBGRA,
+		DX::ThrowIfFailed(formatConverter->Initialize(frame.Get(), GUID_WICPixelFormat32bppRGBA,
 			WICBitmapDitherTypeErrorDiffusion, nullptr, 0, WICBitmapPaletteTypeMedianCut));
 
 		DX::ThrowIfFailed(formatConverter->CopyPixels(0, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));

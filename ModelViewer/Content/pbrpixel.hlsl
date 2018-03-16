@@ -284,7 +284,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseColor = baseColor.rgb * (float3(1.0, 1.0, 1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
-    //return float4(diffuseColor, 1.0);
+    return float4(diffuseColor, 1.0);
 
     float3 specularColor = lerp(f0, baseColor.rgb, metallic);
 

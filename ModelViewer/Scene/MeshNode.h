@@ -23,7 +23,7 @@ public:
 	void CreateMaterial(GLTF_MaterialData^ data);
 
 private:
-	vector<uint8_t> LoadBGRAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height);
+	vector<uint8_t> LoadRGBAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height);
 
 	class BufferWrapper
 	{
