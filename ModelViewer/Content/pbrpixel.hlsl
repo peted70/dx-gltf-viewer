@@ -47,7 +47,9 @@ SamplerState emissionSampler : register(s3);
 struct Light
 {
     float3 dir;
+    float padding1;
     float3 colour;
+    float padding2;
 };
 
 cbuffer cbPerFrame : register(b0)
@@ -154,7 +156,8 @@ float3 getNormal(float3 position, float3 normal, float2 uv)
 
     t = normalize(t - ng * dot(ng, t));
     float3 b = normalize(cross(ng, t));
-    row_major float3x3 tbn = float3x3( t, b, ng);
+    //row_major float3x3 tbn = float3x3( t, b, ng);
+    row_major float3x3 tbn = float3x3(t, b, ng);
 
 #else // HAS_TANGENTS
     mat3 tbn = v_TBN;
@@ -164,8 +167,8 @@ float3 getNormal(float3 position, float3 normal, float2 uv)
     float3 n = normalTexture.Sample(normalSampler, uv).rgb;
 
     // Need to check the multiplication is equivalent..
-    n = normalize(mul(tbn, ((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0))));
-    //n = normalize(mul(((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0)), tbn));
+    //n = normalize(mul(tbn, ((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0))));
+    n = normalize(mul(((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0)), tbn));
     //n = normalize(tbn * ((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0)));
 #else
     float3 n = tbn[2].xyz;
@@ -332,7 +335,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseContrib = (1.0 - F) * diffuse(pbrInputs);
     float3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
     float3 color = NdotL * light.colour * (diffuseContrib + specContrib);
-
+    
     // Calculate lighting contribution from image based lighting source (IBL)
 #ifdef USE_IBL
     color += getIBLContribution(pbrInputs, n, reflection);

@@ -243,7 +243,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
 
 	// TODO: Fix this - understand when to use sRGB and RGB 
-	txtDesc.Format = (data->Type == 4 || data->Type == 3) ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	txtDesc.Format = (data->Type == 4 || data->Type == 3) ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM;
 	txtDesc.SampleDesc.Count = 1;
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;

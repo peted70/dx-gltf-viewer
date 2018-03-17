@@ -406,7 +406,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 	// Do we want an sRGB buffer?
 	D3D11_RENDER_TARGET_VIEW_DESC1 rtvDesc = {};
-	rtvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;// DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+	rtvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
 	DX::ThrowIfFailed(

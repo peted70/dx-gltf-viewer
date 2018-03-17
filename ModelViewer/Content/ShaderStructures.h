@@ -36,7 +36,9 @@ namespace ModelViewer
 	struct Light
 	{
 		XMFLOAT3 dir;
+		float padding1;
 		XMFLOAT3 colour;
+		float padding2;
 	};
 
 	__declspec(align(16)) struct cbPerFrame
