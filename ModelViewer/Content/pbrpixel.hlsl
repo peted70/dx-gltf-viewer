@@ -116,8 +116,8 @@ struct PBRInfo
     float3 specularColor; // color contribution from specular lighting
 };
 
-const float M_PI = 3.141592653589793;
-const float c_MinRoughness = 0.04;
+static const float M_PI = 3.141592653589793;
+static const float c_MinRoughness = 0.04;
 
 float4 SRGBtoLINEAR(float4 srgbIn)
 {
@@ -284,7 +284,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseColor = baseColor.rgb * (float3(1.0, 1.0, 1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
-    return float4(diffuseColor, 1.0);
 
     float3 specularColor = lerp(f0, baseColor.rgb, metallic);
 
@@ -333,7 +332,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseContrib = (1.0 - F) * diffuse(pbrInputs);
     float3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
     float3 color = NdotL * light.colour * (diffuseContrib + specContrib);
-    //return float4(color, 1.0);
 
     // Calculate lighting contribution from image based lighting source (IBL)
 #ifdef USE_IBL
@@ -353,16 +351,18 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     // This section uses lerp to override final color for reference app visualization
     // of various parameters in the lighting equation.
-    color = lerp(color, F, scaleFGDSpec.x);
-    color = lerp(color, float3(G, G, G), scaleFGDSpec.y);
-    color = lerp(color, float3(D, D, D), scaleFGDSpec.z);
-    color = lerp(color, specContrib, scaleFGDSpec.w);
+    //color = lerp(color, F, scaleFGDSpec.x);
+    //color = lerp(color, float3(G, G, G), scaleFGDSpec.y);
+    //color = lerp(color, float3(D, D, D), scaleFGDSpec.z);
+    //color = lerp(color, specContrib, scaleFGDSpec.w);
 
-    color = lerp(color, diffuseContrib, scaleDiffBaseMR.x);
-    color = lerp(color, baseColor.rgb, scaleDiffBaseMR.y);
-    color = lerp(color, float3(metallic, metallic, metallic), scaleDiffBaseMR.z);
-    color = lerp(color, float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), scaleDiffBaseMR.w);
+    //color = lerp(color, diffuseContrib, scaleDiffBaseMR.x);
+    //color = lerp(color, baseColor.rgb, scaleDiffBaseMR.y);
+    //color = lerp(color, float3(metallic, metallic, metallic), scaleDiffBaseMR.z);
+    //color = lerp(color, float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), scaleDiffBaseMR.w);
 
-	float val = 1.0 / 2.2;
-    return float4(pow(color, float3(val, val, val)), baseColor.a);
+    return float4(color, 1.0);
+
+	//float val = 1.0 / 2.2;
+ //   return float4(pow(color, float3(val, val, val)), baseColor.a);
 }
