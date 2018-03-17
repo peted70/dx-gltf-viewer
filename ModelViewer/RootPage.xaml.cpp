@@ -6,7 +6,6 @@
 #include "pch.h"
 #include "RootPage.xaml.h"
 #include "DirectXPage.xaml.h"
-#include "BlankPage.xaml.h"
 #include <ppltasks.h>
 #include <experimental/resumable>
 #include <pplawait.h>
@@ -80,6 +79,7 @@ void ModelViewer::RootPage::MoreInfoBtn_Click(Platform::Object^ sender, Windows:
 void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	ContentFrame->Navigate(DirectXPage::typeid);
+	NavView->IsPaneOpen = false;
 }
 
 future<shared_ptr<MeshNode>> LoadFileAsync()

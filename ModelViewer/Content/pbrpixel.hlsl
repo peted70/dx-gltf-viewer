@@ -287,6 +287,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseColor = baseColor.rgb * (float3(1.0, 1.0, 1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
+    return float4(diffuseColor, 1.0);
 
     float3 specularColor = lerp(f0, baseColor.rgb, metallic);
 
@@ -328,6 +329,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     // Calculate the shading terms for the microfacet specular shading model
     float3 F = specularReflection(pbrInputs);
+    
     float G = geometricOcclusion(pbrInputs);
     float D = microfacetDistribution(pbrInputs);
 
@@ -335,6 +337,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseContrib = (1.0 - F) * diffuse(pbrInputs);
     float3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
     float3 color = NdotL * light.colour * (diffuseContrib + specContrib);
+
     
     // Calculate lighting contribution from image based lighting source (IBL)
 #ifdef USE_IBL

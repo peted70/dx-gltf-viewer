@@ -6,13 +6,64 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style TargetType="TextBlock">
+                <Setter Property="Padding" Value="4"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
     <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-      <SwapChainPanel x:Name="swapChainPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <TextBlock Text="Hello from XAML!"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Top"
-                   FontSize="30" />
-      </SwapChainPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition MaxWidth="300" />
+            </Grid.ColumnDefinitions>
+            <SwapChainPanel Grid.Column="0" x:Name="swapChainPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            </SwapChainPanel>
+            <ContentControl Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Grid.Column="1" Background="AliceBlue">
+                <Grid Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0">Light Scale</TextBlock>
+                    <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="10"></Slider>
+                    <TextBlock Grid.Row="1" Grid.Column="0">Light Rotation</TextBlock>
+                    <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360"></Slider>
+                    <TextBlock Grid.Row="2" Grid.Column="0">Light Pitch</TextBlock>
+                    <Slider Grid.Row="2" Grid.Column="1" Minimum="-90" Maximum="90"></Slider>
+                    <TextBlock Grid.Row="3" Grid.Column="0">IBL</TextBlock>
+                    <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="4"></Slider>
+                    <TextBlock Grid.Row="4" Grid.Column="0">Base Colour</TextBlock>
+                    <ColorPicker Grid.Row="4" Grid.Column="1"></ColorPicker>
+                    <TextBlock Grid.Row="5" Grid.Column="0">Metallic</TextBlock>
+                    <CheckBox Grid.Row="5" Grid.Column="1"></CheckBox>
+                    <TextBlock Grid.Row="6" Grid.Column="0">Roughness</TextBlock>
+                    <CheckBox Grid.Row="6" Grid.Column="1"></CheckBox>
+                    <TextBlock Grid.Row="7" Grid.Column="0">Diff(l, n)</TextBlock>
+                    <CheckBox Grid.Row="7" Grid.Column="1"></CheckBox>
+                    <TextBlock Grid.Row="8" Grid.Column="0">F(l, h)</TextBlock>
+                    <CheckBox Grid.Row="8" Grid.Column="1"></CheckBox>
+                    <TextBlock Grid.Row="9" Grid.Column="0">G(l, v, h)</TextBlock>
+                    <CheckBox Grid.Row="9" Grid.Column="1"></CheckBox>
+                    <TextBlock Grid.Row="10" Grid.Column="0">D(h)</TextBlock>
+                    <CheckBox Grid.Row="10" Grid.Column="1"></CheckBox>
+                </Grid>
+            </ContentControl>
+        </Grid>
     </ContentControl>
 </Page>

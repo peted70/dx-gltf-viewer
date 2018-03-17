@@ -201,9 +201,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="Axis.h" />
-    <ClInclude Include="BlankPage.xaml.h">
-      <DependentUpon>BlankPage.xaml</DependentUpon>
-    </ClInclude>
+    <ClInclude Include="Common\BindableBase.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
     <ClInclude Include="DXGrid.h" />
@@ -223,6 +221,7 @@
     <ClInclude Include="RootPage.xaml.h">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="RootPageViewModel.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\GraphContainerNode.h" />
@@ -231,15 +230,14 @@
     <ClInclude Include="Scene\MeshNode.h" />
     <ClInclude Include="Scene\RootNode.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="Common\ViewModelBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="Axis.cpp" />
-    <ClCompile Include="BlankPage.xaml.cpp">
-      <DependentUpon>BlankPage.xaml</DependentUpon>
-    </ClCompile>
+    <ClCompile Include="Common\BindableBase.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
     <ClCompile Include="DXGrid.cpp" />
@@ -262,6 +260,7 @@
     <ClCompile Include="RootPage.xaml.cpp">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="RootPageViewModel.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\GraphContainerNode.cpp" />
@@ -270,6 +269,7 @@
     <ClCompile Include="Scene\MeshNode.cpp" />
     <ClCompile Include="Scene\RootNode.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="Common\ViewModelBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -330,9 +330,6 @@
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BlankPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="DirectXPage.xaml">
       <SubType>Designer</SubType>
     </Page>

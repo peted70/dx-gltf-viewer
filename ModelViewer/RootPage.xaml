@@ -5,13 +5,18 @@
     xmlns:local="using:ModelViewer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ViewModels"
     mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:RootPageViewModel/>
+    </Page.DataContext>
 
     <NavigationView x:Name="NavView"
                     ItemInvoked="NavView_ItemInvoked"
                     SelectionChanged="NavView_SelectionChanged"
                     Loaded="NavView_Loaded"
-                    Canvas.ZIndex="0">
+                    Canvas.ZIndex="0" IsPaneOpen="False" CompactModeThresholdWidth="50" > 
 
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="HomeNavItem" Content="Home" Tag="home">

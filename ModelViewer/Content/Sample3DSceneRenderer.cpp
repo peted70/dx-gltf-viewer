@@ -58,7 +58,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	CreateWindowSizeDependentResources();
 
 	BufferManager::Instance().MVPBuffer().BufferData().light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
-	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(-0.5f, 0.5f, -0.5f);
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(0.5f, 0.5f, -0.5f);
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(10.0f, 10.0f, 10.0f);
 
 	// Just testing by initialising these here...
