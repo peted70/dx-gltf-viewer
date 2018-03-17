@@ -162,6 +162,8 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 		auto type = txItr->first;
 		auto textureWrapper = txItr->second;
 
+		//auto idx = textureWrapper->GetIndex();
+
 		// Set texture and sampler.
 		auto sampler = textureWrapper->GetSampler().Get();
 		context->PSSetSamplers(type, 1, &sampler);
@@ -241,7 +243,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	txtDesc.MipLevels = txtDesc.ArraySize = 1;
 
 	// TODO: Fix this - understand when to use sRGB and RGB 
-	txtDesc.Format = (data->Type == 4 || data->Type == 3) ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+	txtDesc.Format = (data->Type == 4 || data->Type == 3) ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	txtDesc.SampleDesc.Count = 1;
 	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;

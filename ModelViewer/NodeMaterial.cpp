@@ -31,15 +31,25 @@ void NodeMaterial::AddTexture(unsigned int idx,
 	shared_ptr<TextureWrapper> tw;
 
 	// if we have the index already reference it otherwise create a new one..
-	auto found = std::find_if(_textures.begin(), _textures.end(), 
-		[idx](const std::pair<unsigned int, shared_ptr<TextureWrapper>> tx) { return tx.second->GetIndex() == idx; });
+	auto found = _textures.find(idx);
 	if (found != _textures.end())
 	{
-		tw = found->second;
+		(*found).second->AddType(type);
+		return;
 	}
-	else
-	{
-		tw = make_shared<TextureWrapper>(TextureWrapper(idx, tex, textureResourceView, texSampler));
-	}
-	_textures[type] = tw;
+
+	_textures[idx] = make_shared<TextureWrapper>(TextureWrapper(idx, type, tex, textureResourceView, texSampler));
+
+	//// if we have the index already reference it otherwise create a new one..
+	//auto found = std::find_if(_textures.begin(), _textures.end(), 
+	//	[idx](const std::pair<unsigned int, shared_ptr<TextureWrapper>> tx) { return tx.second->GetIndex() == idx; });
+	//if (found != _textures.end())
+	//{
+	//	tw = found->second;
+	//}
+	//else
+	//{
+	//	tw = make_shared<TextureWrapper>(TextureWrapper(idx, tex, textureResourceView, texSampler));
+	//}
+	//_textures[type] = tw;
 }

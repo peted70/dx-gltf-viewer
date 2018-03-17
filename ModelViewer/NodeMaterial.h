@@ -10,6 +10,7 @@ class TextureWrapper
 {
 public:
 	TextureWrapper(unsigned int idx,
+		unsigned int type,
 		ComPtr<ID3D11Texture2D> tex,
 		ComPtr<ID3D11ShaderResourceView> textureResourceView,
 		ComPtr<ID3D11SamplerState> texSampler) :
@@ -17,7 +18,12 @@ public:
 		_tex(tex),
 		_textureResourceView(textureResourceView),
 		_textureSampler(texSampler)
-	{}
+	{
+		_type = std::make_unique<vector<unsigned int>>();
+		_type->push_back(type);
+	}
+
+	void AddType(unsigned int type) { _type->push_back(type); }
 
 	ComPtr<ID3D11SamplerState> GetSampler() { return _textureSampler; }
 	ComPtr<ID3D11ShaderResourceView> GetShaderResourceView() { return _textureResourceView; }
@@ -29,6 +35,7 @@ private:
 	ComPtr<ID3D11ShaderResourceView> _textureResourceView;
 	ComPtr<ID3D11Texture2D> _tex;
 	unsigned int _idx;
+	unique_ptr<vector<unsigned int>> _type;
 };
 
 class NodeMaterial
