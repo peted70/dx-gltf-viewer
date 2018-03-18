@@ -5,7 +5,13 @@
     xmlns:local="using:ModelViewer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ViewModels"
     mc:Ignorable="d">
+
+    <!--<Page.DataContext>
+        <vm:DirectXPageViewModel/>
+    </Page.DataContext>-->
+
     <Page.Resources>
         <ResourceDictionary>
             <Style TargetType="TextBlock">
@@ -41,15 +47,15 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0">Light Scale</TextBlock>
-                    <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="10"></Slider>
+                    <Slider Value="{x:Bind ViewModel.LightScale, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="10"></Slider>
                     <TextBlock Grid.Row="1" Grid.Column="0">Light Rotation</TextBlock>
-                    <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360"></Slider>
+                    <Slider Value="{x:Bind ViewModel.LightRotation, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360"></Slider>
                     <TextBlock Grid.Row="2" Grid.Column="0">Light Pitch</TextBlock>
-                    <Slider Grid.Row="2" Grid.Column="1" Minimum="-90" Maximum="90"></Slider>
+                    <Slider Value="{x:Bind ViewModel.LightPitch, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Minimum="-90" Maximum="90"></Slider>
                     <TextBlock Grid.Row="3" Grid.Column="0">IBL</TextBlock>
-                    <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="4"></Slider>
+                    <Slider Value="{x:Bind ViewModel.Ibl, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="4"></Slider>
                     <TextBlock Grid.Row="4" Grid.Column="0">Base Colour</TextBlock>
-                    <ColorPicker Grid.Row="4" Grid.Column="1"></ColorPicker>
+                    <ColorPicker Color="{x:Bind ViewModel.LightColour, Mode=TwoWay}" Grid.Row="4" Grid.Column="1"></ColorPicker>
                     <TextBlock Grid.Row="5" Grid.Column="0">Metallic</TextBlock>
                     <CheckBox Grid.Row="5" Grid.Column="1"></CheckBox>
                     <TextBlock Grid.Row="6" Grid.Column="0">Roughness</TextBlock>

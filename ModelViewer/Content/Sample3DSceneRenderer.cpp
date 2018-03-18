@@ -8,6 +8,8 @@
 #include "SceneManager.h"
 #include "BufferManager.h"
 
+#include "DirectXPageViewModelData.h"
+
 // Please move me :)
 static float lastPosX;
 static float lastPosY;
@@ -56,6 +58,8 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 {
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
+
+	NotificationManager::Instance().Register(this);
 
 	BufferManager::Instance().MVPBuffer().BufferData().light_direction = XMFLOAT4(1.7f, 11.0f, 5.7f, 1.0f);
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(0.5f, 0.5f, -0.5f);
@@ -276,6 +280,24 @@ void Sample3DSceneRenderer::DrawAxis(ID3D11DeviceContext2 *context, Axis *axis)
 
 	// Draw the objects.
 	context->DrawIndexed(axis->IndexCount(), 0, 0);
+}
+
+void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
+{
+	auto payload = dynamic_cast<const DirectXPageViewModelData&>(data);
+
+	auto col1 = payload._lightScale * payload._lightColour[0] / 255;
+	auto col2 = payload._lightScale * payload._lightColour[1] / 255;
+	auto col3 = payload._lightScale * payload._lightColour[2] / 255;
+
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(col1, col2, col3);
+
+	auto dir1 = payload._lightDirection[0];
+	auto dir2 = payload._lightDirection[1];
+	auto dir3 = payload._lightDirection[2];
+	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(dir1, dir2, dir3);
+
+
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()

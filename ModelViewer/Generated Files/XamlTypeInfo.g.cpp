@@ -41,6 +41,78 @@ template<typename T>
     return ref new ::Platform::Box<T>((T)userType->CreateEnumUIntFromString(input));
 }
 
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_LightColour(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightColour);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Ibl(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Ibl);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_LightPitch(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightPitch);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_LightRotation(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightRotation);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_LightScale(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightScale);
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_ViewModel(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->ViewModel;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_LightColour(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->LightColour = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Ibl(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Ibl = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_LightPitch(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->LightPitch = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_LightRotation(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->LightRotation = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_LightScale(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->LightScale = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_ViewModel(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->ViewModel = safe_cast<TValue^>(value);
+}
+
 enum TypeInfo_Flags
 {
     TypeInfo_Flags_None                 = 0x00,
@@ -70,34 +142,88 @@ struct TypeInfo
 const TypeInfo TypeInfos[] = 
 {
     //   0
-    L"ModelViewer.RootPage", L"",
-    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
-    2, // Windows.UI.Xaml.Controls.Page
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   1
-    L"ModelViewer.DirectXPage", L"",
-    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
-    2, // Windows.UI.Xaml.Controls.Page
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   2
-    L"Windows.UI.Xaml.Controls.Page", L"",
+    L"Object", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //   3
-    L"Windows.UI.Xaml.Controls.UserControl", L"",
+    //   1
+    L"Single", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   2
+    L"Windows.UI.Color", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    3, // System.ValueType
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
+    //   3
+    L"System.ValueType", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    0, // Object
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //   4
+    L"Common.BindableBase", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    11, // Windows.UI.Xaml.DependencyObject
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   5
+    L"Common.ViewModelBase", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    4, // Common.BindableBase
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   6
+    L"ModelViewer.RootPage", L"",
+    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
+    9, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   7
+    L"ModelViewer.DirectXPage", L"",
+    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
+    9, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   8
+    L"ViewModels.RootPageViewModel", L"",
+    &ActivateType<::ViewModels::RootPageViewModel>, nullptr, nullptr, nullptr,
+    5, // Common.ViewModelBase
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //   9
+    L"Windows.UI.Xaml.Controls.Page", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  10
+    L"ViewModels.DirectXPageViewModel", L"",
+    &ActivateType<::ViewModels::DirectXPageViewModel>, nullptr, nullptr, nullptr,
+    5, // Common.ViewModelBase
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  11
+    L"Windows.UI.Xaml.DependencyObject", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  12
+    L"Windows.UI.Xaml.Controls.UserControl", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -109,38 +235,102 @@ const UINT TypeInfoLookup[] = {
       0,   //   4
       0,   //   5
       0,   //   6
-      0,   //   7
-      0,   //   8
-      0,   //   9
-      0,   //  10
-      0,   //  11
-      0,   //  12
-      0,   //  13
-      0,   //  14
-      0,   //  15
-      0,   //  16
-      0,   //  17
-      0,   //  18
-      0,   //  19
-      0,   //  20
-      1,   //  21
-      1,   //  22
-      1,   //  23
-      2,   //  24
-      2,   //  25
-      2,   //  26
-      2,   //  27
-      2,   //  28
-      2,   //  29
-      3,   //  30
-      3,   //  31
-      3,   //  32
-      3,   //  33
-      3,   //  34
-      3,   //  35
-      3,   //  36
-      4,   //  37
+      2,   //   7
+      2,   //   8
+      2,   //   9
+      2,   //  10
+      2,   //  11
+      2,   //  12
+      2,   //  13
+      2,   //  14
+      2,   //  15
+      2,   //  16
+      4,   //  17
+      4,   //  18
+      4,   //  19
+      5,   //  20
+      7,   //  21
+      7,   //  22
+      7,   //  23
+      8,   //  24
+      8,   //  25
+      8,   //  26
+      8,   //  27
+      8,   //  28
+      9,   //  29
+     10,   //  30
+     10,   //  31
+     11,   //  32
+     12,   //  33
+     12,   //  34
+     12,   //  35
+     12,   //  36
+     13,   //  37
 };
+
+struct MemberInfo 
+{
+    PCWSTR shortName;
+    ::Platform::Object^ (*getter)(::Platform::Object^);
+    void (*setter)(::Platform::Object^, ::Platform::Object^);
+    int typeIndex;
+    int targetTypeIndex;
+    bool isReadOnly;
+    bool isDependencyProperty;
+    bool isAttachable;
+};
+
+const MemberInfo MemberInfos[] = 
+{
+    //   0 - ModelViewer.DirectXPage.ViewModel
+    L"ViewModel",
+    &GetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage>,
+    &SetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage, ::ViewModels::DirectXPageViewModel>,
+    10, // ViewModels.DirectXPageViewModel
+    -1,
+    false, false, false,
+    //   1 - ViewModels.DirectXPageViewModel.LightColour
+    L"LightColour",
+    &GetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
+    &SetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
+    2, // Windows.UI.Color
+    -1,
+    false, false, false,
+    //   2 - ViewModels.DirectXPageViewModel.Ibl
+    L"Ibl",
+    &GetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    &SetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    1, // Single
+    -1,
+    false, false, false,
+    //   3 - ViewModels.DirectXPageViewModel.LightPitch
+    L"LightPitch",
+    &GetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    &SetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    1, // Single
+    -1,
+    false, false, false,
+    //   4 - ViewModels.DirectXPageViewModel.LightRotation
+    L"LightRotation",
+    &GetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    &SetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    1, // Single
+    -1,
+    false, false, false,
+    //   5 - ViewModels.DirectXPageViewModel.LightScale
+    L"LightScale",
+    &GetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    &SetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,
+    1, // Single
+    -1,
+    false, false, false,
+};
+
+PCWSTR GetShortName(PCWSTR longName)
+{
+    PCWSTR separator = wcsrchr(longName, '.');
+    return separator != nullptr ? separator + 1: longName;
+}
 
 const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
 {
@@ -154,6 +344,37 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
                 return &TypeInfos[i];
             }
         }
+    }
+    return nullptr;
+}
+
+const MemberInfo* GetMemberInfo(::Platform::String^ longMemberName)
+{
+    auto lastDotIndex = longMemberName->Length();
+    while (true)
+    {
+        if (longMemberName->Data()[lastDotIndex] == '.')
+        {
+            const TypeInfo* pTypeInfo = GetTypeInfo(ref new ::Platform::String(longMemberName->Data(), lastDotIndex));
+            const TypeInfo* pNextTypeInfo = pTypeInfo + 1;
+            if (pTypeInfo)
+            {
+                PCWSTR shortMemberName = GetShortName(longMemberName->Data());
+                for (int i = pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; i++)
+                {
+                    if (wcscmp(shortMemberName, MemberInfos[i].shortName) == 0)
+                    {
+                        return &MemberInfos[i];
+                    }
+                }
+            }
+            break;
+        }
+        if (lastDotIndex == 0)
+        {
+            break;
+        }
+        lastDotIndex--;
     }
     return nullptr;
 }
@@ -197,6 +418,12 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
         userType->IsBindable = pTypeInfo->flags & TypeInfo_Flags_IsBindable;
         userType->IsMarkupExtension = pTypeInfo->flags & TypeInfo_Flags_IsMarkupExtension;
         userType->CreateFromStringMethod = nullptr;
+        int nextMemberIndex = pTypeInfo->firstMemberIndex;
+        for (int i=pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; i++)
+        {
+            userType->AddMemberName(::Platform::StringReference(MemberInfos[i].shortName));
+            nextMemberIndex++;
+        }
         return userType;
     }
 }
@@ -204,8 +431,20 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
 ::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::CreateXamlMember(::Platform::String^ longMemberName)
 {
     ::XamlTypeInfo::InfoProvider::XamlMember^ xamlMember = nullptr;
-    // No Local Properties
-    (void)longMemberName; // Unused parameter
+    const MemberInfo* pMemberInfo = GetMemberInfo(longMemberName);
+    if (pMemberInfo != nullptr)
+    {
+        xamlMember = ref new ::XamlTypeInfo::InfoProvider::XamlMember(
+            this,
+            ::Platform::StringReference(pMemberInfo->shortName),
+            ::Platform::StringReference(TypeInfos[pMemberInfo->typeIndex].typeName));
+        xamlMember->Getter = pMemberInfo->getter;
+        xamlMember->Setter = pMemberInfo->setter;
+        xamlMember->TargetTypeName = pMemberInfo->targetTypeIndex >= 0 ? ::Platform::StringReference(TypeInfos[pMemberInfo->targetTypeIndex].typeName) : L"";
+        xamlMember->IsReadOnly = pMemberInfo->isReadOnly;
+        xamlMember->IsDependencyProperty = pMemberInfo->isDependencyProperty;
+        xamlMember->IsAttachable = pMemberInfo->isAttachable;
+    }
     return xamlMember;
 }
 

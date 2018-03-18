@@ -99,9 +99,12 @@
     <ClCompile Include="Scene\RootNode.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="NodeMaterial.cpp" />
-    <ClCompile Include="RootPageViewModel.cpp" />
     <ClCompile Include="Common\BindableBase.cpp" />
     <ClCompile Include="Common\ViewModelBase.cpp" />
+    <ClCompile Include="ViewModels\RootPageViewModel.cpp" />
+    <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
+    <ClCompile Include="NotificationManager.cpp" />
+    <ClCompile Include="DirectXPageViewModelData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -134,9 +137,12 @@
     <ClInclude Include="Scene\RootNode.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="NodeMaterial.h" />
-    <ClInclude Include="RootPageViewModel.h" />
     <ClInclude Include="Common\BindableBase.h" />
     <ClInclude Include="Common\ViewModelBase.h" />
+    <ClInclude Include="ViewModels\RootPageViewModel.h" />
+    <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
+    <ClInclude Include="NotificationManager.h" />
+    <ClInclude Include="DirectXPageViewModelData.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

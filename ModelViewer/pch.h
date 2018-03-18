@@ -16,3 +16,6 @@
 #include <collection.h>
 #include "App.xaml.h"
 #include "Utility.h"
+
+#include "ViewModels/RootPageViewModel.h"
+#include "ViewModels/DirectXPageViewModel.h"

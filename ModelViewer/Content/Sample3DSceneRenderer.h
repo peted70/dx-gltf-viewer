@@ -9,6 +9,7 @@
 #include "DXGrid.h"
 #include "Axis.h"
 #include "./Scene/GraphContainerNode.h"
+#include "NotificationManager.h"
 
 namespace ModelViewer
 {
@@ -18,7 +19,7 @@ namespace ModelViewer
 	using namespace Windows::System;
 
 	// This sample renderer instantiates a basic rendering pipeline.
-	class Sample3DSceneRenderer
+	class Sample3DSceneRenderer : public Observer
 	{
 	public:
 		Sample3DSceneRenderer(const shared_ptr<DX::DeviceResources>& deviceResources);
@@ -96,6 +97,9 @@ namespace ModelViewer
 		unique_ptr<Axis> _mainAxes;
 
 		ID3D11RasterizerState * _pRasterState;
+
+		// Inherited via Observer
+		virtual void OnNotify(const Observable & data) const override;
 	};
 }
 

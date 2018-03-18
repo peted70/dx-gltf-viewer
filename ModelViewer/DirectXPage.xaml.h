@@ -15,6 +15,7 @@ namespace ModelViewer
 	using namespace Windows::UI::Xaml::Input;
 	using namespace Windows::UI::Core;
 	using namespace Platform;
+	using namespace ViewModels;
 
 	/// <summary>
 	/// A page that hosts a DirectX SwapChainPanel.
@@ -28,7 +29,10 @@ namespace ModelViewer
 		void SaveInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
+		property DirectXPageViewModel ^ ViewModel;
+
 	private:
+
 		// XAML low-level rendering event handler.
 		void OnRendering(Object^ sender, Object^ args);
 

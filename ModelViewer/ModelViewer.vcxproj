@@ -204,6 +204,9 @@
     <ClInclude Include="Common\BindableBase.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
+    <ClInclude Include="DirectXPageViewModelData.h" />
+    <ClInclude Include="NotificationManager.h" />
+    <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
     <ClInclude Include="DXGrid.h" />
     <ClInclude Include="EventShim.h" />
     <ClInclude Include="ModelFactory.h" />
@@ -221,7 +224,7 @@
     <ClInclude Include="RootPage.xaml.h">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="RootPageViewModel.h" />
+    <ClInclude Include="ViewModels\RootPageViewModel.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\GraphContainerNode.h" />
@@ -240,6 +243,9 @@
     <ClCompile Include="Common\BindableBase.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
+    <ClCompile Include="DirectXPageViewModelData.cpp" />
+    <ClCompile Include="NotificationManager.cpp" />
+    <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
     <ClCompile Include="DXGrid.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="ModelViewerMain.cpp" />
@@ -260,7 +266,7 @@
     <ClCompile Include="RootPage.xaml.cpp">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="RootPageViewModel.cpp" />
+    <ClCompile Include="ViewModels\RootPageViewModel.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\GraphContainerNode.cpp" />

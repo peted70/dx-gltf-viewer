@@ -6,6 +6,7 @@
 //     the code is regenerated.
 //------------------------------------------------------------------------------
 
+#include "XamlBindingInfo.g.h"
 
 namespace Windows {
     namespace UI {
@@ -36,7 +37,9 @@ namespace ModelViewer
     private:
         bool _contentLoaded;
     
+        class DirectXPage_obj1_Bindings;
     
+        ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapChainPanel;
     };
 }

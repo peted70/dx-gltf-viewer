@@ -28,6 +28,8 @@ DirectXPage::DirectXPage():
 	m_windowVisible(true),
 	m_coreInput(nullptr)
 {
+	ViewModel = ref new DirectXPageViewModel();
+
 	InitializeComponent();
 
 	// Register event handlers for page lifecycle.
