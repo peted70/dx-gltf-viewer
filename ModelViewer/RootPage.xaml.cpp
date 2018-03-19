@@ -88,6 +88,8 @@ future<shared_ptr<MeshNode>> LoadFileAsync()
 	fop->FileTypeFilter->Append(".glb");
 
 	auto file = co_await fop->PickSingleFileAsync();
+	if (file == nullptr)
+		co_return nullptr;
 
 	Utility::Out(L"filename = %s", file->Path->Data());
 
@@ -102,6 +104,9 @@ std::future<void> Load()
 {
 	Utility::Out(L"At Start of Load");
 	auto node = co_await LoadFileAsync();
+	if (node == nullptr)
+		co_return;
+
 	Utility::Out(L"Loaded");
 
 	// Add the GraphNode to the scene
