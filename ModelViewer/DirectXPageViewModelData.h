@@ -15,6 +15,15 @@ public:
 	float _lightScale = 0.0f;
 	float _ibl = 1.0f;
 	float _lightColour[3] = {255.f, 255.f, 255.f};
+
+	bool _metallic;
+	bool _roughness;
+	bool _baseColour;
+	bool _diffuse;
+	bool _specular;
+	bool _f;
+	bool _g;
+	bool _d;
 };
 
 

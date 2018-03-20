@@ -194,3 +194,17 @@ void DirectXPage::OnSwapChainPanelSizeChanged(Object^ sender, SizeChangedEventAr
 	m_deviceResources->SetLogicalSize(e->NewSize);
 	m_main->CreateWindowSizeDependentResources();
 }
+
+void ModelViewer::DirectXPage::confirmColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	// Assign the selected color to a variable to use outside the popup.
+	ViewModel->LightColour = myColorPicker->Color;
+
+	// Close the Flyout.
+	colorPickerButton->Flyout->Hide();
+}
+
+void ModelViewer::DirectXPage::cancelColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	colorPickerButton->Flyout->Hide();
+}

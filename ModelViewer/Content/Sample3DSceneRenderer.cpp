@@ -297,7 +297,27 @@ void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
 	auto dir3 = payload._lightDirection[2];
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(dir1, dir2, dir3);
 
+	//auto roughness = payload._roughness;
+	//auto metallic = payload._metallic;
+	//BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues = XMFLOAT2(metallic, roughness);
 
+	auto scaleF = payload._f ? 1.0f : 0.0f;
+	auto scaleG = payload._g ? 1.0f : 0.0f;
+	auto scaleD = payload._d ? 1.0f : 0.0f;
+	auto specular = payload._specular ? 1.0f : 0.0f;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec = XMFLOAT4(scaleF, scaleG, scaleD, specular);
+
+	auto scaleDiffuse = payload._diffuse ? 1.0f : 0.0f;
+	auto scaleBasecolour = payload._baseColour ? 1.0f : 0.0f;
+	auto scaleMetallic = payload._metallic ? 1.0f : 0.0f;
+	auto scaleRoughness = payload._roughness ? 1.0f : 0.0f;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR = 
+		XMFLOAT4(scaleDiffuse, scaleBasecolour, scaleMetallic, scaleRoughness);
+
+	float ibl = payload._ibl;
+	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()

@@ -12,7 +12,9 @@ namespace Windows {
     namespace UI {
         namespace Xaml {
             namespace Controls {
+                ref class ColorPicker;
                 ref class SwapChainPanel;
+                ref class Button;
             }
         }
     }
@@ -40,7 +42,9 @@ namespace ModelViewer
         class DirectXPage_obj1_Bindings;
     
         ::XamlBindingInfo::XamlBindings^ Bindings;
+        private: ::Windows::UI::Xaml::Controls::ColorPicker^ myColorPicker;
         private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapChainPanel;
+        private: ::Windows::UI::Xaml::Controls::Button^ colorPickerButton;
     };
 }
 

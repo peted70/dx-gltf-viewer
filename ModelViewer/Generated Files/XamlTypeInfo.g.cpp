@@ -42,6 +42,54 @@ template<typename T>
 }
 
 template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_D(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->D);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_G(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->G);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_F(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->F);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Specular(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Specular);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Diffuse(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Diffuse);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Roughness(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Roughness);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Metallic(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Metallic);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_BaseColour(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->BaseColour);
+}
+
+template<typename TDeclaringType, typename TValue>
 ::Platform::Object^ GetValueTypeMember_LightColour(::Platform::Object^ instance)
 {
     return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightColour);
@@ -75,6 +123,54 @@ template<typename TDeclaringType>
 ::Platform::Object^ GetReferenceTypeMember_ViewModel(::Platform::Object^ instance)
 {
     return safe_cast<TDeclaringType^>(instance)->ViewModel;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_D(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->D = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_G(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->G = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_F(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->F = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Specular(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Specular = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Diffuse(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Diffuse = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Roughness(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Roughness = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Metallic(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Metallic = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_BaseColour(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->BaseColour = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -154,76 +250,82 @@ const TypeInfo TypeInfos[] =
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   2
+    L"Boolean", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   3
     L"Windows.UI.Color", L"",
     nullptr, nullptr, nullptr, nullptr,
-    3, // System.ValueType
+    4, // System.ValueType
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //   3
+    //   4
     L"System.ValueType", L"",
     nullptr, nullptr, nullptr, nullptr,
     0, // Object
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //   4
+    //   5
     L"Common.BindableBase", L"",
     nullptr, nullptr, nullptr, nullptr,
-    11, // Windows.UI.Xaml.DependencyObject
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   5
-    L"Common.ViewModelBase", L"",
-    nullptr, nullptr, nullptr, nullptr,
-    4, // Common.BindableBase
+    12, // Windows.UI.Xaml.DependencyObject
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   6
-    L"ModelViewer.RootPage", L"",
-    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
-    9, // Windows.UI.Xaml.Controls.Page
+    L"Common.ViewModelBase", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    5, // Common.BindableBase
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   7
-    L"ModelViewer.DirectXPage", L"",
-    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
-    9, // Windows.UI.Xaml.Controls.Page
+    L"ModelViewer.RootPage", L"",
+    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
+    10, // Windows.UI.Xaml.Controls.Page
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   8
+    L"ModelViewer.DirectXPage", L"",
+    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
+    10, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   9
     L"ViewModels.RootPageViewModel", L"",
     &ActivateType<::ViewModels::RootPageViewModel>, nullptr, nullptr, nullptr,
-    5, // Common.ViewModelBase
+    6, // Common.ViewModelBase
     1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //   9
+    //  10
     L"Windows.UI.Xaml.Controls.Page", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  10
+    //  11
     L"ViewModels.DirectXPageViewModel", L"",
     &ActivateType<::ViewModels::DirectXPageViewModel>, nullptr, nullptr, nullptr,
-    5, // Common.ViewModelBase
+    6, // Common.ViewModelBase
     1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  11
+    //  12
     L"Windows.UI.Xaml.DependencyObject", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  12
+    //  13
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    6, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -236,36 +338,36 @@ const UINT TypeInfoLookup[] = {
       0,   //   5
       0,   //   6
       2,   //   7
-      2,   //   8
-      2,   //   9
-      2,   //  10
-      2,   //  11
-      2,   //  12
-      2,   //  13
-      2,   //  14
-      2,   //  15
-      2,   //  16
-      4,   //  17
-      4,   //  18
-      4,   //  19
-      5,   //  20
-      7,   //  21
-      7,   //  22
-      7,   //  23
-      8,   //  24
-      8,   //  25
-      8,   //  26
-      8,   //  27
-      8,   //  28
-      9,   //  29
-     10,   //  30
-     10,   //  31
-     11,   //  32
-     12,   //  33
-     12,   //  34
-     12,   //  35
-     12,   //  36
-     13,   //  37
+      3,   //   8
+      3,   //   9
+      3,   //  10
+      3,   //  11
+      3,   //  12
+      3,   //  13
+      3,   //  14
+      3,   //  15
+      3,   //  16
+      5,   //  17
+      5,   //  18
+      5,   //  19
+      6,   //  20
+      8,   //  21
+      8,   //  22
+      8,   //  23
+      9,   //  24
+      9,   //  25
+      9,   //  26
+      9,   //  27
+      9,   //  28
+     10,   //  29
+     11,   //  30
+     11,   //  31
+     12,   //  32
+     13,   //  33
+     13,   //  34
+     13,   //  35
+     13,   //  36
+     14,   //  37
 };
 
 struct MemberInfo 
@@ -286,38 +388,94 @@ const MemberInfo MemberInfos[] =
     L"ViewModel",
     &GetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage>,
     &SetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage, ::ViewModels::DirectXPageViewModel>,
-    10, // ViewModels.DirectXPageViewModel
+    11, // ViewModels.DirectXPageViewModel
     -1,
     false, false, false,
-    //   1 - ViewModels.DirectXPageViewModel.LightColour
+    //   1 - ViewModels.DirectXPageViewModel.D
+    L"D",
+    &GetValueTypeMember_D<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_D<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   2 - ViewModels.DirectXPageViewModel.G
+    L"G",
+    &GetValueTypeMember_G<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_G<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   3 - ViewModels.DirectXPageViewModel.F
+    L"F",
+    &GetValueTypeMember_F<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_F<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   4 - ViewModels.DirectXPageViewModel.Specular
+    L"Specular",
+    &GetValueTypeMember_Specular<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_Specular<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   5 - ViewModels.DirectXPageViewModel.Diffuse
+    L"Diffuse",
+    &GetValueTypeMember_Diffuse<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_Diffuse<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   6 - ViewModels.DirectXPageViewModel.Roughness
+    L"Roughness",
+    &GetValueTypeMember_Roughness<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_Roughness<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   7 - ViewModels.DirectXPageViewModel.Metallic
+    L"Metallic",
+    &GetValueTypeMember_Metallic<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_Metallic<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   8 - ViewModels.DirectXPageViewModel.BaseColour
+    L"BaseColour",
+    &GetValueTypeMember_BaseColour<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    &SetValueTypeMember_BaseColour<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
+    2, // Boolean
+    -1,
+    false, false, false,
+    //   9 - ViewModels.DirectXPageViewModel.LightColour
     L"LightColour",
     &GetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
     &SetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
-    2, // Windows.UI.Color
+    3, // Windows.UI.Color
     -1,
     false, false, false,
-    //   2 - ViewModels.DirectXPageViewModel.Ibl
+    //  10 - ViewModels.DirectXPageViewModel.Ibl
     L"Ibl",
     &GetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
     1, // Single
     -1,
     false, false, false,
-    //   3 - ViewModels.DirectXPageViewModel.LightPitch
+    //  11 - ViewModels.DirectXPageViewModel.LightPitch
     L"LightPitch",
     &GetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
     1, // Single
     -1,
     false, false, false,
-    //   4 - ViewModels.DirectXPageViewModel.LightRotation
+    //  12 - ViewModels.DirectXPageViewModel.LightRotation
     L"LightRotation",
     &GetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
     1, // Single
     -1,
     false, false, false,
-    //   5 - ViewModels.DirectXPageViewModel.LightScale
+    //  13 - ViewModels.DirectXPageViewModel.LightScale
     L"LightScale",
     &GetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,

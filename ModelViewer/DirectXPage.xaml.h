@@ -63,6 +63,8 @@ namespace ModelViewer
 		std::unique_ptr<ModelViewerMain> m_main; 
 		bool m_windowVisible;
 		bool m_controlPressed;
+		void confirmColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void cancelColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 }
 

@@ -90,6 +90,110 @@ namespace ViewModels
 			}
 		}
 
+		property bool BaseColour
+		{
+			bool get() { return _data._baseColour; }
+			void set(bool val)
+			{
+				if (_data._baseColour == val)
+					return;
+				_data._baseColour = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool Metallic
+		{
+			bool get() { return _data._metallic; }
+			void set(bool val)
+			{
+				if (_data._metallic == val)
+					return;
+				_data._metallic = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool Roughness
+		{
+			bool get() { return _data._roughness; }
+			void set(bool val)
+			{
+				if (_data._roughness == val)
+					return;
+				_data._roughness = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool Diffuse
+		{
+			bool get() { return _data._diffuse; }
+			void set(bool val)
+			{
+				if (_data._diffuse == val)
+					return;
+				_data._diffuse = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool Specular
+		{
+			bool get() { return _data._specular; }
+			void set(bool val)
+			{
+				if (_data._specular == val)
+					return;
+				_data._specular = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool F
+		{
+			bool get() { return _data._f; }
+			void set(bool val)
+			{
+				if (_data._f == val)
+					return;
+				_data._f = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool G
+		{
+			bool get() { return _data._g; }
+			void set(bool val)
+			{
+				if (_data._g == val)
+					return;
+				_data._g = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
+		property bool D
+		{
+			bool get() { return _data._d; }
+			void set(bool val)
+			{
+				if (_data._d == val)
+					return;
+				_data._d = val;
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_data.Notify(_data);
+			}
+		}
+
 	private:
 
 		Color ConvertColor(float col[3])
@@ -113,6 +217,5 @@ namespace ViewModels
 
 		DirectXPageViewModelData _data;
 	};
-
 }
 

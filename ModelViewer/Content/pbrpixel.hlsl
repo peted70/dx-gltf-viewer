@@ -357,15 +357,14 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     // This section uses lerp to override final color for reference app visualization
     // of various parameters in the lighting equation.
-    //color = lerp(color, F, scaleFGDSpec.x);
-    //color = lerp(color, float3(G, G, G), scaleFGDSpec.y);
-    //color = lerp(color, float3(D, D, D), scaleFGDSpec.z);
-    //color = lerp(color, specContrib, scaleFGDSpec.w);
-
-    //color = lerp(color, diffuseContrib, scaleDiffBaseMR.x);
-    //color = lerp(color, baseColor.rgb, scaleDiffBaseMR.y);
-    //color = lerp(color, float3(metallic, metallic, metallic), scaleDiffBaseMR.z);
-    //color = lerp(color, float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), scaleDiffBaseMR.w);
+    color = lerp(color, F, scaleFGDSpec.x);
+    color = lerp(color, float3(G, G, G), scaleFGDSpec.y);
+    color = lerp(color, float3(D, D, D), scaleFGDSpec.z);
+    color = lerp(color, specContrib, scaleFGDSpec.w);
+    color = lerp(color, diffuseContrib, scaleDiffBaseMR.x);
+    color = lerp(color, baseColor.rgb, scaleDiffBaseMR.y);
+    color = lerp(color, float3(metallic, metallic, metallic), scaleDiffBaseMR.z);
+    color = lerp(color, float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), scaleDiffBaseMR.w);
 
     return float4(color, 1.0);
 
