@@ -76,7 +76,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.z = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.w = 1.0f;
 
-	updateMathScales("baseColor");
+	//updateMathScales("baseColor");
 
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.x = 1.0f;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient.y = 1.0f;

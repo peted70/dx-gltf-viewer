@@ -52,8 +52,10 @@ namespace ModelViewer
 		XMFLOAT3 emissiveFactor;
 		float occlusionStrength;
 		XMFLOAT2 metallicRoughnessValues;
+		float padding1;
 		XMFLOAT4 baseColorFactor;
 		XMFLOAT3 camera;
+		float padding2;
 
 		// debugging flags used for shader output of intermediate PBR variables
 		XMFLOAT4 scaleDiffBaseMR;

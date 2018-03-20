@@ -63,8 +63,10 @@ cbuffer cbPerObject : register(b1)
     float3 emissiveFactor;
     float occlusionStrength;
     float2 metallicRoughnessValues;
+    float padding1;
     float4 baseColorFactor;
     float3 camera;
+    float padding2;
 
     // debugging flags used for shader output of intermediate PBR variables
     float4 scaleDiffBaseMR;

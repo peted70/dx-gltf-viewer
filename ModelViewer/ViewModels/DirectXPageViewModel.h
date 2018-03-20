@@ -17,6 +17,11 @@ namespace ViewModels
 	public ref class DirectXPageViewModel sealed : public ViewModelBase
 	{
 	public:
+		DirectXPageViewModel()
+		{
+			_data.Notify(_data);
+		}
+
 		property float LightScale
 		{
 			float get() { return _data._lightScale; }

@@ -16,14 +16,14 @@ public:
 	float _ibl = 1.0f;
 	float _lightColour[3] = {255.f, 255.f, 255.f};
 
-	bool _metallic;
-	bool _roughness;
-	bool _baseColour;
-	bool _diffuse;
-	bool _specular;
-	bool _f;
-	bool _g;
-	bool _d;
+	bool _metallic = true;
+	bool _roughness = true;
+	bool _baseColour = true;
+	bool _diffuse = true;
+	bool _specular = true;
+	bool _f = true;
+	bool _g = true;
+	bool _d = true;
 };
 
 
