@@ -44,6 +44,58 @@ void updateMathScales(string selected)
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = mathSpec;
 };
 
+void CreateCubeMap()
+{
+	D3D11_TEXTURE2D_DESC texDesc;
+	texDesc.Width = 128;
+	texDesc.Height = 128;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 6;
+	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC SMViewDesc;
+	SMViewDesc.Format = texDesc.Format;
+	SMViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	SMViewDesc.TextureCube.MipLevels = texDesc.MipLevels;
+	SMViewDesc.TextureCube.MostDetailedMip = 0;
+
+	D3D11_SUBRESOURCE_DATA pData[6];
+
+#if 0
+	std::vector<vector4b> d[6]; // 6 images of type vector4b = 4 * unsigned char
+
+	for (int cubeMapFaceIndex = 0; cubeMapFaceIndex < 6; cubeMapFaceIndex++)
+	{
+		d[cubeMapFaceIndex].resize(description.width * description.height);
+
+		// fill with red color  
+		std::fill(
+			d[cubeMapFaceIndex].begin(),
+			d[cubeMapFaceIndex].end(),
+			vector4b(255, 0, 0, 255));
+
+		pData[cubeMapFaceIndex].pSysMem = &d[cubeMapFaceIndex][0];// description.data;
+		pData[cubeMapFaceIndex].SysMemPitch = description.width * 4;
+		pData[cubeMapFaceIndex].SysMemSlicePitch = 0;
+	}
+
+	HRESULT hr = renderer->getDevice()->CreateTexture2D(&texDesc,
+		description.data[0] ? &pData[0] : nullptr, &m_pCubeTexture);
+	assert(hr == S_OK);
+
+	hr = renderer->getDevice()->CreateShaderResourceView(
+		m_pCubeTexture, &SMViewDesc, &m_pShaderResourceView);
+	assert(hr == S_OK);
+#endif
+}
+
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),

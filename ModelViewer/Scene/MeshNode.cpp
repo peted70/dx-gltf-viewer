@@ -2,6 +2,7 @@
 #include "MeshNode.h"
 #include "Common\DirectXHelper.h"
 #include "BufferManager.h"
+#include "ImgUtils.h"
 
 MeshNode::MeshNode() : 
 	m_loadingComplete(false)
@@ -251,7 +252,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	uint32_t width;
 	uint32_t height;
 
-	auto image = LoadRGBAImage((void *)data->pSysMem, data->DataSize, width, height);
+	auto image = ImgUtils::LoadRGBAImage((void *)data->pSysMem, data->DataSize, width, height);
 
 	txtDesc.Width = width;
 	txtDesc.Height = height;
@@ -286,56 +287,3 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	_material->AddTexture(data->Idx, data->Type, tex, textureResourceView, texSampler);
 }
 
-std::vector<uint8_t> MeshNode::LoadRGBAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)
-{
-	ComPtr<IWICImagingFactory> wicFactory;
-	DX::ThrowIfFailed(CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
-
-	IWICStream *pIWICStream;
-	// Create a WIC stream to map onto the memory.
-	DX::ThrowIfFailed(wicFactory->CreateStream(&pIWICStream));
-
-	// Initialize the stream with the memory pointer and size.
-	DX::ThrowIfFailed(pIWICStream->InitializeFromMemory(reinterpret_cast<BYTE*>(imgFileData), imgFileDataSize));
-
-	ComPtr<IWICBitmapDecoder> decoder;
-	DX::ThrowIfFailed(wicFactory->CreateDecoderFromStream(pIWICStream, nullptr, WICDecodeMetadataCacheOnLoad, decoder.GetAddressOf()));
-
-	ComPtr<IWICBitmapFrameDecode> frame;
-	DX::ThrowIfFailed(decoder->GetFrame(0, frame.GetAddressOf()));
-
-	DX::ThrowIfFailed(frame->GetSize(&width, &height));
-
-	WICPixelFormatGUID pixelFormat;
-	DX::ThrowIfFailed(frame->GetPixelFormat(&pixelFormat));
-
-	uint32_t rowPitch = width * sizeof(uint32_t);
-	uint32_t imageSize = rowPitch * height;
-
-	std::vector<uint8_t> image;
-	image.resize(size_t(imageSize));
-
-	if (memcmp(&pixelFormat, &GUID_WICPixelFormat32bppRGBA, sizeof(GUID)) == 0)
-	{
-		DX::ThrowIfFailed(frame->CopyPixels(0, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));
-	}
-	else
-	{
-		ComPtr<IWICFormatConverter> formatConverter;
-		DX::ThrowIfFailed(wicFactory->CreateFormatConverter(formatConverter.GetAddressOf()));
-
-		BOOL canConvert = FALSE;
-		DX::ThrowIfFailed(formatConverter->CanConvert(pixelFormat, GUID_WICPixelFormat32bppRGBA, &canConvert));
-		if (!canConvert)
-		{
-			throw std::exception("CanConvert");
-		}
-
-		DX::ThrowIfFailed(formatConverter->Initialize(frame.Get(), GUID_WICPixelFormat32bppRGBA,
-			WICBitmapDitherTypeErrorDiffusion, nullptr, 0, WICBitmapPaletteTypeMedianCut));
-
-		DX::ThrowIfFailed(formatConverter->CopyPixels(0, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));
-	}
-
-	return image;
-}
