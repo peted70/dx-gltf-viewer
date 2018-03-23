@@ -10,12 +10,23 @@
 
 #include "DirectXPageViewModelData.h"
 
+#include <future>
+#include <experimental/resumable>
+#include <pplawait.h>
+
+#include <robuffer.h>  
+
+using namespace Windows::Storage::Streams;
+using namespace Microsoft::WRL;
+
 // Please move me :)
 static float lastPosX;
 static float lastPosY;
 static float lastY;
 
 using namespace ModelViewer;
+using namespace Platform;
+using namespace Windows::Storage;
 
 using namespace DirectX;
 using namespace Windows::Foundation;
@@ -44,7 +55,47 @@ void updateMathScales(string selected)
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = mathSpec;
 };
 
-void CreateCubeMap()
+future<void *> LoadFileDataAsync(StorageFolder^ imgfolder, String^ imgType, String^ side, int mipmapLevel, int& fileSize)
+{
+	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel);
+	auto buffer = co_await FileIO::ReadBufferAsync(file);
+	fileSize = buffer->Length;
+
+	// Query the IBufferByteAccess interface.  
+	ComPtr<IBufferByteAccess> bufferByteAccess;
+	reinterpret_cast<IInspectable*>(buffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
+
+	byte* data = nullptr;
+	bufferByteAccess->Buffer(&data);
+
+	co_return static_cast<void *>(data);
+}
+
+#include "ImgUtils.h"
+
+future<vector<byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgType, String^ side, int mipLevel, uint32_t& width, uint32_t& height)
+{
+	int dataSize = 0;
+	auto fileData = co_await LoadFileDataAsync(imgFolder, imgType, side, mipLevel, dataSize);
+
+	auto bytes = ImgUtils::LoadRGBAImage(fileData, dataSize, width, height);
+	co_return bytes;
+}
+
+const wchar_t *sides[] = 
+{
+	L"front",
+	L"back",
+	L"top",
+	L"bottom",
+	L"left",
+	L"right"
+};
+
+//auto sf = Windows::Storage::ApplicationData::Current->LocalFolder;
+//auto imgFolder = co_await sf->GetFolderFromPathAsync(ref new String("Assets/textures/") + imgType);
+
+std::future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.Width = 128;
@@ -68,32 +119,24 @@ void CreateCubeMap()
 
 	D3D11_SUBRESOURCE_DATA pData[6];
 
-#if 0
-	std::vector<vector4b> d[6]; // 6 images of type vector4b = 4 * unsigned char
-
-	for (int cubeMapFaceIndex = 0; cubeMapFaceIndex < 6; cubeMapFaceIndex++)
+	uint32_t width;
+	uint32_t height;
+	
+	for (int i = 0; i < 6; i++)
 	{
-		d[cubeMapFaceIndex].resize(description.width * description.height);
-
-		// fill with red color  
-		std::fill(
-			d[cubeMapFaceIndex].begin(),
-			d[cubeMapFaceIndex].end(),
-			vector4b(255, 0, 0, 255));
-
-		pData[cubeMapFaceIndex].pSysMem = &d[cubeMapFaceIndex][0];// description.data;
-		pData[cubeMapFaceIndex].SysMemPitch = description.width * 4;
-		pData[cubeMapFaceIndex].SysMemSlicePitch = 0;
+		auto bytes = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), 0, width, height);
+		pData[i].pSysMem = bytes.data();
+		pData[i].SysMemPitch = width * 4;
+		pData[i].SysMemSlicePitch = 0;
 	}
 
-	HRESULT hr = renderer->getDevice()->CreateTexture2D(&texDesc,
-		description.data[0] ? &pData[0] : nullptr, &m_pCubeTexture);
+	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], &m_pCubeTexture);
 	assert(hr == S_OK);
 
-	hr = renderer->getDevice()->CreateShaderResourceView(
-		m_pCubeTexture, &SMViewDesc, &m_pShaderResourceView);
+	hr = device->CreateShaderResourceView(m_pCubeTexture, &SMViewDesc, &m_pShaderResourceView);
 	assert(hr == S_OK);
-#endif
+
+	co_return;
 }
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
