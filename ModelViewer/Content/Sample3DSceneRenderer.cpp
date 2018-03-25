@@ -95,7 +95,7 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.MipLevels = mipLevels;
 	texDesc.ArraySize = 6;
-	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
