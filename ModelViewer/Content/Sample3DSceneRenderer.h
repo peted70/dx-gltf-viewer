@@ -32,7 +32,7 @@ namespace ModelViewer
 		future<void> CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
-		future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType);
+		future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels);
 		future<void> CreateBdrfLutAsync(StorageFolder^ imgFolder);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);

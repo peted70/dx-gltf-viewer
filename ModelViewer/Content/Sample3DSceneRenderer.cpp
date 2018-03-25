@@ -88,12 +88,12 @@ const wchar_t *sides[] =
 };
 
 
-future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
+future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.Width = 128;
 	texDesc.Height = 128;
-	texDesc.MipLevels = 1;
+	texDesc.MipLevels = mipLevels;
 	texDesc.ArraySize = 6;
 	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	texDesc.CPUAccessFlags = 0;
@@ -110,20 +110,26 @@ future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, St
 	SMViewDesc.TextureCube.MipLevels = texDesc.MipLevels;
 	SMViewDesc.TextureCube.MostDetailedMip = 0;
 
-	D3D11_SUBRESOURCE_DATA pData[6];
-
+	vector<D3D11_SUBRESOURCE_DATA> pData(6 * mipLevels);
 	uint32_t width;
 	uint32_t height;
-	std::vector<byte> bytes[6];
-	for (int i = 0; i < 6; i++)
+	vector<vector<byte>> bytes(6 * mipLevels);
+	for (int j = 0; j < mipLevels; j++)
 	{
-		Utility::Out(L"Loading cube image [%d]", i);
-		bytes[i] = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), 0, width, height);
-		Utility::Out(L"Loaded cube image [%d]", i);
-		pData[i].pSysMem = bytes[i].data();
-		pData[i].SysMemPitch = width * 4;
-		pData[i].SysMemSlicePitch = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			int idx = j * 6 + i;
+			Utility::Out(L"Loading cube image [%d]", i);
+			bytes[idx] = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), j, width, height);
+			Utility::Out(L"Loaded cube image [%d]", i);
+			pData[idx].pSysMem = bytes[i].data();
+			pData[idx].SysMemPitch = width * 4;
+			pData[idx].SysMemSlicePitch = 0;
+		}
 	}
+
+	texDesc.Width = width;
+	texDesc.Height = height;
 
 	ComPtr<ID3D11Texture2D> tex;
 	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], tex.GetAddressOf());
@@ -487,10 +493,16 @@ future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ e
 	String^ imgType(L"diffuse");
 	String^ path(L"\\Assets\\textures\\");
 	String^ temp = sf->Path + path + envName + "\\"  + imgType;
-	auto tmp = temp->Data();
 	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
-	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType);
+	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 1);
 	co_await CreateBdrfLutAsync(imgFolder);
+
+	imgType = L"specular";
+	temp = sf->Path + path + envName + "\\" + imgType;
+	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
+
+	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 10);
+
 	co_return;
 }
 
