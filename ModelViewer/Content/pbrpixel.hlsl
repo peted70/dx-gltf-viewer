@@ -23,6 +23,7 @@
 //#define MANUAL_SRGB
 //#define SRGB_FAST_APPROXIMATION
 #define USE_IBL
+#define USE_TEX_LOD
 
 // First three are 3 channel textures
 Texture2D baseColourTexture : register(t0);
@@ -37,11 +38,14 @@ SamplerState normalSampler : register(s2);
 Texture2D emissionTexture : register(t3);
 SamplerState emissionSampler : register(s3);
 
-TextureCube envTexture : register(t8);
-SamplerState envSampler : register(s8);
+TextureCube envDiffuseTexture : register(t8);
+SamplerState envDiffuseSampler : register(s8);
 
 Texture2D brdfLutTexture : register(t9);
 SamplerState brdfLutSampler : register(s9);
+
+TextureCube envSpecularTexture : register(t10);
+SamplerState envSpecularSampler : register(s10);
 
 //Texture2D occlusionTexture : register(t1);
 //SamplerState occlusionSampler : register(s1);
@@ -193,10 +197,11 @@ float3 getIBLContribution(PBRInfo pbrInputs, float3 n, float3 reflection)
     float2 val = float2(pbrInputs.NdotV, 1.0 - pbrInputs.perceptualRoughness);
     float3 brdf = SRGBtoLINEAR(brdfLutTexture.Sample(brdfLutSampler, val)).rgb;
 
-    float3 diffuseLight = SRGBtoLINEAR(envTexture.Sample(envSampler, n)).rgb;
+    float3 diffuseLight = SRGBtoLINEAR(envDiffuseTexture.Sample(envDiffuseSampler, n)).rgb;
 
 #ifdef USE_TEX_LOD
-    float3 specularLight = SRGBtoLINEAR(textureCubeLodEXT(u_SpecularEnvSampler, reflection, lod)).rgb;
+    float3 specularLight = SRGBtoLINEAR(envSpecularTexture.SampleLevel(envSpecularSampler, reflection, lod)).rgb;
+    //float3 specularLight = SRGBtoLINEAR(textureCubeLodEXT(envSpecularTexture, reflection, lod)).rgb;
 #else
     float3 specularLight = SRGBtoLINEAR(textureCube(u_SpecularEnvSampler, reflection)).rgb;
 #endif

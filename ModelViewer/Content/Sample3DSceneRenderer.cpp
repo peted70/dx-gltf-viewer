@@ -27,20 +27,20 @@ using namespace Microsoft::WRL;
 
 void updateMathScales(string selected)
 {
-	float mathDiff = (selected == "mathDiff") ? 1.0 : 0.0;
-	float baseColor = (selected == "baseColor") ? 1.0 : 0.0;
-	float metallic = (selected == "metallic") ? 1.0 : 0.0;
-	float roughness = (selected == "roughness") ? 1.0 : 0.0;
+	float mathDiff = (selected == "mathDiff") ? 1.0f : 0.0f;
+	float baseColor = (selected == "baseColor") ? 1.0f : 0.0f;
+	float metallic = (selected == "metallic") ? 1.0f : 0.0f;
+	float roughness = (selected == "roughness") ? 1.0f : 0.0f;
 
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.x = mathDiff;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.y = baseColor;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.z = metallic;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR.w = roughness;
 
-	float mathF = (selected == "mathF") ? 1.0 : 0.0;
-	float mathG = (selected == "mathG") ? 1.0 : 0.0;
-	float mathD = (selected == "mathD") ? 1.0 : 0.0;
-	float mathSpec = (selected == "mathSpec") ? 1.0 : 0.0;
+	float mathF = (selected == "mathF") ? 1.0f : 0.0f;
+	float mathG = (selected == "mathG") ? 1.0f : 0.0f;
+	float mathD = (selected == "mathD") ? 1.0f : 0.0f;
+	float mathSpec = (selected == "mathSpec") ? 1.0f : 0.0f;
 
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.x = mathF;
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.y = mathG;
@@ -50,6 +50,8 @@ void updateMathScales(string selected)
 
 future<void *> LoadFileDataAsync(StorageFolder^ imgfolder, String^ imgType, String^ side, int mipmapLevel, int& fileSize)
 {
+	String^ fileName(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
+	Utility::Out(L"Loading file [%s\\%s]", imgfolder->Path->Data(), fileName->Data());
 	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
 	auto buffer = co_await FileIO::ReadBufferAsync(file);
 	fileSize = buffer->Length;
@@ -88,11 +90,9 @@ const wchar_t *sides[] =
 };
 
 
-future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels)
+future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width = 128;
-	texDesc.Height = 128;
 	texDesc.MipLevels = mipLevels;
 	texDesc.ArraySize = 6;
 	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -120,11 +120,11 @@ future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, St
 		{
 			int idx = j * 6 + i;
 			Utility::Out(L"Loading cube image [%d]", i);
-			bytes[idx] = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), j, width, height);
+			bytes[idx] = co_await LoadCubeImagesAsync(imgFolder, imgType, ref new String(sides[i]), j, width, height);
 			Utility::Out(L"Loaded cube image [%d]", i);
 			pData[idx].pSysMem = bytes[i].data();
 			pData[idx].SysMemPitch = width * 4;
-			pData[idx].SysMemSlicePitch = 0;
+			pData[idx].SysMemSlicePitch = width * height * 4;
 		}
 	}
 
@@ -135,7 +135,9 @@ future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, St
 	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], tex.GetAddressOf());
 	assert(hr == S_OK);
 
-	hr = device->CreateShaderResourceView(tex.Get(), &SMViewDesc, _envTexResourceView.ReleaseAndGetAddressOf());
+	ComPtr<ID3D11ShaderResourceView> resourceView;
+	hr = device->CreateShaderResourceView(tex.Get(), &SMViewDesc, resourceView.ReleaseAndGetAddressOf());
+
 	assert(hr == S_OK);
 
 	D3D11_SAMPLER_DESC samplerDesc = {};
@@ -147,9 +149,14 @@ future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, St
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	DX::ThrowIfFailed(device->CreateSamplerState(&samplerDesc, _envTexSampler.ReleaseAndGetAddressOf()));
+	ComPtr<ID3D11SamplerState> samplerState;
+	DX::ThrowIfFailed(device->CreateSamplerState(&samplerDesc, samplerState.ReleaseAndGetAddressOf()));
 
-	co_return;
+	TexWrapper ret;
+	ret.texResourceView = resourceView;
+	ret.texSampler = samplerState;
+
+	co_return ret;
 }
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
@@ -296,7 +303,7 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
-			_zoom += (positionY - lastPosY) / 40.0f;
+			_zoom += (positionY - lastPosY) / 120.0f;
 		}
 		else
 		{
@@ -337,10 +344,12 @@ void Sample3DSceneRenderer::Render()
 	BufferManager::Instance().PerFrameBuffer().Update(*m_deviceResources);
 
 	// Not sure which start slot to use here - maybe we need to keep a count..
-	context->PSSetShaderResources(8, 1, &_envTexResourceView);
-	context->PSSetSamplers(8, 1, &_envTexSampler);
-	context->PSSetShaderResources(9, 1, &_brdfLutResourceView);
-	context->PSSetSamplers(9, 1, &_brdfLutSampler);
+	context->PSSetShaderResources(8, 1, _envTexResourceView.GetAddressOf());
+	context->PSSetSamplers(8, 1, _envTexSampler.GetAddressOf());
+	context->PSSetShaderResources(9, 1, _brdfLutResourceView.GetAddressOf());
+	context->PSSetSamplers(9, 1, _brdfLutSampler.GetAddressOf());
+	context->PSSetShaderResources(10, 1, _envSpecularTexResourceView.GetAddressOf());
+	context->PSSetSamplers(10, 1, _envSpecularTexSampler.GetAddressOf());
 
 	SceneManager::Instance().Current()->Draw(context);
 	return;
@@ -434,7 +443,7 @@ void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
 }
 
-future<void> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)
+future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)
 {
 	// First load the file...
 	auto file = co_await imgFolder->GetFileAsync(ref new String(L"brdfLUT.png"));
@@ -471,8 +480,9 @@ future<void> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)
 	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateTexture2D(&txtDesc, &initialData,
 			tex.GetAddressOf()));
 
+	ComPtr<ID3D11ShaderResourceView> resourceView;
 	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateShaderResourceView(tex.Get(),
-			nullptr, _brdfLutResourceView.ReleaseAndGetAddressOf()));
+			nullptr, resourceView.GetAddressOf()));
 
 	// Create sampler.
 	D3D11_SAMPLER_DESC samplerDesc = {};
@@ -484,7 +494,13 @@ future<void> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, _brdfLutSampler.ReleaseAndGetAddressOf()));
+	ComPtr<ID3D11SamplerState> samplerState;
+	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf()));
+
+	TexWrapper ret;
+	ret.texResourceView = resourceView;
+	ret.texSampler = samplerState;
+	co_return ret;
 }
 
 future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ envName)
@@ -494,14 +510,28 @@ future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ e
 	String^ path(L"\\Assets\\textures\\");
 	String^ temp = sf->Path + path + envName + "\\"  + imgType;
 	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
-	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 1);
-	co_await CreateBdrfLutAsync(imgFolder);
+	auto res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 1);
+
+	_envTexResourceView = res.texResourceView;
+	_envTexSampler = res.texSampler;
+
+	temp = sf->Path + path;
+	auto brdfFolder = co_await sf->GetFolderFromPathAsync(temp);
+	res = co_await CreateBdrfLutAsync(brdfFolder);
+
+	_brdfLutResourceView = res.texResourceView;
+	_brdfLutSampler = res.texSampler;
 
 	imgType = L"specular";
 	temp = sf->Path + path + envName + "\\" + imgType;
-	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
+	imgFolder = co_await sf->GetFolderFromPathAsync(temp);
 
-	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 10);
+	ComPtr<ID3D11ShaderResourceView> rv;
+	ComPtr<ID3D11SamplerState> ss;
+	res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 5);
+
+	_envSpecularTexResourceView = res.texResourceView;
+	_envSpecularTexSampler = res.texSampler;
 
 	co_return;
 }

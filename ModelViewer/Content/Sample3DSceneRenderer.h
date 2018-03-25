@@ -29,11 +29,19 @@ namespace ModelViewer
 	{
 	public:
 		Sample3DSceneRenderer(const shared_ptr<DX::DeviceResources>& deviceResources);
+
+		class TexWrapper
+		{
+		public:
+			ComPtr<ID3D11ShaderResourceView> texResourceView;
+			ComPtr<ID3D11SamplerState> texSampler;
+		};
+
 		future<void> CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
-		future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels);
-		future<void> CreateBdrfLutAsync(StorageFolder^ imgFolder);
+		future<TexWrapper> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevel);
+		future<TexWrapper> CreateBdrfLutAsync(StorageFolder^ imgFolder);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();
@@ -84,6 +92,9 @@ namespace ModelViewer
 
 		ComPtr<ID3D11ShaderResourceView> _envTexResourceView;
 		ComPtr<ID3D11SamplerState> _envTexSampler;
+
+		ComPtr<ID3D11ShaderResourceView> _envSpecularTexResourceView;
+		ComPtr<ID3D11SamplerState> _envSpecularTexSampler;
 
 		ComPtr<ID3D11SamplerState> _brdfLutSampler;
 		ComPtr<ID3D11ShaderResourceView> _brdfLutResourceView;
