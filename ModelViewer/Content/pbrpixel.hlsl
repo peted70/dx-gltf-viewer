@@ -39,6 +39,9 @@ SamplerState emissionSampler : register(s3);
 TextureCube envTexture : register(t8);
 SamplerState envSampler : register(s8);
 
+Texture2D brdfLutTexture : register(t9);
+SamplerState brdfLutSampler : register(s9);
+
 //Texture2D occlusionTexture : register(t1);
 //SamplerState occlusionSampler : register(s1);
 

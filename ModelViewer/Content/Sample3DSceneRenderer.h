@@ -33,6 +33,7 @@ namespace ModelViewer
 		void CreateWindowSizeDependentResources();
 		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
 		future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType);
+		future<void> CreateBdrfLutAsync(StorageFolder^ imgFolder);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();
@@ -83,6 +84,9 @@ namespace ModelViewer
 
 		ComPtr<ID3D11ShaderResourceView> _envTexResourceView;
 		ComPtr<ID3D11SamplerState> _envTexSampler;
+
+		ComPtr<ID3D11SamplerState> _brdfLutSampler;
+		ComPtr<ID3D11ShaderResourceView> _brdfLutResourceView;
 
 		ComPtr<ID3D11SamplerState>          _spSampler;
 		ComPtr<ID3D11ShaderResourceView>    _spTexture;

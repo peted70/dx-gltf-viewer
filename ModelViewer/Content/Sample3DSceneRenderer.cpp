@@ -333,6 +333,8 @@ void Sample3DSceneRenderer::Render()
 	// Not sure which start slot to use here - maybe we need to keep a count..
 	context->PSSetShaderResources(8, 1, &_envTexResourceView);
 	context->PSSetSamplers(8, 1, &_envTexSampler);
+	context->PSSetShaderResources(9, 1, &_brdfLutResourceView);
+	context->PSSetSamplers(9, 1, &_brdfLutSampler);
 
 	SceneManager::Instance().Current()->Draw(context);
 	return;
@@ -426,6 +428,59 @@ void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
 }
 
+future<void> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)
+{
+	// First load the file...
+	auto file = co_await imgFolder->GetFileAsync(ref new String(L"brdfLUT.png"));
+	auto buffer = co_await FileIO::ReadBufferAsync(file);
+	auto fileSize = buffer->Length;
+
+	// Query the IBufferByteAccess interface.  
+	ComPtr<IBufferByteAccess> bufferByteAccess;
+	reinterpret_cast<IInspectable*>(buffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
+
+	byte* data = nullptr;
+	bufferByteAccess->Buffer(&data);
+
+	uint32_t width;
+	uint32_t height;
+
+	auto image = ImgUtils::LoadRGBAImage((void *)data, fileSize, width, height);
+
+	D3D11_TEXTURE2D_DESC txtDesc = {};
+	txtDesc.MipLevels = txtDesc.ArraySize = 1;
+	txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	txtDesc.SampleDesc.Count = 1;
+	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	txtDesc.Width = width;
+	txtDesc.Height = height;
+
+	D3D11_SUBRESOURCE_DATA initialData = {};
+	initialData.pSysMem = image.data();
+	initialData.SysMemPitch = txtDesc.Width * sizeof(uint32_t);
+
+	ComPtr<ID3D11Texture2D> tex;
+	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateTexture2D(&txtDesc, &initialData,
+			tex.GetAddressOf()));
+
+	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateShaderResourceView(tex.Get(),
+			nullptr, _brdfLutResourceView.ReleaseAndGetAddressOf()));
+
+	// Create sampler.
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateSamplerState(&samplerDesc, _brdfLutSampler.ReleaseAndGetAddressOf()));
+}
+
 future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ envName)
 {
 	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
@@ -435,6 +490,7 @@ future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ e
 	auto tmp = temp->Data();
 	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
 	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType);
+	co_await CreateBdrfLutAsync(imgFolder);
 	co_return;
 }
 
