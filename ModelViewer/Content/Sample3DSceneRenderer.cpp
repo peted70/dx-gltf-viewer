@@ -20,7 +20,6 @@ static float lastPosY;
 static float lastY;
 
 using namespace ModelViewer;
-using namespace Windows::Storage;
 
 using namespace DirectX;
 using namespace Windows::Foundation;
@@ -88,10 +87,8 @@ const wchar_t *sides[] =
 	L"right"
 };
 
-//auto sf = Windows::Storage::ApplicationData::Current->LocalFolder;
-//auto imgFolder = co_await sf->GetFolderFromPathAsync(ref new String("Assets/textures/") + imgType);
 
-future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
+future<void> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.Width = 128;
@@ -117,13 +114,13 @@ future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder,
 
 	uint32_t width;
 	uint32_t height;
-	
+	std::vector<byte> bytes[6];
 	for (int i = 0; i < 6; i++)
 	{
 		Utility::Out(L"Loading cube image [%d]", i);
-		auto bytes = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), 0, width, height);
+		bytes[i] = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), 0, width, height);
 		Utility::Out(L"Loaded cube image [%d]", i);
-		pData[i].pSysMem = bytes.data();
+		pData[i].pSysMem = bytes[i].data();
 		pData[i].SysMemPitch = width * 4;
 		pData[i].SysMemSlicePitch = 0;
 	}
@@ -132,9 +129,19 @@ future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder,
 	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], tex.GetAddressOf());
 	assert(hr == S_OK);
 
-	ComPtr<ID3D11ShaderResourceView> textureResourceView;
-	hr = device->CreateShaderResourceView(tex.Get(), &SMViewDesc, textureResourceView.ReleaseAndGetAddressOf());
+	hr = device->CreateShaderResourceView(tex.Get(), &SMViewDesc, _envTexResourceView.ReleaseAndGetAddressOf());
 	assert(hr == S_OK);
+
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	DX::ThrowIfFailed(device->CreateSamplerState(&samplerDesc, _envTexSampler.ReleaseAndGetAddressOf()));
 
 	co_return;
 }
@@ -322,6 +329,10 @@ void Sample3DSceneRenderer::Render()
 
 	BufferManager::Instance().PerObjBuffer().Update(*m_deviceResources);
 	BufferManager::Instance().PerFrameBuffer().Update(*m_deviceResources);
+
+	// Not sure which start slot to use here - maybe we need to keep a count..
+	context->PSSetShaderResources(8, 1, &_envTexResourceView);
+	context->PSSetSamplers(8, 1, &_envTexSampler);
 
 	SceneManager::Instance().Current()->Draw(context);
 	return;

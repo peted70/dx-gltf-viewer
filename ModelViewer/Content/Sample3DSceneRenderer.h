@@ -22,6 +22,7 @@ namespace ModelViewer
 	using namespace Microsoft::WRL;
 	using namespace Windows::System;
 	using namespace Platform;
+	using namespace Windows::Storage;
 
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer : public Observer
@@ -31,6 +32,7 @@ namespace ModelViewer
 		future<void> CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
+		future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();
@@ -78,6 +80,9 @@ namespace ModelViewer
 		ComPtr<ID3D11InputLayout>	_lineDrawingInputLayout;
 		ComPtr<ID3D11VertexShader>	_simpleVertexShader;
 		ComPtr<ID3D11PixelShader>	_simplePixelShader;
+
+		ComPtr<ID3D11ShaderResourceView> _envTexResourceView;
+		ComPtr<ID3D11SamplerState> _envTexSampler;
 
 		ComPtr<ID3D11SamplerState>          _spSampler;
 		ComPtr<ID3D11ShaderResourceView>    _spTexture;
