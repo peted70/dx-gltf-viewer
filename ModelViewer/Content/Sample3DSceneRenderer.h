@@ -11,20 +11,26 @@
 #include "./Scene/GraphContainerNode.h"
 #include "NotificationManager.h"
 
+#include <future>
+#include <experimental/resumable>
+#include <pplawait.h>
+
 namespace ModelViewer
 {
 	using namespace WinRTGLTFParser;
 	using namespace std;
 	using namespace Microsoft::WRL;
 	using namespace Windows::System;
+	using namespace Platform;
 
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer : public Observer
 	{
 	public:
 		Sample3DSceneRenderer(const shared_ptr<DX::DeviceResources>& deviceResources);
-		void CreateDeviceDependentResources();
+		future<void> CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
+		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();

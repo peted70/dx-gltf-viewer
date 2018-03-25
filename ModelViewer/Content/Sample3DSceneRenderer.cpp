@@ -9,11 +9,6 @@
 #include "BufferManager.h"
 
 #include "DirectXPageViewModelData.h"
-
-#include <future>
-#include <experimental/resumable>
-#include <pplawait.h>
-
 #include <robuffer.h>  
 
 using namespace Windows::Storage::Streams;
@@ -25,7 +20,6 @@ static float lastPosY;
 static float lastY;
 
 using namespace ModelViewer;
-using namespace Platform;
 using namespace Windows::Storage;
 
 using namespace DirectX;
@@ -57,7 +51,7 @@ void updateMathScales(string selected)
 
 future<void *> LoadFileDataAsync(StorageFolder^ imgfolder, String^ imgType, String^ side, int mipmapLevel, int& fileSize)
 {
-	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel);
+	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
 	auto buffer = co_await FileIO::ReadBufferAsync(file);
 	fileSize = buffer->Length;
 
@@ -78,7 +72,9 @@ future<vector<byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgTy
 	int dataSize = 0;
 	auto fileData = co_await LoadFileDataAsync(imgFolder, imgType, side, mipLevel, dataSize);
 
-	auto bytes = ImgUtils::LoadRGBAImage(fileData, dataSize, width, height);
+	auto pth = imgFolder->Path + "\\" + imgType + "_" + side + "_" + mipLevel + ".jpg";
+
+	auto bytes = ImgUtils::LoadRGBAImage(fileData, dataSize, width, height, true, pth->Data());
 	co_return bytes;
 }
 
@@ -95,7 +91,7 @@ const wchar_t *sides[] =
 //auto sf = Windows::Storage::ApplicationData::Current->LocalFolder;
 //auto imgFolder = co_await sf->GetFolderFromPathAsync(ref new String("Assets/textures/") + imgType);
 
-std::future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
+future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.Width = 128;
@@ -124,16 +120,20 @@ std::future<void> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFo
 	
 	for (int i = 0; i < 6; i++)
 	{
+		Utility::Out(L"Loading cube image [%d]", i);
 		auto bytes = co_await LoadCubeImagesAsync(imgFolder, "diffuse", ref new String(sides[i]), 0, width, height);
+		Utility::Out(L"Loaded cube image [%d]", i);
 		pData[i].pSysMem = bytes.data();
 		pData[i].SysMemPitch = width * 4;
 		pData[i].SysMemSlicePitch = 0;
 	}
 
-	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], &m_pCubeTexture);
+	ComPtr<ID3D11Texture2D> tex;
+	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], tex.GetAddressOf());
 	assert(hr == S_OK);
 
-	hr = device->CreateShaderResourceView(m_pCubeTexture, &SMViewDesc, &m_pShaderResourceView);
+	ComPtr<ID3D11ShaderResourceView> textureResourceView;
+	hr = device->CreateShaderResourceView(tex.Get(), &SMViewDesc, textureResourceView.ReleaseAndGetAddressOf());
 	assert(hr == S_OK);
 
 	co_return;
@@ -415,7 +415,19 @@ void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
 }
 
-void Sample3DSceneRenderer::CreateDeviceDependentResources()
+future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ envName)
+{
+	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
+	String^ imgType(L"diffuse");
+	String^ path(L"\\Assets\\textures\\");
+	String^ temp = sf->Path + path + envName + "\\"  + imgType;
+	auto tmp = temp->Data();
+	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
+	co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType);
+	co_return;
+}
+
+future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 {
 	// Create sampler.
 	D3D11_SAMPLER_DESC samplerDesc = {};
@@ -546,10 +558,14 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		);
 	});
 
+	co_await CreateEnvironmentMapResourcesAsync(ref new String(L"papermill"));
+
 	(createPSTask && createVSTask && createPSTask2 && createVSTask2).then([this]()
 	{
 		m_loadingComplete = true;
 	});
+
+	co_return;
 }
 
 void Sample3DSceneRenderer::ReleaseDeviceDependentResources()

@@ -4,7 +4,8 @@
 
 using namespace DX;
 
-vector<uint8_t> ImgUtils::LoadRGBAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height)
+vector<uint8_t> ImgUtils::LoadRGBAImage(void *imgFileData, int imgFileDataSize, uint32_t& width, uint32_t& height, 
+	bool jpg, const wchar_t *filename)
 {
 	ComPtr<IWICImagingFactory> wicFactory;
 	ThrowIfFailed(CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
@@ -17,7 +18,16 @@ vector<uint8_t> ImgUtils::LoadRGBAImage(void *imgFileData, int imgFileDataSize, 
 	ThrowIfFailed(pIWICStream->InitializeFromMemory(reinterpret_cast<BYTE*>(imgFileData), imgFileDataSize));
 
 	ComPtr<IWICBitmapDecoder> decoder;
-	ThrowIfFailed(wicFactory->CreateDecoderFromStream(pIWICStream, nullptr, WICDecodeMetadataCacheOnLoad, decoder.GetAddressOf()));
+	if (jpg)
+	{
+		ThrowIfFailed(wicFactory->CreateDecoderFromFilename(filename, nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, decoder.GetAddressOf()));
+		//ThrowIfFailed(wicFactory->CreateDecoder(GUID_ContainerFormatJpeg, nullptr, decoder.GetAddressOf()));
+		//decoder->Initialize(pIWICStream, WICDecodeMetadataCacheOnLoad);
+	}
+	else
+	{
+		ThrowIfFailed(wicFactory->CreateDecoderFromStream(pIWICStream, nullptr, WICDecodeMetadataCacheOnLoad, decoder.GetAddressOf()));
+	}
 
 	ComPtr<IWICBitmapFrameDecode> frame;
 	ThrowIfFailed(decoder->GetFrame(0, frame.GetAddressOf()));
