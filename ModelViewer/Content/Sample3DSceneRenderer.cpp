@@ -95,7 +95,7 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.MipLevels = mipLevels;
 	texDesc.ArraySize = 6;
-	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
@@ -111,8 +111,10 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	SMViewDesc.TextureCube.MostDetailedMip = 0;
 
 	vector<D3D11_SUBRESOURCE_DATA> pData(6 * mipLevels);
-	uint32_t width;
-	uint32_t height;
+	uint32_t twidth = 0;
+	uint32_t theight = 0;
+	uint32_t width = 0;
+	uint32_t height = 0;
 	vector<vector<byte>> bytes(6 * mipLevels);
 	for (int j = 0; j < mipLevels; j++)
 	{
@@ -121,6 +123,10 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 			int idx = j * 6 + i;
 			Utility::Out(L"Loading cube image [%d]", i);
 			bytes[idx] = co_await LoadCubeImagesAsync(imgFolder, imgType, ref new String(sides[i]), j, width, height);
+			if (width > twidth)
+				twidth = width;
+			if (height > theight)
+				theight = height;
 			Utility::Out(L"Loaded cube image [%d]", i);
 			pData[idx].pSysMem = bytes[i].data();
 			pData[idx].SysMemPitch = width * 4;
@@ -128,8 +134,8 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 		}
 	}
 
-	texDesc.Width = width;
-	texDesc.Height = height;
+	texDesc.Width = twidth;
+	texDesc.Height = theight;
 
 	ComPtr<ID3D11Texture2D> tex;
 	HRESULT hr = device->CreateTexture2D(&texDesc, &pData[0], tex.GetAddressOf());
@@ -528,7 +534,7 @@ future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ e
 
 	ComPtr<ID3D11ShaderResourceView> rv;
 	ComPtr<ID3D11SamplerState> ss;
-	res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 5);
+	res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 10);
 
 	_envSpecularTexResourceView = res.texResourceView;
 	_envSpecularTexSampler = res.texSampler;

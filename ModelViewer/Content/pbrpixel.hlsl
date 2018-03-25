@@ -200,7 +200,7 @@ float3 getIBLContribution(PBRInfo pbrInputs, float3 n, float3 reflection)
     float3 diffuseLight = SRGBtoLINEAR(envDiffuseTexture.Sample(envDiffuseSampler, n)).rgb;
 
 #ifdef USE_TEX_LOD
-    float3 specularLight = SRGBtoLINEAR(envSpecularTexture.SampleLevel(envSpecularSampler, reflection, 0)).rgb;
+    float3 specularLight = SRGBtoLINEAR(envSpecularTexture.SampleLevel(envSpecularSampler, reflection, lod)).rgb;
     //float3 specularLight = SRGBtoLINEAR(textureCubeLodEXT(envSpecularTexture, reflection, lod)).rgb;
 #else
     //float3 specularLight = SRGBtoLINEAR(textureCube(u_SpecularEnvSampler, reflection)).rgb;
