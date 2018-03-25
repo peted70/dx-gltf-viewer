@@ -22,6 +22,7 @@
 #define HAS_NORMALS
 //#define MANUAL_SRGB
 //#define SRGB_FAST_APPROXIMATION
+#define USE_IBL
 
 // First three are 3 channel textures
 Texture2D baseColourTexture : register(t0);
@@ -93,12 +94,6 @@ struct PixelShaderInput
     float2 texcoord : TEXCOORD0;
 #endif
 };
-
-#ifdef USE_IBL
-TextureCube u_DiffuseEnvSampler;
-TextureCube u_SpecularEnvSampler;
-Texture2D u_brdfLUT;
-#endif
 
 #ifdef HAS_NORMALS
 #ifdef HAS_TANGENTS
@@ -193,13 +188,12 @@ float3 getIBLContribution(PBRInfo pbrInputs, float3 n, float3 reflection)
 {
     float mipCount = 9.0; // resolution of 512x512
     float lod = (pbrInputs.perceptualRoughness * mipCount);
+  
     // retrieve a scale and bias to F0. See [1], Figure 3
-    float3 brdf = SRGBtoLINEAR(
-    texture2D( u_brdfLUT, float2
-    (pbrInputs.NdotV, 1.0 - pbrInputs.perceptualRoughness))).
-    rgb;
-    float3
-    diffuseLight = SRGBtoLINEAR(textureCube(u_DiffuseEnvSampler, n)).rgb;
+    float2 val = float2(pbrInputs.NdotV, 1.0 - pbrInputs.perceptualRoughness);
+    float3 brdf = SRGBtoLINEAR(brdfLutTexture.Sample(brdfLutSampler, val)).rgb;
+
+    float3 diffuseLight = SRGBtoLINEAR(envTexture.Sample(envSampler, n)).rgb;
 
 #ifdef USE_TEX_LOD
     float3 specularLight = SRGBtoLINEAR(textureCubeLodEXT(u_SpecularEnvSampler, reflection, lod)).rgb;
