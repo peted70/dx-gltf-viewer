@@ -314,7 +314,7 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 {
 	if (m_tracking)
 	{
-		//Utility::Out(L"TrackingUpdate [%f %f] %d", positionX, positionY, mod);
+		Utility::Out(L"TrackingUpdate [%f %f] %d", positionX, positionY, mod);
 
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
