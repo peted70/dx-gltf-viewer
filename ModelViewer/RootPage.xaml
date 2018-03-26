@@ -51,7 +51,6 @@
                             VerticalAlignment="Top"
                             DefaultLabelPosition="Right"
                             Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
-                        <AppBarButton Label="Refresh" Icon="Refresh"/>
                         <AppBarButton Label="Import" Icon="Import" Click="ImportClick"/>
                     </CommandBar>
                 </Grid>

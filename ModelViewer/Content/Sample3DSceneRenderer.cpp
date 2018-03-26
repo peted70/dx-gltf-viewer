@@ -48,12 +48,17 @@ void updateMathScales(string selected)
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec.w = mathSpec;
 };
 
-future<void *> LoadFileDataAsync(StorageFolder^ imgfolder, String^ imgType, String^ side, int mipmapLevel, int& fileSize)
+future<IBuffer^> GetBuffer(StorageFolder^ imgfolder, String^ imgType, String^ side, int mipmapLevel)
 {
 	String^ fileName(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
 	Utility::Out(L"Loading file [%s\\%s]", imgfolder->Path->Data(), fileName->Data());
 	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
 	auto buffer = co_await FileIO::ReadBufferAsync(file);
+	return buffer;
+}
+
+future<void *> LoadFileDataAsync(IBuffer^ buffer, int& fileSize)
+{
 	fileSize = buffer->Length;
 
 	// Query the IBufferByteAccess interface.  
@@ -71,8 +76,9 @@ future<void *> LoadFileDataAsync(StorageFolder^ imgfolder, String^ imgType, Stri
 future<vector<byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgType, String^ side, int mipLevel, uint32_t& width, uint32_t& height)
 {
 	int dataSize = 0;
-	auto fileData = co_await LoadFileDataAsync(imgFolder, imgType, side, mipLevel, dataSize);
+	auto buffer = co_await GetBuffer(imgFolder, imgType, side, mipLevel);
 
+	auto fileData = co_await LoadFileDataAsync(buffer, dataSize);
 	auto pth = imgFolder->Path + "\\" + imgType + "_" + side + "_" + mipLevel + ".jpg";
 
 	auto bytes = ImgUtils::LoadRGBAImage(fileData, dataSize, width, height, true, pth->Data());
@@ -81,8 +87,8 @@ future<vector<byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgTy
 
 const wchar_t *sides[] = 
 {
-	L"front",
 	L"back",
+	L"front",
 	L"top",
 	L"bottom",
 	L"left",
@@ -90,12 +96,13 @@ const wchar_t *sides[] =
 };
 
 
-future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevels)
+future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAsync(ID3D11Device3 *device, 
+	StorageFolder^ imgFolder, String^ imgType, int mipLevels)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.MipLevels = mipLevels;
 	texDesc.ArraySize = 6;
-	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
@@ -113,24 +120,26 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	vector<D3D11_SUBRESOURCE_DATA> pData(6 * mipLevels);
 	uint32_t twidth = 0;
 	uint32_t theight = 0;
-	uint32_t width = 0;
-	uint32_t height = 0;
 	vector<vector<byte>> bytes(6 * mipLevels);
 	for (int j = 0; j < mipLevels; j++)
 	{
 		for (int i = 0; i < 6; i++)
 		{
 			int idx = j * 6 + i;
-			Utility::Out(L"Loading cube image [%d]", i);
-			bytes[idx] = co_await LoadCubeImagesAsync(imgFolder, imgType, ref new String(sides[i]), j, width, height);
+			Utility::Out(L"Loading cube image [%d]", idx);
+			uint32_t width = 0;
+			uint32_t height = 0;
+			auto imgData = co_await LoadCubeImagesAsync(imgFolder, imgType, ref new String(sides[i]), j, width, height);
+			bytes[idx] = imgData;
+			Utility::Out(L"cube image size [%d, %d, %d]", width, height, bytes[idx].size());
 			if (width > twidth)
 				twidth = width;
 			if (height > theight)
 				theight = height;
-			Utility::Out(L"Loaded cube image [%d]", i);
-			pData[idx].pSysMem = bytes[i].data();
+			Utility::Out(L"Loaded cube image [%d]", idx);
+			pData[idx].pSysMem = bytes[idx].data();
 			pData[idx].SysMemPitch = width * 4;
-			pData[idx].SysMemSlicePitch = width * height * 4;
+			pData[idx].SysMemSlicePitch = 0;
 		}
 	}
 
@@ -147,7 +156,7 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	assert(hr == S_OK);
 
 	D3D11_SAMPLER_DESC samplerDesc = {};
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.Filter = D3D11_FILTER_MAXIMUM_ANISOTROPIC;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -534,7 +543,7 @@ future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ e
 
 	ComPtr<ID3D11ShaderResourceView> rv;
 	ComPtr<ID3D11SamplerState> ss;
-	res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 10);
+	res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 1);
 
 	_envSpecularTexResourceView = res.texResourceView;
 	_envSpecularTexSampler = res.texSampler;
