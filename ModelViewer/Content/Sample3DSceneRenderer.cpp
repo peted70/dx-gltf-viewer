@@ -291,6 +291,8 @@ void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 
 		Rotate(0.0f);
 	}
+
+	SceneManager::Instance().Current()->Update(timer);
 }
 
 // Rotate the 3D cube model a set amount of radians.

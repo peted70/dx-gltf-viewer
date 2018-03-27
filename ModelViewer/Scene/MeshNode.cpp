@@ -119,7 +119,6 @@ void MeshNode::CreateDeviceDependentResources()
 	//auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"PixelTranslated.cso");
 
-
 	// After the vertex shader file is loaded, create the shader and input layout.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
 	{
@@ -147,19 +146,6 @@ void MeshNode::CreateDeviceDependentResources()
 		Utility::Out(L"Loaded Vertex Shader");
 	});
 
-	// After the pixel shader file is loaded, create the shader and constant buffer.
-	//auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) 
-	//{
-	//	//DX::ThrowIfFailed(
-	//	//	DevResources()->GetD3DDevice()->CreatePixelShader(
-	//	//		&fileData[0],
-	//	//		fileData.size(),
-	//	//		nullptr,
-	//	//		&m_pixelShader));
-	//	//Utility::Out(L"Loaded Pixel Shader");
-	//});
-
-	//concurrency::when_all()
 	(createVSTask).then([this]() {
 		m_loadingComplete = true;
 		Utility::Out(L"Loading Complete");

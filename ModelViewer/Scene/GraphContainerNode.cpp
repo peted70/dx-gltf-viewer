@@ -11,6 +11,14 @@ GraphContainerNode::~GraphContainerNode()
 {
 }
 
+void GraphContainerNode::Update(StepTimer const& timer)
+{
+	for (auto child : _children)
+	{
+		child->Update(timer);
+	}
+}
+
 void GraphContainerNode::Draw(ID3D11DeviceContext2 *context)
 {
 	for (auto child : _children)

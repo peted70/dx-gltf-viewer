@@ -2,8 +2,10 @@
 #include "GraphNode.h"
 #include <vector>
 #include "../Common/DeviceResources.h"
+#include "../Common/StepTimer.h"
 
 using namespace std;
+using namespace DX;
 
 class GraphContainerNode :
 	public GraphNode
@@ -11,6 +13,8 @@ class GraphContainerNode :
 public:
 	GraphContainerNode();
 	virtual ~GraphContainerNode();
+
+	virtual void Update(StepTimer const& timer);
 
 	virtual void Draw(ID3D11DeviceContext2 *context);
 	virtual void CreateDeviceDependentResources();
