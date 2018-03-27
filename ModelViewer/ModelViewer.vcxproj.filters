@@ -105,6 +105,7 @@
     <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
+    <ClCompile Include="DXUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="NotificationManager.h" />
     <ClInclude Include="DirectXPageViewModelData.h" />
     <ClInclude Include="ImgUtils.h" />
+    <ClInclude Include="DXUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
@@ -375,6 +377,7 @@
     <None Include="ModelViewer_TemporaryKey.pfx" />
     <None Include="Assets\BoomBox.glb" />
     <None Include="Assets\Box.glb" />
+    <None Include="Assets\Shaders\pbrpixel.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />
@@ -383,7 +386,6 @@
   <ItemGroup>
     <FxCompile Include="Content\SimplePixelShader.hlsl" />
     <FxCompile Include="Content\SimpleVertexShader.hlsl" />
-    <FxCompile Include="Content\pbrpixel.hlsl" />
     <FxCompile Include="Content\pbrvertex.hlsl" />
     <FxCompile Include="Content\PixelTranslated.hlsl" />
   </ItemGroup>

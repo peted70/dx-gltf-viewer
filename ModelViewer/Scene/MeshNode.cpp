@@ -3,6 +3,20 @@
 #include "Common\DirectXHelper.h"
 #include "BufferManager.h"
 #include "ImgUtils.h"
+#include "DxUtils.h"
+
+using namespace Platform;
+
+const char *defineLookup[] = 
+{
+	"HAS_BASECOLORMAP",
+	"HAS_NORMALMAP",
+	"HAS_EMISSIVEMAP",
+	"HAS_OCCLUSIONMAP",
+	"HAS_METALROUGHNESSMAP"
+};
+
+const char *one = "1";
 
 MeshNode::MeshNode() : 
 	m_loadingComplete(false)
@@ -17,6 +31,58 @@ void MeshNode::Initialise(const std::shared_ptr<DX::DeviceResources>& deviceReso
 {
 	GraphContainerNode::Initialise(deviceResources);
 	CreateDeviceDependentResources();
+}
+
+void MeshNode::AfterLoad()
+{
+	CompileAndLoadShaders();
+}
+
+void MeshNode::CompileAndLoadShaders()
+{
+	// Compile pixel shader shader
+	ID3DBlob *psBlob = nullptr;
+
+	// Work out the path to the shader...
+	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
+	String^ path(L"\\Assets\\Shaders\\");
+	String^ filePath = sf->Path + path + "pbrpixel.hlsl";
+
+	auto textures = _material->Textures();
+	
+	// Allocate the defines map...
+	int count = textures.size();
+	auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
+
+	// Iterate through all textures and set them as shader resources...
+	int idx = 0;
+	for (auto txItr = textures.begin(); txItr != textures.end(); ++txItr)
+	{
+		auto textureWrapper = txItr->second;
+		auto type = textureWrapper->Type();
+
+		const char *define = defineLookup[type];
+
+		(defines.get())[idx].Name = define;
+		(defines.get())[idx].Definition = one;
+
+		idx++;
+	}
+
+	(defines.get())[idx].Name = nullptr;
+	(defines.get())[idx].Definition = nullptr;
+
+	auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "ps_5_0", &psBlob);
+	if (FAILED(hr))
+	{
+		printf("Failed compiling pixel shader %08X\n", hr);
+		return;
+	}
+	DX::ThrowIfFailed(
+		DevResources()->GetD3DDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
+		nullptr, &m_pixelShader));
+
+	Utility::Out(L"Loaded Pixel Shader");
 }
 
 void MeshNode::CreateDeviceDependentResources()
@@ -50,7 +116,7 @@ void MeshNode::CreateDeviceDependentResources()
 	//auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 	auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
-	auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
+	//auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"PixelTranslated.cso");
 
 
@@ -82,19 +148,19 @@ void MeshNode::CreateDeviceDependentResources()
 	});
 
 	// After the pixel shader file is loaded, create the shader and constant buffer.
-	auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) 
-	{
-		DX::ThrowIfFailed(
-			DevResources()->GetD3DDevice()->CreatePixelShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_pixelShader));
-		Utility::Out(L"Loaded Pixel Shader");
-	});
+	//auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) 
+	//{
+	//	//DX::ThrowIfFailed(
+	//	//	DevResources()->GetD3DDevice()->CreatePixelShader(
+	//	//		&fileData[0],
+	//	//		fileData.size(),
+	//	//		nullptr,
+	//	//		&m_pixelShader));
+	//	//Utility::Out(L"Loaded Pixel Shader");
+	//});
 
 	//concurrency::when_all()
-	(createPSTask && createVSTask).then([this]() {
+	(createVSTask).then([this]() {
 		m_loadingComplete = true;
 		Utility::Out(L"Loading Complete");
 	});

@@ -278,6 +278,7 @@
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
     <ClInclude Include="DirectXPageViewModelData.h" />
+    <ClInclude Include="DXUtils.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="NotificationManager.h" />
     <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
     <ClCompile Include="DirectXPageViewModelData.cpp" />
+    <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
@@ -367,15 +369,10 @@
     <None Include="ModelViewer_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Content\pbrpixel.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-    </FxCompile>
+    <None Include="Assets\Shaders\pbrpixel.hlsl">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </None>
     <FxCompile Include="Content\pbrvertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Vertex</ShaderType>

@@ -32,5 +32,7 @@ future<shared_ptr<MeshNode>> ModelFactory::CreateFromFileAsync(String^ filename)
 
 	co_await async([&parser, filename, &mesh]() { parser->ParseFile(filename); return mesh.get(); });
 
+	mesh->AfterLoad();
+
 	co_return mesh;
 }

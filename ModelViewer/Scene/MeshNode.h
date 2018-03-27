@@ -4,9 +4,14 @@
 #include "Common\DeviceResources.h"
 #include <map>
 #include "NodeMaterial.h"
+#include <future>
+#include <experimental/resumable>
+#include <pplawait.h>
 
 using namespace WinRTGLTFParser;
 using namespace Microsoft::WRL;
+using namespace std;
+using namespace DX;
 
 class MeshNode : public GraphContainerNode
 {
@@ -14,9 +19,12 @@ public:
 	MeshNode();
 	virtual ~MeshNode();
 
+	void CompileAndLoadShaders();
+
 	virtual void Draw(ID3D11DeviceContext2 *context);
 	virtual void CreateDeviceDependentResources();
-	virtual void Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+	virtual void Initialise(const shared_ptr<DeviceResources>& deviceResources);
+	virtual void AfterLoad();
 
 	void CreateBuffer(GLTF_BufferData^ data);
 	void CreateTexture(GLTF_TextureData^ data);
@@ -41,7 +49,7 @@ private:
 		ComPtr<ID3D11Buffer> _buffer;
 	};
 
-	shared_ptr<DX::DeviceResources> m_deviceResources;
+	shared_ptr<DeviceResources> m_deviceResources;
 	map<wstring, BufferWrapper> _buffers;
 	ComPtr<ID3D11InputLayout> m_inputLayout;
 

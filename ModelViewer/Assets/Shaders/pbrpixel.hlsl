@@ -14,33 +14,17 @@
 
 #define NORMALS
 #define UV
-#define HAS_METALROUGHNESSMAP
-#define HAS_OCCLUSIONMAP
-#define HAS_EMISSIVEMAP
-#define HAS_BASECOLORMAP
-#define HAS_NORMALMAP
+//#define HAS_METALROUGHNESSMAP
+//#define HAS_OCCLUSIONMAP
+//#define HAS_EMISSIVEMAP
+//#define HAS_BASECOLORMAP
+//#define HAS_NORMALMAP
 #define HAS_NORMALS
 //#define MANUAL_SRGB
 //#define SRGB_FAST_APPROXIMATION
 #define USE_IBL
 #define USE_TEX_LOD
 
-#if 0
-// First three are 3 channel textures
-Texture2D baseColourTexture : register(t0);
-SamplerState baseColourSampler : register(s0);
-
-Texture2D metallicRoughnessTexture : register(t1);
-SamplerState metallicRoughnessSampler : register(s1);
-
-Texture2D normalTexture : register(t2);
-SamplerState normalSampler : register(s2);
-
-Texture2D emissionTexture : register(t3);
-SamplerState emissionSampler : register(s3);
-
-
-#else
 Texture2D baseColourTexture : register(t0);
 SamplerState baseColourSampler : register(s0);
 
@@ -55,8 +39,6 @@ SamplerState occlusionSampler : register(s3);
 
 Texture2D metallicRoughnessTexture : register(t4);
 SamplerState metallicRoughnessSampler : register(s4);
-
-#endif
 
 TextureCube envDiffuseTexture : register(t8);
 SamplerState envDiffuseSampler : register(s8);
