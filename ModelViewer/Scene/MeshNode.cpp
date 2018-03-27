@@ -158,20 +158,19 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	// Iterate through all textures and set them as shader resources...
 	auto textures = _material->Textures();
 
+	// Setting the textures and samplers using the GLTF index as the destination slot
+	// We load some textures twice here so maybe re-visit..
 	for (auto txItr = textures.begin(); txItr != textures.end(); ++txItr)
 	{
-		auto type = txItr->first;
 		auto textureWrapper = txItr->second;
-
-		//auto idx = textureWrapper->GetIndex();
 
 		// Set texture and sampler.
 		auto sampler = textureWrapper->GetSampler().Get();
-		context->PSSetSamplers(type, 1, &sampler);
-		//Utility::Out(L"Set texture sampler at slot %d", type);
-
+		context->PSSetSamplers(textureWrapper->Type(), 1, &sampler);
+		
+		//Utility::Out(L"Set texture sampler at slot %d", textureWrapper->Type());
 		auto texture = textureWrapper->GetShaderResourceView().Get();
-		context->PSSetShaderResources(type, 1, &texture);
+		context->PSSetShaderResources(textureWrapper->Type(), 1, &texture);
 	}
 
 	if (indexed)

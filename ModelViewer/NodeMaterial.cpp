@@ -32,13 +32,14 @@ void NodeMaterial::AddTexture(unsigned int idx,
 
 	// if we have the index already reference it otherwise create a new one..
 	auto found = _textures.find(idx);
-	if (found != _textures.end())
-	{
-		(*found).second->AddType(type);
-		return;
-	}
 
-	_textures[idx] = make_shared<TextureWrapper>(TextureWrapper(idx, type, tex, textureResourceView, texSampler));
+	//if (found != _textures.end())
+	//{
+	//	(*found).second->AddType(type);
+	//	return;
+	//}
+
+	_textures[type] = make_shared<TextureWrapper>(TextureWrapper(idx, type, tex, textureResourceView, texSampler));
 
 	//// if we have the index already reference it otherwise create a new one..
 	//auto found = std::find_if(_textures.begin(), _textures.end(), 

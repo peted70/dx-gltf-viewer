@@ -25,6 +25,7 @@
 #define USE_IBL
 #define USE_TEX_LOD
 
+#if 0
 // First three are 3 channel textures
 Texture2D baseColourTexture : register(t0);
 SamplerState baseColourSampler : register(s0);
@@ -38,6 +39,25 @@ SamplerState normalSampler : register(s2);
 Texture2D emissionTexture : register(t3);
 SamplerState emissionSampler : register(s3);
 
+
+#else
+Texture2D baseColourTexture : register(t0);
+SamplerState baseColourSampler : register(s0);
+
+Texture2D normalTexture : register(t1);
+SamplerState normalSampler : register(s1);
+
+Texture2D emissionTexture : register(t2);
+SamplerState emissionSampler : register(s2);
+
+Texture2D occlusionTexture : register(t3);
+SamplerState occlusionSampler : register(s3);
+
+Texture2D metallicRoughnessTexture : register(t4);
+SamplerState metallicRoughnessSampler : register(s4);
+
+#endif
+
 TextureCube envDiffuseTexture : register(t8);
 SamplerState envDiffuseSampler : register(s8);
 
@@ -46,14 +66,6 @@ SamplerState brdfLutSampler : register(s9);
 
 TextureCube envSpecularTexture : register(t10);
 SamplerState envSpecularSampler : register(s10);
-
-//Texture2D occlusionTexture : register(t1);
-//SamplerState occlusionSampler : register(s1);
-
-// The following three textures are packed into a single channel
-// of one input image..
-//Texture2D metallicRoughnessTexture : register(t4);
-//SamplerState metallicRoughnessSampler : register(s4);
 
 struct Light
 {
@@ -354,7 +366,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     // Apply optional PBR terms for additional (optional) shading
 #ifdef HAS_OCCLUSIONMAP
-    float ao = metallicRoughnessTexture.Sample(metallicRoughnessSampler, input.texcoord).r;
+    float ao = occlusionTexture.Sample(occlusionSampler, input.texcoord).r;
     color = lerp(color, color * ao, occlusionStrength);
 #endif
 
