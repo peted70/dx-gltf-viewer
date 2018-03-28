@@ -12,6 +12,7 @@ using namespace WinRTGLTFParser;
 using namespace Microsoft::WRL;
 using namespace std;
 using namespace DX;
+using namespace DirectX;
 
 class MeshNode : public GraphContainerNode
 {
@@ -29,6 +30,7 @@ public:
 	void CreateBuffer(GLTF_BufferData^ data);
 	void CreateTexture(GLTF_TextureData^ data);
 	void CreateMaterial(GLTF_MaterialData^ data);
+	void CreateTransform(GLTF_TransformData^ data);
 
 private:
 	class BufferWrapper
@@ -66,5 +68,9 @@ private:
 	bool m_loadingComplete;
 
 	shared_ptr<NodeMaterial> _currentMaterial;
+
+	XMVECTOR _scale;
+	XMVECTOR _translation;
+	XMVECTOR _rotation;
 };
 

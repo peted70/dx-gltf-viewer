@@ -299,7 +299,7 @@ void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 void Sample3DSceneRenderer::Rotate(float radians)
 {
 	// Prepare to pass the updated model matrix to the shader
-	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(XMMatrixRotationY(radians)));
+	//XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(XMMatrixRotationY(radians)));
 }
 
 void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, VirtualKeyModifiers mod)
@@ -351,6 +351,8 @@ void Sample3DSceneRenderer::Render()
 	}
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
+
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(XMMatrixRotationY(0.0)));
 
 	DrawGrid(context);
 	DrawAxis(context, _mainAxes.get());

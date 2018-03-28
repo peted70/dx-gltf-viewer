@@ -201,7 +201,7 @@ namespace ViewModels
 
 	private:
 
-		Color ConvertColor(float col[3])
+		Color ConvertColor(unsigned char col[3])
 		{
 			auto ret = new Color();
 			ret->R = col[0];
@@ -214,9 +214,9 @@ namespace ViewModels
 		{
 			auto rot = rotation * M_PI / 180;
 			auto ptch = pitch * M_PI / 180;
-			data[0] = sin(rot) * cos(ptch);
-			data[1] = sin(ptch);
-			data[2] = cos(rot) * cos(ptch);
+			data[0] = static_cast<float>(sin(rot) * cos(ptch));
+			data[1] = static_cast<float>(sin(ptch));
+			data[2] = static_cast<float>(cos(rot) * cos(ptch));
 			return data;
 		}
 

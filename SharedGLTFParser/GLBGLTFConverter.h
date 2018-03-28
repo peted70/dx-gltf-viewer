@@ -70,6 +70,7 @@ namespace GLTFParser
 		function<void(const BufferData&)> Buffers;
 		function<void(const TextureData&)> Textures;
 		function<void(const MaterialData&)> Materials;
+		function<void(const TransformData&)> Transform;
 
 		GLTFChunk * BinaryChunk() { return _binaryChunk; }
 		Document& document() { return _document; }
@@ -78,7 +79,8 @@ namespace GLTFParser
 		void NotifyBuffers(const Document& document, 
 						   function<void(const BufferData&)> OnBuffer,
 						   function<void(const MaterialData&)> OnMaterial,
-						   function<void(const TextureData&)> OnTexture);
+						   function<void(const TextureData&)> OnTexture,
+						   function<void(const TransformData&)> OnTransform);
 	};
 };
 

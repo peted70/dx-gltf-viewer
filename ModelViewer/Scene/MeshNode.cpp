@@ -17,6 +17,7 @@ const char *defineLookup[] =
 };
 
 const char *one = "1";
+const XMVECTOR emptyVector = { 0, 0, 0 };
 
 MeshNode::MeshNode() : 
 	m_loadingComplete(false)
@@ -157,6 +158,12 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	if (!m_loadingComplete)
 		return;
 
+	// Create matrix from scale
+	auto matrix = XMMatrixAffineTransformation(_scale, emptyVector, _rotation, _translation);
+
+	// Prepare to pass the updated model matrix to the shader 
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, matrix);
+
 	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
 	unsigned int indexCount = 0;
@@ -277,10 +284,68 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	_buffers[type] = bw;
 }
 
-void MeshNode::CreateMaterial(WinRTGLTFParser::GLTF_MaterialData ^ data)
+void MeshNode::CreateMaterial(GLTF_MaterialData ^ data)
 {
 	_material = make_shared<NodeMaterial>();
 	_material->Initialise(data);
+}
+
+void MeshNode::CreateTransform(GLTF_TransformData^ data)
+{
+	// If we are handed a matrix, just apply that, otherwise break down into scale, rotate, translate
+	// and generate the matrix from those..
+	XMMATRIX matrix;
+
+	if (data->hasMatrix)
+	{
+		XMFLOAT4X4 mat = 
+		{
+			data->matrix[0], 
+			data->matrix[1],
+			data->matrix[2],
+			data->matrix[3],
+			data->matrix[4],
+			data->matrix[5],
+			data->matrix[6],
+			data->matrix[7],
+			data->matrix[8],
+			data->matrix[9],
+			data->matrix[10],
+			data->matrix[11],
+			data->matrix[12],
+			data->matrix[13],
+			data->matrix[14],
+			data->matrix[15]
+		};
+		
+		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMLoadFloat4x4(&mat));
+	}
+	else
+	{
+		_scale = { data->scale[0], data->scale[1], data->scale[2] };
+		_translation = { data->translation[0], data->translation[1], data->translation[2] };
+
+		// Using the conversion from right-handed coordinate system of OpenGL to left-handed coordinate
+		// system of DirectX
+		// q.x, q.y, -q.z, -q.w
+		//
+		_rotation = { data->rotation[0], data->rotation[1], -data->rotation[2], -data->rotation[3] };
+
+		//XMVECTOR scale = { 1.0, 1.0, 1.0 };
+		//XMVECTOR translation = { 0.0, 0.0, 0.0 };
+
+		XMVECTOR ypr = { 0.0, 180.0, 0.0 };
+		// generate a quaternion from angle for testing...
+		XMVECTOR rotQuat = XMQuaternionRotationRollPitchYawFromVector(ypr);
+
+		//auto matrix = XMMatrixRotationQuaternion(quat);
+
+		// Create matrix from scale
+		auto matrix = XMMatrixAffineTransformation(_scale, emptyVector, _rotation, _translation);
+
+		// Prepare to pass the updated model matrix to the shader 
+		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, matrix);
+	}
 }
 
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)

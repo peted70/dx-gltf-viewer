@@ -40,6 +40,40 @@ namespace WinRTGLTFParser
 		property unsigned int Emissivetexture;
 	};
 
+	public ref class GLTF_TransformData sealed
+	{
+	internal:
+		GLTF_TransformData(const TransformData& data)
+		{
+			hasMatrix = data.hasMatrix;
+
+			rotation = ref new Array<float>(4);
+
+			rotation[0] = data.rotation[0];
+			rotation[1] = data.rotation[1];
+			rotation[2] = data.rotation[2];
+			rotation[3] = data.rotation[3];
+
+			scale = ref new Array<float>(3);
+
+			scale[0] = data.scale[0];
+			scale[1] = data.scale[1];
+			scale[2] = data.scale[2];
+
+			translation = ref new Array<float>(3);
+
+			translation[0] = data.translation[0];
+			translation[1] = data.translation[1];
+			translation[2] = data.translation[2];
+		}
+	public:
+		property Array<float>^ rotation;
+		property Array<float>^ translation;
+		property Array<float>^ scale;
+		property Array<float>^ matrix;
+		property bool hasMatrix;
+	};
+
 	public ref class GLTF_TextureData sealed
 	{
 	internal:
@@ -121,9 +155,10 @@ namespace WinRTGLTFParser
 		GLTF_BufferDesc^ _bufDesc;
 	};
 
-	public delegate void BufferEventHandler(Platform::Object^ sender, GLTF_BufferData^);
-	public delegate void TextureEventHandler(Platform::Object^ sender, GLTF_TextureData^);
-	public delegate void MaterialEventHandler(Platform::Object^ sender, GLTF_MaterialData^);
+	public delegate void BufferEventHandler(Object^ sender, GLTF_BufferData^);
+	public delegate void TextureEventHandler(Object^ sender, GLTF_TextureData^);
+	public delegate void MaterialEventHandler(Object^ sender, GLTF_MaterialData^);
+	public delegate void TransformEventHandler(Object^ sender, GLTF_TransformData^);
 
 	public ref class GLTF_Parser sealed
     {
@@ -133,6 +168,7 @@ namespace WinRTGLTFParser
 		event BufferEventHandler^ OnBufferEvent;
 		event TextureEventHandler^ OnTextureEvent;
 		event MaterialEventHandler^ OnMaterialEvent;
+		event TransformEventHandler^ OnTransformEvent;
 
 		/// <summary>
 		/// Will parse a .GLB file given the input filename

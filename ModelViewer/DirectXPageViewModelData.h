@@ -14,7 +14,7 @@ public:
 	float _lightRotation = 0.0f;
 	float _lightScale = 0.0f;
 	float _ibl = 1.0f;
-	float _lightColour[3] = {255.f, 255.f, 255.f};
+	unsigned char _lightColour[3] = {255, 255, 255};
 
 	bool _metallic = false;
 	bool _roughness = false;

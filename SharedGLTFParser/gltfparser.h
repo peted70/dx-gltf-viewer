@@ -45,6 +45,24 @@ public:
 	unsigned int type;
 };
 
+class GLTFPARSER_API TransformData
+{
+public:
+	TransformData() 
+	{
+		rotation[0] = rotation[1] = rotation[2] = rotation[4] = 0.0;
+		translation[0] = translation[1] = translation[2] = 0.0;
+		scale[0] = scale[1] = scale[2] = 1.0;
+	}
+
+	double rotation[4];
+	double translation[3];
+	double scale[3];
+	double matrix[16];
+
+	bool hasMatrix;
+};
+
 struct GLTFPARSER_API SubresourceData
 {
 	const void *pSysMem;
@@ -74,4 +92,5 @@ public:
 HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, 
 	std::function<void(const BufferData&)> bufferCallback,
 	std::function<void(const MaterialData&)> materialCallback,
-	std::function<void(const TextureData&)> textureCallback);
+	std::function<void(const TextureData&)> textureCallback,
+	std::function<void(const TransformData&)> transformCallback);
