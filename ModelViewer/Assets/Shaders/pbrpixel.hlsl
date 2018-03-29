@@ -14,14 +14,7 @@
 
 #define NORMALS
 #define UV
-//#define HAS_METALROUGHNESSMAP
-//#define HAS_OCCLUSIONMAP
-//#define HAS_EMISSIVEMAP
-//#define HAS_BASECOLORMAP
-//#define HAS_NORMALMAP
 #define HAS_NORMALS
-//#define MANUAL_SRGB
-//#define SRGB_FAST_APPROXIMATION
 #define USE_IBL
 #define USE_TEX_LOD
 
@@ -157,7 +150,6 @@ float3 getNormal(float3 position, float3 normal, float2 uv)
 
     t = normalize(t - ng * dot(ng, t));
     float3 b = normalize(cross(ng, t));
-    //row_major float3x3 tbn = float3x3( t, b, ng);
     row_major float3x3 tbn = float3x3(t, b, ng);
 
 #else // HAS_TANGENTS
@@ -168,9 +160,7 @@ float3 getNormal(float3 position, float3 normal, float2 uv)
     float3 n = normalTexture.Sample(normalSampler, uv).rgb;
 
     // Need to check the multiplication is equivalent..
-    //n = normalize(mul(tbn, ((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0))));
     n = normalize(mul(((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0)), tbn));
-    //n = normalize(tbn * ((2.0 * n - 1.0) * float3(normalScale, normalScale, 1.0)));
 #else
     float3 n = tbn[2].xyz;
 #endif
@@ -195,9 +185,7 @@ float3 getIBLContribution(PBRInfo pbrInputs, float3 n, float3 reflection)
 
 #ifdef USE_TEX_LOD
     float3 specularLight = SRGBtoLINEAR(envSpecularTexture.SampleLevel(envSpecularSampler, reflection, 0)).rgb;
-    //float3 specularLight = SRGBtoLINEAR(textureCubeLodEXT(envSpecularTexture, reflection, lod)).rgb;
 #else
-    //float3 specularLight = SRGBtoLINEAR(textureCube(u_SpecularEnvSampler, reflection)).rgb;
     float3 specularLight = SRGBtoLINEAR(envSpecularTexture.Sample(envSpecularSampler, reflection)).rgb;
 #endif
 
@@ -289,7 +277,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseColor = baseColor.rgb * (float3(1.0, 1.0, 1.0) - f0);
 
     diffuseColor *= 1.0 - metallic;
-    //return float4(diffuseColor, 1.0);
 
     float3 specularColor = lerp(f0, baseColor.rgb, metallic);
 
@@ -369,7 +356,4 @@ float4 main(PixelShaderInput input) : SV_TARGET
     color = lerp(color, float3(perceptualRoughness, perceptualRoughness, perceptualRoughness), scaleDiffBaseMR.w);
 
     return float4(color, 1.0);
-
-	//float val = 1.0 / 2.2;
- //   return float4(pow(color, float3(val, val, val)), baseColor.a);
 }
