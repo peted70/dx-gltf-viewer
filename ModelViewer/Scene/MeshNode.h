@@ -17,7 +17,7 @@ using namespace DirectX;
 class MeshNode : public GraphContainerNode
 {
 public:
-	MeshNode();
+	MeshNode(int index);
 	virtual ~MeshNode();
 
 	void CompileAndLoadShaders();
@@ -31,6 +31,16 @@ public:
 	void CreateTexture(GLTF_TextureData^ data);
 	void CreateMaterial(GLTF_MaterialData^ data);
 	void CreateTransform(GLTF_TransformData^ data);
+
+	void* operator new(size_t i)
+	{
+		return _mm_malloc(i, 16);
+	}
+
+	void operator delete(void* p)
+	{
+		_mm_free(p);
+	}
 
 private:
 	class BufferWrapper
@@ -68,9 +78,5 @@ private:
 	bool m_loadingComplete;
 
 	shared_ptr<NodeMaterial> _currentMaterial;
-
-	XMVECTOR _scale;
-	XMVECTOR _translation;
-	XMVECTOR _rotation;
 };
 

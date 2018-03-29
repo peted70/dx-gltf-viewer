@@ -17,5 +17,9 @@ public:
 	virtual void CreateDeviceDependentResources() = 0;
 	virtual void Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources) = 0;
 	virtual void AddChild(shared_ptr<GraphNode> child) = 0;
+	virtual void AfterLoad() = 0;
+	virtual void ForAllChildrenRecursive(function<void(GraphNode&)> func) = 0;
+	virtual GraphNode *FindChildByIndex(int index) = 0;
+	virtual int Index() = 0;
 };
 

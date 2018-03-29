@@ -17,9 +17,9 @@ const char *defineLookup[] =
 };
 
 const char *one = "1";
-const XMVECTOR emptyVector = { 0, 0, 0 };
 
-MeshNode::MeshNode() : 
+MeshNode::MeshNode(int index) :
+	GraphContainerNode(index),
 	m_loadingComplete(false)
 {
 }

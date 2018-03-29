@@ -5,7 +5,7 @@ class RootNode :
 	public GraphContainerNode
 {
 public:
-	RootNode();
+	RootNode(int index);
 	~RootNode();
 
 	shared_ptr<GraphNode> SelectedNode();

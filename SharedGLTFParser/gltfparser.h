@@ -3,6 +3,8 @@
 #include <iostream>
 #include <functional>
 
+using namespace std;
+
 // The following ifdef block is the standard way of creating macros which make exporting 
 // from a DLL simpler. All files within this DLL are compiled with the GLTFPARSER_EXPORTS
 // symbol defined on the command line. This symbol should not be defined on any project
@@ -50,7 +52,7 @@ class GLTFPARSER_API TransformData
 public:
 	TransformData() 
 	{
-		rotation[0] = rotation[1] = rotation[2] = rotation[4] = 0.0;
+		rotation[0] = rotation[1] = rotation[2] = rotation[3] = 0.0;
 		translation[0] = translation[1] = translation[2] = 0.0;
 		scale[0] = scale[1] = scale[2] = 1.0;
 	}
@@ -61,6 +63,17 @@ public:
 	double matrix[16];
 
 	bool hasMatrix;
+};
+
+class GLTFPARSER_API SceneNodeData
+{
+public:
+	SceneNodeData(){}
+
+	const char *Name;
+	bool isMesh;
+	int nodeIndex;
+	int parentIndex;
 };
 
 struct GLTFPARSER_API SubresourceData
@@ -89,8 +102,9 @@ public:
 	BufferDesc desc;
 };
 
-HRESULT GLTFPARSER_API ParseFile(std::istream& inStr, 
-	std::function<void(const BufferData&)> bufferCallback,
-	std::function<void(const MaterialData&)> materialCallback,
-	std::function<void(const TextureData&)> textureCallback,
-	std::function<void(const TransformData&)> transformCallback);
+HRESULT GLTFPARSER_API ParseFile(istream& inStr, 
+	function<void(const BufferData&)> bufferCallback,
+	function<void(const MaterialData&)> materialCallback,
+	function<void(const TextureData&)> textureCallback,
+	function<void(const TransformData&)> transformCallback,
+	function<void(const SceneNodeData&)> sceneNodeCallback);

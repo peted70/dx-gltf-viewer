@@ -47,24 +47,65 @@ namespace WinRTGLTFParser
 		{
 			hasMatrix = data.hasMatrix;
 
-			rotation = ref new Array<float>(4);
+			if (hasMatrix == false)
+			{
+				rotation = ref new Array<float>(4);
 
-			rotation[0] = data.rotation[0];
-			rotation[1] = data.rotation[1];
-			rotation[2] = data.rotation[2];
-			rotation[3] = data.rotation[3];
+				rotation[0] = data.rotation[0];
+				rotation[1] = data.rotation[1];
+				rotation[2] = data.rotation[2];
+				rotation[3] = data.rotation[3];
 
-			scale = ref new Array<float>(3);
+				scale = ref new Array<float>(3);
 
-			scale[0] = data.scale[0];
-			scale[1] = data.scale[1];
-			scale[2] = data.scale[2];
+				scale[0] = data.scale[0];
+				scale[1] = data.scale[1];
+				scale[2] = data.scale[2];
 
-			translation = ref new Array<float>(3);
+				translation = ref new Array<float>(3);
 
-			translation[0] = data.translation[0];
-			translation[1] = data.translation[1];
-			translation[2] = data.translation[2];
+				translation[0] = data.translation[0];
+				translation[1] = data.translation[1];
+				translation[2] = data.translation[2];
+			}
+			else
+			{
+				matrix = ref new Array<float>(16);
+
+				//matrix[0] = data.matrix[0];
+				//matrix[1] = data.matrix[1];
+				//matrix[2] = data.matrix[2];
+				//matrix[3] = data.matrix[3];
+				//matrix[4] = data.matrix[4];
+				//matrix[5] = data.matrix[5];
+				//matrix[6] = data.matrix[6];
+				//matrix[7] = data.matrix[7];
+				//matrix[8] = data.matrix[8];
+				//matrix[9] = data.matrix[9];
+				//matrix[10] = data.matrix[10];
+				//matrix[11] = data.matrix[11];
+				//matrix[12] = data.matrix[12];
+				//matrix[13] = data.matrix[13];
+				//matrix[14] = data.matrix[14];
+				//matrix[15] = data.matrix[15];
+
+				matrix[0] = data.matrix[0];
+				matrix[1] = data.matrix[4];
+				matrix[2] = data.matrix[8];
+				matrix[3] = data.matrix[12];
+				matrix[4] = data.matrix[1];
+				matrix[5] = data.matrix[5];
+				matrix[6] = data.matrix[9];
+				matrix[7] = data.matrix[13];
+				matrix[8] = data.matrix[2];
+				matrix[9] = data.matrix[6];
+				matrix[10] = data.matrix[10];
+				matrix[11] = data.matrix[14];
+				matrix[12] = data.matrix[3];
+				matrix[13] = data.matrix[7];
+				matrix[14] = data.matrix[11];
+				matrix[15] = data.matrix[15];
+			}
 		}
 	public:
 		property Array<float>^ rotation;
@@ -74,6 +115,24 @@ namespace WinRTGLTFParser
 		property bool hasMatrix;
 	};
 
+	public ref class GLTF_SceneNodeData sealed
+	{
+	internal:
+		GLTF_SceneNodeData(const SceneNodeData& data)
+		{
+			Name = ToStringHat(const_cast<char *>(data.Name));
+			IsMesh = data.isMesh;
+			NodeIndex = data.nodeIndex;
+			ParentIndex = data.parentIndex;
+		}
+
+	public:
+		property String^ Name;
+		property bool IsMesh;
+		property int NodeIndex;
+		property int ParentIndex;
+	};
+	
 	public ref class GLTF_TextureData sealed
 	{
 	internal:
@@ -159,6 +218,7 @@ namespace WinRTGLTFParser
 	public delegate void TextureEventHandler(Object^ sender, GLTF_TextureData^);
 	public delegate void MaterialEventHandler(Object^ sender, GLTF_MaterialData^);
 	public delegate void TransformEventHandler(Object^ sender, GLTF_TransformData^);
+	public delegate void SceneNodeEventHandler(Object^ sender, GLTF_SceneNodeData^);
 
 	public ref class GLTF_Parser sealed
     {
@@ -169,6 +229,7 @@ namespace WinRTGLTFParser
 		event TextureEventHandler^ OnTextureEvent;
 		event MaterialEventHandler^ OnMaterialEvent;
 		event TransformEventHandler^ OnTransformEvent;
+		event SceneNodeEventHandler^ OnSceneNodeEvent;
 
 		/// <summary>
 		/// Will parse a .GLB file given the input filename

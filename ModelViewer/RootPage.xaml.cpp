@@ -82,7 +82,7 @@ void ModelViewer::RootPage::NavView_Loaded(Platform::Object^ sender, Windows::UI
 	NavView->IsPaneOpen = false;
 }
 
-future<shared_ptr<MeshNode>> LoadFileAsync()
+future<shared_ptr<GraphNode>> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
@@ -96,7 +96,7 @@ future<shared_ptr<MeshNode>> LoadFileAsync()
 	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
 	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
 
-	auto ret = co_await ModelFactory::CreateFromFileAsync(tempFile->Path);
+	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(tempFile->Path);
 	co_return ret;
 }
 

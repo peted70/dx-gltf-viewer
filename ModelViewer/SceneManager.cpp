@@ -3,7 +3,7 @@
 
 SceneManager::SceneManager()
 {
-	_sceneNode = make_shared<RootNode>();
+	_sceneNode = make_shared<RootNode>(-1);
 }
 
 shared_ptr<RootNode> SceneManager::Current()

@@ -47,6 +47,11 @@ void GLTF_Parser::ParseFile(String^ Filename)
 		{
 			auto td = ref new GLTF_TransformData(data);
 			OnTransformEvent(this, td);
+		},
+		[this](const SceneNodeData& data)
+		{
+			auto td = ref new GLTF_SceneNodeData(data);
+			OnSceneNodeEvent(this, td);
 		});
 
 	infile.close();

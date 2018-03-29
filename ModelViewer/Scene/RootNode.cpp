@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "RootNode.h"
 
-RootNode::RootNode()
+RootNode::RootNode(int index) :
+	GraphContainerNode(index)
 {
 }
 

@@ -47,12 +47,37 @@ namespace GLTFParser
 
 	class GLTFFileData
 	{
+	public:
+		class Callbacks
+		{
+		public:
+			function<void(const BufferData&)> Buffers;
+			function<void(const TextureData&)> Textures;
+			function<void(const MaterialData&)> Materials;
+			function<void(const TransformData&)> Transform;
+			function<void(const SceneNodeData&)> SceneNode;
+		};
+
+		const Callbacks& EventHandlers() const { return _callbacks; }
+		Callbacks& EventHandlers() { return _callbacks; }
+
+		GLTFChunk * BinaryChunk() { return _binaryChunk; }
+		Document& document() { return _document; }
+
+		void Read(istream& file);
+		void ParseDocument(const Document& document, const Callbacks& callbacks);
+		void LoadScene(const Document& document, const Value& scene, const Callbacks& callbacks);
+		void LoadMeshNode(const Document& document, const Value& meshNode, const Callbacks& callbacks);
+		void LoadSceneNode(const Document& document, const Value& scene, const Callbacks& callbacks, int nodeIndex, int parentIndex);
+		void LoadTransform(const Document& document, const Value& mNode, const Callbacks& callbacks);
+
 	private:
 		unique_ptr<GLTFHeader> _header;
 		unique_ptr<ChunkList> _chunks;
 		Document _document;
 		GLTFChunk *_headerChunk;
 		GLTFChunk *_binaryChunk;
+		GLTFFileData::Callbacks _callbacks;
 
 		enum ComponentType
 		{
@@ -65,22 +90,6 @@ namespace GLTFParser
 		};
 
 		void PopulateDocument();
-
-	public:
-		function<void(const BufferData&)> Buffers;
-		function<void(const TextureData&)> Textures;
-		function<void(const MaterialData&)> Materials;
-		function<void(const TransformData&)> Transform;
-
-		GLTFChunk * BinaryChunk() { return _binaryChunk; }
-		Document& document() { return _document; }
-
-		void Read(istream& file);
-		void NotifyBuffers(const Document& document, 
-						   function<void(const BufferData&)> OnBuffer,
-						   function<void(const MaterialData&)> OnMaterial,
-						   function<void(const TextureData&)> OnTexture,
-						   function<void(const TransformData&)> OnTransform);
 	};
 };
 

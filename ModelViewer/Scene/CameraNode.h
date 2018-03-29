@@ -5,7 +5,7 @@ class CameraNode :
 	public GraphContainerNode
 {
 public:
-	CameraNode();
+	CameraNode(int index);
 	virtual ~CameraNode();
 };
 

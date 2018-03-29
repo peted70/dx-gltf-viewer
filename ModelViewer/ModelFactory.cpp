@@ -3,38 +3,123 @@
 #include "EventShim.h"
 #include "SceneManager.h"
 
+using namespace std;
+
 ModelFactory::ModelFactory()
 {
 }
 
-
-ModelFactory::~ModelFactory()
+void ModelFactory::CreateBuffer(GLTF_BufferData^ data)
 {
+	auto node = dynamic_cast<MeshNode *>(_currentNode);
+	if (node)
+	{
+		node->CreateBuffer(data);
+	}
+}
+void ModelFactory::CreateTexture(GLTF_TextureData^ data)
+{
+	auto node = dynamic_cast<MeshNode *>(_currentNode);
+	if (node)
+	{
+		node->CreateTexture(data);
+	}
+}
+void ModelFactory::CreateMaterial(GLTF_MaterialData^ data)
+{
+	auto node = dynamic_cast<MeshNode *>(_currentNode);
+	if (node)
+	{
+		node->CreateMaterial(data);
+	}
+}
+void ModelFactory::CreateTransform(GLTF_TransformData^ data)
+{
+	auto node = dynamic_cast<GraphContainerNode *>(_currentNode);
+	if (node)
+	{
+		node->CreateTransform(data);
+	}
 }
 
-future<shared_ptr<MeshNode>> ModelFactory::CreateFromFileAsync(String^ filename)
+GraphNode * ModelFactory::InitialiseMesh(GLTF_SceneNodeData^ data)
 {
-	WinRTGLTFParser::GLTF_Parser^ parser = ref new WinRTGLTFParser::GLTF_Parser();
-
-	auto mesh = std::make_shared<MeshNode>();
+	auto mesh = new MeshNode(data->NodeIndex);
+	_currentNode = mesh;
 
 	auto devResources = SceneManager::Instance().DevResources();
 	mesh->Initialise(devResources);
 
-	std::function<void(WinRTGLTFParser::GLTF_BufferData^)> memfun = std::bind(&MeshNode::CreateBuffer, mesh, std::placeholders::_1);
-	std::function<void(WinRTGLTFParser::GLTF_TextureData^)> tmemfun = std::bind(&MeshNode::CreateTexture, mesh, std::placeholders::_1);
-	std::function<void(WinRTGLTFParser::GLTF_MaterialData^)> mmemfun = std::bind(&MeshNode::CreateMaterial, mesh, std::placeholders::_1);
-	std::function<void(WinRTGLTFParser::GLTF_TransformData^)> tmmemfun = std::bind(&MeshNode::CreateTransform, mesh, std::placeholders::_1);
+	return mesh;
+}
 
-	auto es = ref new EventShim(memfun, mmemfun, tmemfun, tmmemfun);
-	parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
-	parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
-	parser->OnMaterialEvent += ref new MaterialEventHandler(es, &EventShim::OnMaterial);
-	parser->OnTransformEvent += ref new TransformEventHandler(es, &EventShim::OnTransform);
+static int times = 0;
 
-	co_await async([&parser, filename, &mesh]() { parser->ParseFile(filename); return mesh.get(); });
+void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
+{
+	//times++;
+	if (times >= 2)
+		return;
 
-	mesh->AfterLoad();
+	GraphNode *parent = nullptr;
+	if (_root && data->ParentIndex != -1)
+	{
+		parent = _root->FindChildByIndex(data->ParentIndex);
+	}
 
-	co_return mesh;
+	if (data->IsMesh)
+	{
+		_currentNode = InitialiseMesh(data);
+		times = 2;
+	}
+	else
+	{
+		_currentNode = new GraphContainerNode(data->NodeIndex);
+	}
+
+
+	//if (parent == nullptr)
+	//	parent = _root;
+
+	if (_root == nullptr)
+	{
+		_root = _currentNode;
+	}
+	else if (parent && _currentNode)
+	{
+		shared_ptr<GraphNode> sp;
+		sp.reset(_currentNode);
+		parent->AddChild(sp);
+	}
+}
+
+future<shared_ptr<GraphNode>> ModelFactory::CreateFromFileAsync(String^ filename)
+{
+	_parser = ref new GLTF_Parser();
+
+	function<void(GLTF_SceneNodeData^)> snmmemfun = bind(&ModelFactory::CreateSceneNode, &(ModelFactory::Instance()), placeholders::_1);
+	function<void(GLTF_BufferData^)> memfun = bind(&ModelFactory::CreateBuffer, &(ModelFactory::Instance()), placeholders::_1);
+	function<void(GLTF_TextureData^)> tmemfun = bind(&ModelFactory::CreateTexture, &(ModelFactory::Instance()), placeholders::_1);
+	function<void(GLTF_MaterialData^)> mmemfun = bind(&ModelFactory::CreateMaterial, &(ModelFactory::Instance()), placeholders::_1);
+	function<void(GLTF_TransformData^)> tmmemfun = bind(&ModelFactory::CreateTransform, &(ModelFactory::Instance()), placeholders::_1);
+
+	auto es = ref new EventShim(memfun, mmemfun, tmemfun, tmmemfun, snmmemfun);
+
+	_parser->OnBufferEvent += ref new BufferEventHandler(es, &EventShim::OnBuffer);
+	_parser->OnTextureEvent += ref new TextureEventHandler(es, &EventShim::OnTexture);
+	_parser->OnMaterialEvent += ref new MaterialEventHandler(es, &EventShim::OnMaterial);
+	_parser->OnTransformEvent += ref new TransformEventHandler(es, &EventShim::OnTransform);
+	_parser->OnSceneNodeEvent += ref new SceneNodeEventHandler(es, &EventShim::OnSceneNode);
+
+	co_await async([this, filename]() { _parser->ParseFile(filename); });
+
+	// call afterLoad on all children...
+	_root->ForAllChildrenRecursive([](GraphNode& node) 
+	{
+		node.AfterLoad();
+	});
+
+	shared_ptr<GraphNode> sp;
+	sp.reset(_root);
+	co_return sp;
 }

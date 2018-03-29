@@ -5,7 +5,7 @@ class LightNode :
 	public GraphContainerNode
 {
 public:
-	LightNode();
+	LightNode(int index);
 	~LightNode();
 };
 
