@@ -53,14 +53,8 @@ GraphNode * ModelFactory::InitialiseMesh(GLTF_SceneNodeData^ data)
 	return mesh;
 }
 
-static int times = 0;
-
 void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 {
-	//times++;
-	if (times >= 2)
-		return;
-
 	GraphNode *parent = nullptr;
 	if (_root && data->ParentIndex != -1)
 	{
@@ -70,7 +64,6 @@ void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 	if (data->IsMesh)
 	{
 		_currentNode = InitialiseMesh(data);
-		times = 2;
 	}
 	else
 	{

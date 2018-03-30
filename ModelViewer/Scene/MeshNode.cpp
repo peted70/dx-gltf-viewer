@@ -159,10 +159,10 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 		return;
 
 	// Create matrix from scale
-	auto matrix = XMMatrixAffineTransformation(_scale, emptyVector, _rotation, _translation);
+	auto matrix = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
 
 	// Prepare to pass the updated model matrix to the shader 
-	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, matrix);
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(matrix));
 
 	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
@@ -340,11 +340,15 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 
 		//auto matrix = XMMatrixRotationQuaternion(quat);
 
+		//_scale = { 1.0, 1.0, 1.0 };
+		//_translation = { 0.0, 0.0, 0.0 };
+		//_rotation = { 0.0, 0.0, 0.0, 0.0 };
+
 		// Create matrix from scale
-		auto matrix = XMMatrixAffineTransformation(_scale, emptyVector, _rotation, _translation);
+		auto matrix = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
 
 		// Prepare to pass the updated model matrix to the shader 
-		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, matrix);
+		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(matrix));
 	}
 }
 

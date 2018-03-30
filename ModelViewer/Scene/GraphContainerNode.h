@@ -9,7 +9,7 @@ using namespace DX;
 using namespace WinRTGLTFParser;
 using namespace DirectX;
 
-const XMVECTOR emptyVector = { 0, 0, 0 };
+const XMFLOAT3 emptyVector = { 0, 0, 0 };
 
 class GraphContainerNode :
 	public GraphNode
@@ -47,9 +47,9 @@ public:
 protected:
 	XMMATRIX _matrix;
 
-	XMVECTOR _scale;
-	XMVECTOR _translation;
-	XMVECTOR _rotation;
+	XMFLOAT3 _scale;
+	XMFLOAT3 _translation;
+	XMFLOAT4 _rotation;
 
 	int _index;
 

@@ -117,7 +117,7 @@ void GraphContainerNode::CreateTransform(GLTF_TransformData^ data)
 		//auto matrix = XMMatrixRotationQuaternion(quat);
 
 		// Create matrix from scale
-		auto matrix = XMMatrixAffineTransformation(_scale, emptyVector, _rotation, _translation);
+		auto matrix = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
 
 		// Prepare to pass the updated model matrix to the shader 
 		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, matrix);
