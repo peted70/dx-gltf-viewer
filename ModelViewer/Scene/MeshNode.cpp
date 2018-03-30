@@ -244,6 +244,43 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	GraphContainerNode::Draw(context);
 }
 
+template<class T>
+class BoundingBox
+{
+public:
+	BoundingBox() :
+		MinX((numeric_limits<T>::max)()),
+		MaxX((numeric_limits<T>::min)()),
+		MinY((numeric_limits<T>::max)()),
+		MaxY((numeric_limits<T>::min)()),
+		MinZ((numeric_limits<T>::max)()),
+		MaxZ((numeric_limits<T>::min)())
+	{
+	}
+	T MinX;
+	T MaxX;
+	T MinY;
+	T MaxY;
+	T MinZ;
+	T MaxZ;
+};
+
+BoundingBox<float> CreateBoundingBoxFromVertexBuffer(void *buffer, unsigned int bufferSize)
+{
+	XMFLOAT3 *buffPtr = (XMFLOAT3 *)buffer;
+	BoundingBox<float> bbox;
+	for (int i = 0; i < bufferSize / (3 * sizeof(float)); i++, buffPtr++)
+	{
+		bbox.MaxX = max<float>(buffPtr->x, bbox.MaxX);
+		bbox.MaxY = max<float>(buffPtr->y, bbox.MaxY);
+		bbox.MaxZ = max<float>(buffPtr->z, bbox.MaxZ);
+		bbox.MinX = min<float>(buffPtr->x, bbox.MinX);
+		bbox.MinY = min<float>(buffPtr->y, bbox.MinY);
+		bbox.MinZ = min<float>(buffPtr->z, bbox.MinZ);
+	}
+	return bbox;
+}
+
 void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 {
 	int bindFlags = 0;
@@ -260,6 +297,11 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	else
 	{
 		return;
+	}
+
+	if (data->BufferDescription->BufferContentType == L"POSITION")
+	{
+		CreateBoundingBoxFromVertexBuffer((void *)data->BufferDescription->pSysMem, data->SubResource->ByteWidth);
 	}
 
 	// Create the buffers...
