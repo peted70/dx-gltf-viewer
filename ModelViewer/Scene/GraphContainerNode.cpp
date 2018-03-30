@@ -48,6 +48,16 @@ void GraphContainerNode::ForAllChildrenRecursive(function<void(GraphNode&)> func
 	}
 }
 
+BoundingBox<float> GraphContainerNode::GetBoundingBox()
+{
+	BoundingBox<float> ret;
+	for (auto child : _children)
+	{
+		ret.Grow(child->GetBoundingBox());
+	}
+	return ret;
+}
+
 void GraphContainerNode::CreateDeviceDependentResources()
 {
 	for (auto child : _children)

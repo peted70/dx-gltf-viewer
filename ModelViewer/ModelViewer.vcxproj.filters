@@ -106,6 +106,7 @@
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="DXUtils.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="DirectXPageViewModelData.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="DXUtils.h" />
+    <ClInclude Include="BoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

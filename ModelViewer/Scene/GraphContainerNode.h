@@ -34,6 +34,8 @@ public:
 	virtual void CreateTransform(GLTF_TransformData^ data);
 	virtual int Index() override { return _index; };
 
+	virtual BoundingBox<float> GetBoundingBox() override;
+
 	void* operator new(size_t i)
 	{
 		return _mm_malloc(i, 16);

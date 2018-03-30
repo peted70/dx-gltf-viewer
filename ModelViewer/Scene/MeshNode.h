@@ -8,6 +8,8 @@
 #include <experimental/resumable>
 #include <pplawait.h>
 
+#include "BoundingBox.h"
+
 using namespace WinRTGLTFParser;
 using namespace Microsoft::WRL;
 using namespace std;
@@ -78,5 +80,6 @@ private:
 	bool m_loadingComplete;
 
 	shared_ptr<NodeMaterial> _currentMaterial;
+	BoundingBox<float> _bbox;
 };
 

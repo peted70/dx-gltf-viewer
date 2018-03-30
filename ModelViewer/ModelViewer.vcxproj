@@ -274,6 +274,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="Axis.h" />
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Common\BindableBase.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
@@ -315,6 +316,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="Axis.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Common\BindableBase.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
