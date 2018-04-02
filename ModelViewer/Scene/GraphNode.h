@@ -22,6 +22,10 @@ public:
 	virtual BoundingBox<float> GetBoundingBox() = 0;
 	virtual void ForAllChildrenRecursive(function<void(GraphNode&)> func) = 0;
 	virtual GraphNode *FindChildByIndex(int index) = 0;
+	virtual int NumChildren() = 0;
+	virtual const GraphNode& GetChild(int i) = 0;
+	virtual const wstring& Name() const = 0;
+	virtual void SetName(const wstring& name) = 0;
 	virtual int Index() = 0;
 };
 

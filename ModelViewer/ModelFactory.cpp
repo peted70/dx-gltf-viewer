@@ -69,7 +69,7 @@ void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 	{
 		_currentNode = new GraphContainerNode(data->NodeIndex);
 	}
-
+	_currentNode->SetName(data->Name->Data());
 
 	//if (parent == nullptr)
 	//	parent = _root;

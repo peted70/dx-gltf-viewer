@@ -19,6 +19,9 @@ namespace Windows {
         }
     }
 }
+namespace TreeViewControl {
+    ref class TreeView;
+}
 
 namespace ModelViewer
 {
@@ -44,6 +47,7 @@ namespace ModelViewer
         ::XamlBindingInfo::XamlBindings^ Bindings;
         private: ::Windows::UI::Xaml::Controls::ColorPicker^ myColorPicker;
         private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapChainPanel;
+        private: ::TreeViewControl::TreeView^ sampleTreeView;
         private: ::Windows::UI::Xaml::Controls::Button^ colorPickerButton;
     };
 }

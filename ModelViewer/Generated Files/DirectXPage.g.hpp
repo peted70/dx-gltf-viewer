@@ -52,20 +52,7 @@ public:
     {
         switch(__connectionId)
         {
-            case 6: // DirectXPage.xaml line 78
-                this->obj6 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
-                this->obj6->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
-                    ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
-                        [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
-                        {
-                            if (this->IsInitialized())
-                            {
-                                // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->LightScale = safe_cast<::default::float32>(this->obj6->Value);
-                            }
-                        }));
-                break;
-            case 7: // DirectXPage.xaml line 80
+            case 7: // DirectXPage.xaml line 131
                 this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj7->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -74,11 +61,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->LightRotation = safe_cast<::default::float32>(this->obj7->Value);
+                                this->GetDataRoot()->ViewModel->LightScale = safe_cast<::default::float32>(this->obj7->Value);
                             }
                         }));
                 break;
-            case 8: // DirectXPage.xaml line 82
+            case 8: // DirectXPage.xaml line 133
                 this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj8->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -87,11 +74,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->LightPitch = safe_cast<::default::float32>(this->obj8->Value);
+                                this->GetDataRoot()->ViewModel->LightRotation = safe_cast<::default::float32>(this->obj8->Value);
                             }
                         }));
                 break;
-            case 9: // DirectXPage.xaml line 84
+            case 9: // DirectXPage.xaml line 135
                 this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj9->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -100,24 +87,24 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->Ibl = safe_cast<::default::float32>(this->obj9->Value);
+                                this->GetDataRoot()->ViewModel->LightPitch = safe_cast<::default::float32>(this->obj9->Value);
                             }
                         }));
                 break;
-            case 10: // DirectXPage.xaml line 99
-                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
-                this->obj10->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+            case 10: // DirectXPage.xaml line 137
+                this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
+                this->obj10->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
                         [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
                         {
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->BaseColour = this->obj10->IsChecked ? this->obj10->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->Ibl = safe_cast<::default::float32>(this->obj10->Value);
                             }
                         }));
                 break;
-            case 11: // DirectXPage.xaml line 101
+            case 11: // DirectXPage.xaml line 152
                 this->obj11 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj11->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -126,11 +113,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->Metallic = this->obj11->IsChecked ? this->obj11->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->BaseColour = this->obj11->IsChecked ? this->obj11->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 12: // DirectXPage.xaml line 103
+            case 12: // DirectXPage.xaml line 154
                 this->obj12 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj12->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -139,11 +126,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->Roughness = this->obj12->IsChecked ? this->obj12->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->Metallic = this->obj12->IsChecked ? this->obj12->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 13: // DirectXPage.xaml line 106
+            case 13: // DirectXPage.xaml line 156
                 this->obj13 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj13->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -152,11 +139,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->Diffuse = this->obj13->IsChecked ? this->obj13->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->Roughness = this->obj13->IsChecked ? this->obj13->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 14: // DirectXPage.xaml line 108
+            case 14: // DirectXPage.xaml line 159
                 this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj14->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -165,11 +152,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->Specular = this->obj14->IsChecked ? this->obj14->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->Diffuse = this->obj14->IsChecked ? this->obj14->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 15: // DirectXPage.xaml line 110
+            case 15: // DirectXPage.xaml line 161
                 this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj15->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -178,11 +165,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->F = this->obj15->IsChecked ? this->obj15->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->Specular = this->obj15->IsChecked ? this->obj15->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 16: // DirectXPage.xaml line 112
+            case 16: // DirectXPage.xaml line 163
                 this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj16->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -191,11 +178,11 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->G = this->obj16->IsChecked ? this->obj16->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->F = this->obj16->IsChecked ? this->obj16->IsChecked->Value : false;
                             }
                         }));
                 break;
-            case 17: // DirectXPage.xaml line 114
+            case 17: // DirectXPage.xaml line 165
                 this->obj17 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj17->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -204,7 +191,20 @@ public:
                             if (this->IsInitialized())
                             {
                                 // Update Two Way binding
-                                this->GetDataRoot()->ViewModel->D = this->obj17->IsChecked ? this->obj17->IsChecked->Value : false;
+                                this->GetDataRoot()->ViewModel->G = this->obj17->IsChecked ? this->obj17->IsChecked->Value : false;
+                            }
+                        }));
+                break;
+            case 18: // DirectXPage.xaml line 167
+                this->obj18 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
+                this->obj18->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
+                    ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
+                        [this] (::Windows::UI::Xaml::DependencyObject^ sender, ::Windows::UI::Xaml::DependencyProperty^ prop)
+                        {
+                            if (this->IsInitialized())
+                            {
+                                // Update Two Way binding
+                                this->GetDataRoot()->ViewModel->D = this->obj18->IsChecked ? this->obj18->IsChecked->Value : false;
                             }
                         }));
                 break;
@@ -218,11 +218,10 @@ public:
 
 private:
     // Fields for each control that has bindings.
-    ::Windows::UI::Xaml::Controls::Slider^ obj6;
     ::Windows::UI::Xaml::Controls::Slider^ obj7;
     ::Windows::UI::Xaml::Controls::Slider^ obj8;
     ::Windows::UI::Xaml::Controls::Slider^ obj9;
-    ::Windows::UI::Xaml::Controls::CheckBox^ obj10;
+    ::Windows::UI::Xaml::Controls::Slider^ obj10;
     ::Windows::UI::Xaml::Controls::CheckBox^ obj11;
     ::Windows::UI::Xaml::Controls::CheckBox^ obj12;
     ::Windows::UI::Xaml::Controls::CheckBox^ obj13;
@@ -230,6 +229,7 @@ private:
     ::Windows::UI::Xaml::Controls::CheckBox^ obj15;
     ::Windows::UI::Xaml::Controls::CheckBox^ obj16;
     ::Windows::UI::Xaml::Controls::CheckBox^ obj17;
+    ::Windows::UI::Xaml::Controls::CheckBox^ obj18;
     
     // Fields for binding tracking.
     ::Windows::UI::Xaml::Data::INotifyPropertyChanged^ cachePC_ViewModel = nullptr;
@@ -272,96 +272,96 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 78
-            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj6, obj);
+            // DirectXPage.xaml line 131
+            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj7, obj);
         }
     }
     void Update_ViewModel_LightRotation(::default::float32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 80
-            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj7, obj);
+            // DirectXPage.xaml line 133
+            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj8, obj);
         }
     }
     void Update_ViewModel_LightPitch(::default::float32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 82
-            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj8, obj);
+            // DirectXPage.xaml line 135
+            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj9, obj);
         }
     }
     void Update_ViewModel_Ibl(::default::float32 obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 84
-            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj9, obj);
+            // DirectXPage.xaml line 137
+            Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj10, obj);
         }
     }
     void Update_ViewModel_BaseColour(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 99
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj10, obj, nullptr);
+            // DirectXPage.xaml line 152
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, obj, nullptr);
         }
     }
     void Update_ViewModel_Metallic(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 101
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, obj, nullptr);
+            // DirectXPage.xaml line 154
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, obj, nullptr);
         }
     }
     void Update_ViewModel_Roughness(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 103
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, obj, nullptr);
+            // DirectXPage.xaml line 156
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, obj, nullptr);
         }
     }
     void Update_ViewModel_Diffuse(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 106
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, obj, nullptr);
+            // DirectXPage.xaml line 159
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, obj, nullptr);
         }
     }
     void Update_ViewModel_Specular(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 108
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, obj, nullptr);
+            // DirectXPage.xaml line 161
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj15, obj, nullptr);
         }
     }
     void Update_ViewModel_F(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 110
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj15, obj, nullptr);
+            // DirectXPage.xaml line 163
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj16, obj, nullptr);
         }
     }
     void Update_ViewModel_G(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 112
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj16, obj, nullptr);
+            // DirectXPage.xaml line 165
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj17, obj, nullptr);
         }
     }
     void Update_ViewModel_D(::Platform::Boolean obj, int phase)
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 114
-            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj17, obj, nullptr);
+            // DirectXPage.xaml line 167
+            Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj18, obj, nullptr);
         }
     }
 
@@ -541,7 +541,12 @@ void ::ModelViewer::DirectXPage::Connect(int __connectionId, ::Platform::Object^
             this->swapChainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
         }
         break;
-    case 18:
+    case 6:
+        {
+            this->sampleTreeView = safe_cast<::TreeViewControl::TreeView^>(__target);
+        }
+        break;
+    case 19:
         {
             this->colorPickerButton = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
         }

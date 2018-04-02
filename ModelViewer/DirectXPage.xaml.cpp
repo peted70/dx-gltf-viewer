@@ -5,6 +5,8 @@
 
 #include "pch.h"
 #include "DirectXPage.xaml.h"
+#include "SceneManager.h"
+#include "FileSystemData.h"
 
 using namespace ModelViewer;
 
@@ -26,7 +28,8 @@ using namespace concurrency;
 
 DirectXPage::DirectXPage():
 	m_windowVisible(true),
-	m_coreInput(nullptr)
+	m_coreInput(nullptr),
+	updates(this)
 {
 	ViewModel = ref new DirectXPageViewModel();
 
@@ -94,6 +97,7 @@ DirectXPage::~DirectXPage()
 	m_coreInput->Dispatcher->StopProcessEvents();
 }
 
+
 // Saves the current state of the app for suspend and terminate events.
 void DirectXPage::SaveInternalState(IPropertySet^ state)
 {
@@ -115,6 +119,44 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 	m_main->StartRenderLoop();
 }
 
+void DirectXPage::NotifySceneChanges(Observable const& scene)
+{
+	auto scn = dynamic_cast<const SceneManager*>(&scene);
+	if (scn == nullptr)
+		return;
+
+	// Marshal the rest onto the ui thread...
+	Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([scn, this]()
+	{
+		auto root = scn->Current();
+		auto parent = CreateContainerNode(ref new String(root->Name().c_str()));
+		parent->IsExpanded = true;
+		for (int i = 0; i < root->NumChildren(); i++)
+		{
+			auto& child = root->GetChild(i);
+			parent->Append(CreateMeshNode(ref new String(child.Name().c_str())));
+		}
+
+		sampleTreeView->RootNode->Append(parent);
+	}));
+}
+
+TreeNode^ DirectXPage::CreateMeshNode(String^ name)
+{
+	auto data = ref new FileSystemData(name);
+	auto treeNode = ref new TreeNode();
+	treeNode->Data = data;
+	return treeNode;
+}
+
+TreeNode^ DirectXPage::CreateContainerNode(String^ name)
+{
+	auto data = ref new FileSystemData(name);
+	data->IsFolder = true;
+	auto treeNode = ref new TreeNode();
+	treeNode->Data = data;
+	return treeNode;
+}
 // Window event handlers.
 
 void DirectXPage::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)

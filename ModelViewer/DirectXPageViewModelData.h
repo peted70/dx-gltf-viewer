@@ -33,7 +33,6 @@ public:
 		_lightDirection[1] = ld[1];
 		_lightDirection[2] = ld[2];
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	float LightPitch() const { return _lightPitch; }
@@ -43,7 +42,6 @@ public:
 			return;
 		_lightPitch = lp;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	float LightRotation() const { return _lightRotation; }
@@ -53,7 +51,6 @@ public:
 			return;
 		_lightRotation = lr;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	float LightScale() const { return _lightScale; }
@@ -63,7 +60,6 @@ public:
 			return;
 		_lightScale = ls;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	float Ibl() const { return _ibl; }
@@ -73,7 +69,6 @@ public:
 			return;
 		_ibl = i;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	const unsigned char *LightColour() const { return _lightColour; }
@@ -87,7 +82,6 @@ public:
 		_lightColour[1] = lc[1];
 		_lightColour[2] = lc[2];
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool Metallic() const { return _metallic; }
@@ -97,7 +91,6 @@ public:
 			return;
 		_metallic = m;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool Roughness() const { return _roughness; }
@@ -107,7 +100,6 @@ public:
 			return;
 		_roughness = r;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool BaseColour() const { return _baseColour; }
@@ -117,7 +109,6 @@ public:
 			return;
 		_baseColour = bc;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool Diffuse() const { return _diffuse; }
@@ -127,7 +118,6 @@ public:
 			return;
 		_diffuse = d;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool Specular() const { return _specular; }
@@ -137,7 +127,6 @@ public:
 			return;
 		_specular = s;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool F() const { return _f; }
@@ -147,7 +136,6 @@ public:
 			return;
 		_f = f;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool G() const { return _g; }
@@ -157,7 +145,6 @@ public:
 			return;
 		_g = g;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 	bool D()const { return _d; }
@@ -167,7 +154,6 @@ public:
 			return;
 		_d = d;
 		DataChanged(*this);
-		Notify(*this);
 	}
 
 private:

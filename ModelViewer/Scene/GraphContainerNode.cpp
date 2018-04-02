@@ -76,6 +76,27 @@ void GraphContainerNode::AddChild(shared_ptr<GraphNode> child)
 	_children.push_back(child);
 }
 
+int GraphContainerNode::NumChildren()
+{
+	return _children.size();
+}
+
+const GraphNode& GraphContainerNode::GetChild(int i)
+{
+	return *(_children[i].get());
+}
+
+const wstring& GraphContainerNode::Name() const
+{
+	return _name;
+}
+
+void GraphContainerNode::SetName(const wstring& name)
+{
+	if (_name != name)
+		_name = name;
+}
+
 void GraphContainerNode::CreateTransform(GLTF_TransformData^ data)
 {
 	// If we are handed a matrix, just apply that, otherwise break down into scale, rotate, translate

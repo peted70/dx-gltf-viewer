@@ -9,6 +9,7 @@
 
 #include "Common\DeviceResources.h"
 #include "ModelViewerMain.h"
+#include "SceneManager.h"
 
 namespace ModelViewer
 {
@@ -16,6 +17,7 @@ namespace ModelViewer
 	using namespace Windows::UI::Core;
 	using namespace Platform;
 	using namespace ViewModels;
+	using namespace TreeViewControl;
 
 	/// <summary>
 	/// A page that hosts a DirectX SwapChainPanel.
@@ -29,9 +31,33 @@ namespace ModelViewer
 		void SaveInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
+		TreeNode^ CreateMeshNode(String^ name);
+		TreeNode^ CreateContainerNode(String^ name);
+
 		property DirectXPageViewModel ^ ViewModel;
 
 	private:
+		class SceneUpdateProxy
+		{
+		public:
+			SceneUpdateProxy(DirectXPage ^page) :
+				owner(page)
+			{
+				SceneManager::Instance().RegisterForUpdates(boost::bind(&SceneUpdateProxy::NotifySceneChanges, this, _1));
+			}
+
+			void NotifySceneChanges(Observable const& scene)
+			{
+				owner->NotifySceneChanges(scene);
+			}
+
+		private:
+			DirectXPage ^ owner;
+		};
+
+		SceneUpdateProxy updates;
+
+		void NotifySceneChanges(Observable const& scene);
 
 		// XAML low-level rendering event handler.
 		void OnRendering(Object^ sender, Object^ args);

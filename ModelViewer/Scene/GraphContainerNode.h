@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphNode.h"
 #include <vector>
+#include <string>
 #include "../Common/DeviceResources.h"
 #include "../Common/StepTimer.h"
 
@@ -29,7 +30,13 @@ public:
 	virtual GraphNode *FindChildByIndex(int index) override;
 
 	virtual void AddChild(shared_ptr<GraphNode> child);
+	virtual int NumChildren() override;
+	virtual const GraphNode& GetChild(int i) override;
+	virtual const wstring& Name() const override;
+	virtual void SetName(const wstring& name)  override;
+
 	shared_ptr<DeviceResources> DevResources() { return _deviceResources; }
+	const shared_ptr<DeviceResources> DevResources() const { return _deviceResources; }
 
 	virtual void CreateTransform(GLTF_TransformData^ data);
 	virtual int Index() override { return _index; };
@@ -57,5 +64,6 @@ protected:
 
 	vector<shared_ptr<GraphNode>>_children;
 	shared_ptr<DeviceResources> _deviceResources;
+	wstring _name;
 };
 

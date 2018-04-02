@@ -79,6 +79,7 @@ void MeshNode::CompileAndLoadShaders()
 		printf("Failed compiling pixel shader %08X\n", hr);
 		return;
 	}
+
 	DX::ThrowIfFailed(
 		DevResources()->GetD3DDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
 		nullptr, &m_pixelShader));

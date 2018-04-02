@@ -42,6 +42,42 @@ template<typename T>
 }
 
 template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IndentMultiplier(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IndentMultiplier);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsInverse(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsInverse);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Depth(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Depth);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_HasItems(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->HasItems);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsExpanded(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsExpanded);
+}
+
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_Size(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->Size);
+}
+
+template<typename TDeclaringType, typename TValue>
 ::Platform::Object^ GetValueTypeMember_D(::Platform::Object^ instance)
 {
     return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->D);
@@ -119,10 +155,70 @@ template<typename TDeclaringType, typename TValue>
     return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->LightScale);
 }
 
+template<typename TDeclaringType, typename TValue>
+::Platform::Object^ GetValueTypeMember_IsFolder(::Platform::Object^ instance)
+{
+    return ref new ::Platform::Box<TValue>(safe_cast<TDeclaringType^>(instance)->IsFolder);
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_ExpandedGlyph(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->ExpandedGlyph;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_CollapsedGlyph(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->CollapsedGlyph;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_RootNode(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->RootNode;
+}
+
 template<typename TDeclaringType>
 ::Platform::Object^ GetReferenceTypeMember_ViewModel(::Platform::Object^ instance)
 {
     return safe_cast<TDeclaringType^>(instance)->ViewModel;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_ParentNode(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->ParentNode;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_Data(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->Data;
+}
+
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_Name(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->Name;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IndentMultiplier(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->IndentMultiplier = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsInverse(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->IsInverse = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsExpanded(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->IsExpanded = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -204,9 +300,45 @@ void SetValueTypeMember_LightScale(::Platform::Object^ instance, ::Platform::Obj
 }
 
 template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsFolder(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->IsFolder = safe_cast<::Platform::IBox<TValue>^>(value)->Value;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_ExpandedGlyph(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->ExpandedGlyph = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_CollapsedGlyph(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->CollapsedGlyph = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
 void SetReferenceTypeMember_ViewModel(::Platform::Object^ instance, ::Platform::Object^ value)
 {
     safe_cast<TDeclaringType^>(instance)->ViewModel = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_ParentNode(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->ParentNode = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_Data(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Data = safe_cast<TValue^>(value);
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_Name(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Name = safe_cast<TValue^>(value);
 }
 
 enum TypeInfo_Flags
@@ -238,94 +370,178 @@ struct TypeInfo
 const TypeInfo TypeInfos[] = 
 {
     //   0
-    L"Object", L"",
+    L"Int32", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   1
-    L"Single", L"",
+    L"Object", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   2
-    L"Boolean", L"",
+    L"String", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   3
+    L"UInt32", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   4
+    L"Single", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   5
+    L"Boolean", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   6
     L"Windows.UI.Color", L"",
     nullptr, nullptr, nullptr, nullptr,
-    4, // System.ValueType
+    7, // System.ValueType
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //   4
+    //   7
     L"System.ValueType", L"",
     nullptr, nullptr, nullptr, nullptr,
-    0, // Object
+    1, // Object
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //   5
+    //   8
     L"Common.BindableBase", L"",
     nullptr, nullptr, nullptr, nullptr,
-    12, // Windows.UI.Xaml.DependencyObject
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   6
-    L"Common.ViewModelBase", L"",
-    nullptr, nullptr, nullptr, nullptr,
-    5, // Common.BindableBase
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   7
-    L"ModelViewer.RootPage", L"",
-    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
-    10, // Windows.UI.Xaml.Controls.Page
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   8
-    L"ModelViewer.DirectXPage", L"",
-    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
-    10, // Windows.UI.Xaml.Controls.Page
+    20, // Windows.UI.Xaml.DependencyObject
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //   9
+    L"Common.ViewModelBase", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    8, // Common.BindableBase
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  10
+    L"ModelViewer.RootPage", L"",
+    &ActivateType<::ModelViewer::RootPage>, nullptr, nullptr, nullptr,
+    18, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  11
+    L"ModelViewer.DirectXPage", L"",
+    &ActivateType<::ModelViewer::DirectXPage>, nullptr, nullptr, nullptr,
+    18, // Windows.UI.Xaml.Controls.Page
+    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //  12
+    L"TreeViewControl.TreeView", L"",
+    &ActivateType<::TreeViewControl::TreeView>, nullptr, nullptr, nullptr,
+    21, // Windows.UI.Xaml.Controls.ListView
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  13
+    L"TreeViewControl.TreeNode", L"",
+    &ActivateType<::TreeViewControl::TreeNode>, nullptr, nullptr, nullptr,
+    1, // Object
+    2, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  14
+    L"ModelViewer.GlyphConverter", L"",
+    &ActivateType<::ModelViewer::GlyphConverter>, nullptr, nullptr, nullptr,
+    1, // Object
+    8, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  15
+    L"ModelViewer.FileSystemData", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    1, // Object
+    10, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  16
     L"ViewModels.RootPageViewModel", L"",
     &ActivateType<::ViewModels::RootPageViewModel>, nullptr, nullptr, nullptr,
-    6, // Common.ViewModelBase
-    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    9, // Common.ViewModelBase
+    12, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  10
+    //  17
+    L"TreeViewControl.TreeViewItem", L"",
+    &ActivateType<::TreeViewControl::TreeViewItem>, nullptr, nullptr, nullptr,
+    24, // Windows.UI.Xaml.Controls.ListViewItem
+    12, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  18
     L"Windows.UI.Xaml.Controls.Page", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    12, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  11
+    //  19
     L"ViewModels.DirectXPageViewModel", L"",
     &ActivateType<::ViewModels::DirectXPageViewModel>, nullptr, nullptr, nullptr,
-    6, // Common.ViewModelBase
-    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    9, // Common.ViewModelBase
+    12, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  12
+    //  20
     L"Windows.UI.Xaml.DependencyObject", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  13
+    //  21
+    L"Windows.UI.Xaml.Controls.ListView", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  22
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  23
+    L"Windows.UI.Xaml.Controls.ItemsControl", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  24
+    L"Windows.UI.Xaml.Controls.ListViewItem", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  25
+    L"Windows.UI.Xaml.Controls.ContentControl", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  26
+    L"ModelViewer.BooleanToVisibilityConverter", L"",
+    &ActivateType<::ModelViewer::BooleanToVisibilityConverter>, nullptr, nullptr, nullptr,
+    1, // Object
+    25, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
+    //  27
+    L"TreeViewControl.IntegerToIndentationConverter", L"",
+    &ActivateType<::TreeViewControl::IntegerToIndentationConverter>, nullptr, nullptr, nullptr,
+    1, // Object
+    26, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    14, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    27, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -336,38 +552,47 @@ const UINT TypeInfoLookup[] = {
       0,   //   3
       0,   //   4
       0,   //   5
-      0,   //   6
-      2,   //   7
-      3,   //   8
-      3,   //   9
-      3,   //  10
-      3,   //  11
-      3,   //  12
-      3,   //  13
-      3,   //  14
-      3,   //  15
-      3,   //  16
-      5,   //  17
-      5,   //  18
-      5,   //  19
-      6,   //  20
-      8,   //  21
-      8,   //  22
-      8,   //  23
-      9,   //  24
-      9,   //  25
-      9,   //  26
-      9,   //  27
-      9,   //  28
-     10,   //  29
-     11,   //  30
-     11,   //  31
-     12,   //  32
-     13,   //  33
-     13,   //  34
-     13,   //  35
-     13,   //  36
-     14,   //  37
+      1,   //   6
+      5,   //   7
+      6,   //   8
+      6,   //   9
+      6,   //  10
+      6,   //  11
+      6,   //  12
+      6,   //  13
+      6,   //  14
+      6,   //  15
+      6,   //  16
+      8,   //  17
+      8,   //  18
+      8,   //  19
+      9,   //  20
+     11,   //  21
+     11,   //  22
+     11,   //  23
+     12,   //  24
+     14,   //  25
+     14,   //  26
+     16,   //  27
+     16,   //  28
+     18,   //  29
+     19,   //  30
+     19,   //  31
+     20,   //  32
+     21,   //  33
+     22,   //  34
+     22,   //  35
+     22,   //  36
+     23,   //  37
+     25,   //  38
+     25,   //  39
+     26,   //  40
+     27,   //  41
+     27,   //  42
+     27,   //  43
+     27,   //  44
+     27,   //  45
+     28,   //  46
 };
 
 struct MemberInfo 
@@ -388,98 +613,189 @@ const MemberInfo MemberInfos[] =
     L"ViewModel",
     &GetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage>,
     &SetReferenceTypeMember_ViewModel<::ModelViewer::DirectXPage, ::ViewModels::DirectXPageViewModel>,
-    11, // ViewModels.DirectXPageViewModel
+    19, // ViewModels.DirectXPageViewModel
     -1,
     false, false, false,
-    //   1 - ViewModels.DirectXPageViewModel.D
+    //   1 - TreeViewControl.TreeView.RootNode
+    L"RootNode",
+    &GetReferenceTypeMember_RootNode<::TreeViewControl::TreeView>,
+    nullptr,
+    13, // TreeViewControl.TreeNode
+    -1,
+    true,  false, false,
+    //   2 - TreeViewControl.TreeNode.Depth
+    L"Depth",
+    &GetValueTypeMember_Depth<::TreeViewControl::TreeNode, ::default::int32>,
+    nullptr,
+    0, // Int32
+    -1,
+    true,  false, false,
+    //   3 - TreeViewControl.TreeNode.HasItems
+    L"HasItems",
+    &GetValueTypeMember_HasItems<::TreeViewControl::TreeNode, ::Platform::Boolean>,
+    nullptr,
+    5, // Boolean
+    -1,
+    true,  false, false,
+    //   4 - TreeViewControl.TreeNode.IsExpanded
+    L"IsExpanded",
+    &GetValueTypeMember_IsExpanded<::TreeViewControl::TreeNode, ::Platform::Boolean>,
+    &SetValueTypeMember_IsExpanded<::TreeViewControl::TreeNode, ::Platform::Boolean>,
+    5, // Boolean
+    -1,
+    false, false, false,
+    //   5 - TreeViewControl.TreeNode.ParentNode
+    L"ParentNode",
+    &GetReferenceTypeMember_ParentNode<::TreeViewControl::TreeNode>,
+    &SetReferenceTypeMember_ParentNode<::TreeViewControl::TreeNode, ::TreeViewControl::TreeNode>,
+    13, // TreeViewControl.TreeNode
+    -1,
+    false, false, false,
+    //   6 - TreeViewControl.TreeNode.Data
+    L"Data",
+    &GetReferenceTypeMember_Data<::TreeViewControl::TreeNode>,
+    &SetReferenceTypeMember_Data<::TreeViewControl::TreeNode, ::Platform::Object>,
+    1, // Object
+    -1,
+    false, false, false,
+    //   7 - TreeViewControl.TreeNode.Size
+    L"Size",
+    &GetValueTypeMember_Size<::TreeViewControl::TreeNode, ::default::uint32>,
+    nullptr,
+    3, // UInt32
+    -1,
+    true,  false, false,
+    //   8 - ModelViewer.GlyphConverter.ExpandedGlyph
+    L"ExpandedGlyph",
+    &GetReferenceTypeMember_ExpandedGlyph<::ModelViewer::GlyphConverter>,
+    &SetReferenceTypeMember_ExpandedGlyph<::ModelViewer::GlyphConverter, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //   9 - ModelViewer.GlyphConverter.CollapsedGlyph
+    L"CollapsedGlyph",
+    &GetReferenceTypeMember_CollapsedGlyph<::ModelViewer::GlyphConverter>,
+    &SetReferenceTypeMember_CollapsedGlyph<::ModelViewer::GlyphConverter, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  10 - ModelViewer.FileSystemData.IsFolder
+    L"IsFolder",
+    &GetValueTypeMember_IsFolder<::ModelViewer::FileSystemData, ::Platform::Boolean>,
+    &SetValueTypeMember_IsFolder<::ModelViewer::FileSystemData, ::Platform::Boolean>,
+    5, // Boolean
+    -1,
+    false, false, false,
+    //  11 - ModelViewer.FileSystemData.Name
+    L"Name",
+    &GetReferenceTypeMember_Name<::ModelViewer::FileSystemData>,
+    &SetReferenceTypeMember_Name<::ModelViewer::FileSystemData, ::Platform::String>,
+    2, // String
+    -1,
+    false, false, false,
+    //  12 - ViewModels.DirectXPageViewModel.D
     L"D",
     &GetValueTypeMember_D<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_D<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   2 - ViewModels.DirectXPageViewModel.G
+    //  13 - ViewModels.DirectXPageViewModel.G
     L"G",
     &GetValueTypeMember_G<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_G<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   3 - ViewModels.DirectXPageViewModel.F
+    //  14 - ViewModels.DirectXPageViewModel.F
     L"F",
     &GetValueTypeMember_F<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_F<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   4 - ViewModels.DirectXPageViewModel.Specular
+    //  15 - ViewModels.DirectXPageViewModel.Specular
     L"Specular",
     &GetValueTypeMember_Specular<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_Specular<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   5 - ViewModels.DirectXPageViewModel.Diffuse
+    //  16 - ViewModels.DirectXPageViewModel.Diffuse
     L"Diffuse",
     &GetValueTypeMember_Diffuse<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_Diffuse<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   6 - ViewModels.DirectXPageViewModel.Roughness
+    //  17 - ViewModels.DirectXPageViewModel.Roughness
     L"Roughness",
     &GetValueTypeMember_Roughness<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_Roughness<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   7 - ViewModels.DirectXPageViewModel.Metallic
+    //  18 - ViewModels.DirectXPageViewModel.Metallic
     L"Metallic",
     &GetValueTypeMember_Metallic<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_Metallic<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   8 - ViewModels.DirectXPageViewModel.BaseColour
+    //  19 - ViewModels.DirectXPageViewModel.BaseColour
     L"BaseColour",
     &GetValueTypeMember_BaseColour<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
     &SetValueTypeMember_BaseColour<::ViewModels::DirectXPageViewModel, ::Platform::Boolean>,
-    2, // Boolean
+    5, // Boolean
     -1,
     false, false, false,
-    //   9 - ViewModels.DirectXPageViewModel.LightColour
+    //  20 - ViewModels.DirectXPageViewModel.LightColour
     L"LightColour",
     &GetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
     &SetValueTypeMember_LightColour<::ViewModels::DirectXPageViewModel, ::Windows::UI::Color>,
-    3, // Windows.UI.Color
+    6, // Windows.UI.Color
     -1,
     false, false, false,
-    //  10 - ViewModels.DirectXPageViewModel.Ibl
+    //  21 - ViewModels.DirectXPageViewModel.Ibl
     L"Ibl",
     &GetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_Ibl<::ViewModels::DirectXPageViewModel, ::default::float32>,
-    1, // Single
+    4, // Single
     -1,
     false, false, false,
-    //  11 - ViewModels.DirectXPageViewModel.LightPitch
+    //  22 - ViewModels.DirectXPageViewModel.LightPitch
     L"LightPitch",
     &GetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightPitch<::ViewModels::DirectXPageViewModel, ::default::float32>,
-    1, // Single
+    4, // Single
     -1,
     false, false, false,
-    //  12 - ViewModels.DirectXPageViewModel.LightRotation
+    //  23 - ViewModels.DirectXPageViewModel.LightRotation
     L"LightRotation",
     &GetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightRotation<::ViewModels::DirectXPageViewModel, ::default::float32>,
-    1, // Single
+    4, // Single
     -1,
     false, false, false,
-    //  13 - ViewModels.DirectXPageViewModel.LightScale
+    //  24 - ViewModels.DirectXPageViewModel.LightScale
     L"LightScale",
     &GetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,
     &SetValueTypeMember_LightScale<::ViewModels::DirectXPageViewModel, ::default::float32>,
-    1, // Single
+    4, // Single
+    -1,
+    false, false, false,
+    //  25 - ModelViewer.BooleanToVisibilityConverter.IsInverse
+    L"IsInverse",
+    &GetValueTypeMember_IsInverse<::ModelViewer::BooleanToVisibilityConverter, ::Platform::Boolean>,
+    &SetValueTypeMember_IsInverse<::ModelViewer::BooleanToVisibilityConverter, ::Platform::Boolean>,
+    5, // Boolean
+    -1,
+    false, false, false,
+    //  26 - TreeViewControl.IntegerToIndentationConverter.IndentMultiplier
+    L"IndentMultiplier",
+    &GetValueTypeMember_IndentMultiplier<::TreeViewControl::IntegerToIndentationConverter, ::default::int32>,
+    &SetValueTypeMember_IndentMultiplier<::TreeViewControl::IntegerToIndentationConverter, ::default::int32>,
+    0, // Int32
     -1,
     false, false, false,
 };

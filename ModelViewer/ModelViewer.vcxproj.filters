@@ -108,6 +108,8 @@
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Container.cpp" />
+    <ClCompile Include="BooleanToVisibilityConverter.cpp" />
+    <ClCompile Include="GlyphConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -149,6 +151,9 @@
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="BooleanToVisibilityConverter.h" />
+    <ClInclude Include="GlyphConverter.h" />
+    <ClInclude Include="FileSystemData.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

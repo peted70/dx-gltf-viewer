@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:ViewModels"
+    xmlns:tvs="using:TreeViewControl" 
     mc:Ignorable="d">
 
     <!--<Page.DataContext>
@@ -14,6 +15,13 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <tvs:IntegerToIndentationConverter x:Key="IntToIndConverter"/>
+            <local:GlyphConverter x:Key="folderGlyphConverter" ExpandedGlyph="&#xED44;" CollapsedGlyph="&#xED42;" />
+            <local:GlyphConverter x:Key="folderOutlineGlyphConverter" ExpandedGlyph="&#xED43;" CollapsedGlyph="&#xED41;" />
+            <local:GlyphConverter x:Key="expandCollapseGlyphConverter" ExpandedGlyph="&#xE70D;" CollapsedGlyph="&#xE76C;"/>
+            <local:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"  />
+            <local:BooleanToVisibilityConverter x:Key="inverseBooleanToVisibilityConverter" IsInverse="True" />
+
             <Style TargetType="TextBlock">
                 <Setter Property="Padding" Value="4"></Setter>
             </Style>
@@ -38,6 +46,51 @@
                     </Grid>
                 </RelativePanel>
             </Flyout>
+            <DataTemplate x:Key="TreeViewItemDataTemplate">
+                <StackPanel Orientation="Horizontal" Height="40" Margin="{Binding Depth, Converter={StaticResource IntToIndConverter}}" AllowDrop="{Binding Data.IsFolder}">
+                    <FontIcon x:Name="expandCollapseChevron" 
+                          Glyph="{Binding IsExpanded, Converter={StaticResource expandCollapseGlyphConverter}}"
+                          Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"                           
+                          FontSize="12"
+                          Margin="12,8,12,8" 
+                          FontFamily="Segoe MDL2 Assets"                          
+                          />
+                    <Grid>
+                        <FontIcon x:Name ="expandCollapseFolder" 
+                              Glyph="{Binding IsExpanded, Converter={StaticResource folderGlyphConverter}}" 
+                              Foreground="#FFFFE793" 
+                              FontSize="16" 
+                              Margin="0,8,12,8" 
+                              FontFamily="Segoe MDL2 Assets"
+                              Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"
+                              />
+
+                        <FontIcon x:Name ="nonFolderIcon" 
+                              Glyph="&#xE160;"
+                              Foreground="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                              FontSize="12" 
+                              Margin="20,8,12,8" 
+                              FontFamily="Segoe MDL2 Assets"
+                              Visibility="{Binding Data.IsFolder, Converter={StaticResource inverseBooleanToVisibilityConverter}}"
+                              />
+
+                        <FontIcon x:Name ="expandCollapseFolderOutline" 
+                              Glyph="{Binding IsExpanded, Converter={StaticResource folderOutlineGlyphConverter}}" 
+                              Foreground="#FFECC849" 
+                              FontSize="16" 
+                              Margin="0,8,12,8" 
+                              FontFamily="Segoe MDL2 Assets"
+                              Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                    </Grid>
+
+                    <TextBlock Text="{Binding Data.Name}" 
+                           HorizontalAlignment="Stretch" 
+                           VerticalAlignment="Center"  
+                           FontWeight="Medium"
+                           FontFamily="Segoe MDL2 Assests"                           
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
     <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
@@ -114,7 +167,27 @@
                         <CheckBox IsChecked="{x:Bind ViewModel.D, Mode=TwoWay}" Grid.Row="12" Grid.Column="1"></CheckBox>
                     </Grid>
                 </ContentControl>
-                <ContentControl Grid.Row="1" Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                <ContentControl Grid.Row="1" Margin="8" 
+                                HorizontalContentAlignment="Stretch"  
+                                HorizontalAlignment="Stretch" 
+                                VerticalContentAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="AliceBlue">
+                    <tvs:TreeView x:Name="sampleTreeView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      Grid.Row="1"
+                      Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                      BorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                      BorderThickness="2"
+                      IsItemClickEnabled="True" 
+                      ItemTemplate="{StaticResource TreeViewItemDataTemplate}">
+                        <tvs:TreeView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <ContentThemeTransition />
+                                <ReorderThemeTransition />
+                                <EntranceThemeTransition IsStaggeringEnabled="False" />
+                            </TransitionCollection>
+                        </tvs:TreeView.ItemContainerTransitions>
+                    </tvs:TreeView>
                 </ContentControl>
             </Grid>
         </Grid>
