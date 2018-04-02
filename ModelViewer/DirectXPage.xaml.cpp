@@ -82,6 +82,8 @@ DirectXPage::DirectXPage():
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
 	m_main = std::unique_ptr<ModelViewerMain>(new ModelViewerMain(m_deviceResources));
+
+	//ViewModel->SetRenderer(m_main->Renderer());
 	m_main->StartRenderLoop();
 }
 

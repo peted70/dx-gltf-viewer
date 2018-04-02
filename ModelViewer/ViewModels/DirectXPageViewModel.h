@@ -3,6 +3,9 @@
 #include "Common/ViewModelBase.h"
 #include "NotificationManager.h"
 #include "DirectXPageViewModelData.h"
+#include "Content\Sample3DSceneRenderer.h"
+#include <memory>
+#include "Container.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -12,6 +15,7 @@ namespace ViewModels
 	using namespace Common;
 	using namespace Windows::UI;
 	using namespace Windows::UI::Xaml::Data;
+	using namespace ModelViewer;
 
 	[Bindable]
 	public ref class DirectXPageViewModel sealed : public ViewModelBase
@@ -19,189 +23,175 @@ namespace ViewModels
 	public:
 		DirectXPageViewModel()
 		{
-			_data.Notify(_data);
+			_data = Container::Instance().ResolveDirectXPageViewModelData();
 		}
 
 		property float LightScale
 		{
-			float get() { return _data._lightScale; }
+			float get() { return _data->LightScale(); }
 			void set(float val)
 			{
-				if (_data._lightScale == val)
+				if (_data->LightScale() == val)
 					return;
-				_data._lightScale = val;
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
+				_data->SetLightScale(val);
 			}
 		}
 
 		property float LightRotation
 		{
-			float get() { return _data._lightRotation; }
+			float get() { return _data->LightRotation(); }
 			void set(float val)
 			{
-				if (_data._lightRotation == val)
+				if (_data->LightRotation() == val)
 					return;
-				_data._lightRotation = val;
+				_data->SetLightRotation(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				ConvertDirection(LightRotation, LightPitch, _data._lightDirection);
-				_data.Notify(_data);
+				_data->SetLightDirection(ConvertDirection(LightRotation, LightPitch, 
+					const_cast<float *>(_data->LightDirection())));
 			}
 		}
 
 		property float LightPitch
 		{
-			float get() { return _data._lightPitch; }
+			float get() { return _data->LightPitch(); }
 			void set(float val)
 			{
-				if (_data._lightPitch == val)
+				if (_data->LightPitch() == val)
 					return;
-				_data._lightPitch = val;
+				_data->SetLightPitch(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				ConvertDirection(LightRotation, LightPitch, _data._lightDirection);
-				_data.Notify(_data);
+				_data->SetLightDirection(ConvertDirection(LightRotation, LightPitch, 
+					const_cast<float *>(_data->LightDirection())));
 			}
 		}
 
 		property float Ibl
 		{
-			float get() { return _data._ibl; }
+			float get() { return _data->Ibl(); }
 			void set(float val)
 			{
-				if (_data._ibl == val)
+				if (_data->Ibl() == val)
 					return;
-				_data._ibl = val;
+				_data->SetIbl(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property Color LightColour
 		{
-			Color get() { return ConvertColor(_data._lightColour); }
+			Color get() { return ConvertColor(_data->LightColour()); }
 			void set(Windows::UI::Color val)
 			{
-				if (_data._lightColour[0] == val.R && 
-					_data._lightColour[1] == val.G &&
-					_data._lightColour[2] == val.B)
+				if (_data->LightColour()[0] == val.R &&
+					_data->LightColour()[1] == val.G &&
+					_data->LightColour()[2] == val.B)
 					return;
-
-				_data._lightColour[0] = val.R;
-				_data._lightColour[1] = val.G;
-				_data._lightColour[2] = val.B;
-
+				unsigned char col[3] = { val.R, val.G, val.B };
+				_data->SetLightColour(col);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool BaseColour
 		{
-			bool get() { return _data._baseColour; }
+			bool get() { return _data->BaseColour(); }
 			void set(bool val)
 			{
-				if (_data._baseColour == val)
+				if (_data->BaseColour() == val)
 					return;
-				_data._baseColour = val;
+				_data->SetBaseColour(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool Metallic
 		{
-			bool get() { return _data._metallic; }
+			bool get() { return _data->Metallic(); }
 			void set(bool val)
 			{
-				if (_data._metallic == val)
+				if (_data->Metallic() == val)
 					return;
-				_data._metallic = val;
+				_data->SetMetallic(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool Roughness
 		{
-			bool get() { return _data._roughness; }
+			bool get() { return _data->Roughness(); }
 			void set(bool val)
 			{
-				if (_data._roughness == val)
+				if (_data->Roughness() == val)
 					return;
-				_data._roughness = val;
+				_data->SetRoughness(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool Diffuse
 		{
-			bool get() { return _data._diffuse; }
+			bool get() { return _data->Diffuse(); }
 			void set(bool val)
 			{
-				if (_data._diffuse == val)
+				if (_data->Diffuse() == val)
 					return;
-				_data._diffuse = val;
+				_data->SetDiffuse(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool Specular
 		{
-			bool get() { return _data._specular; }
+			bool get() { return _data->Specular(); }
 			void set(bool val)
 			{
-				if (_data._specular == val)
+				if (_data->Specular() == val)
 					return;
-				_data._specular = val;
+				_data->SetSpecular(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool F
 		{
-			bool get() { return _data._f; }
+			bool get() { return _data->F(); }
 			void set(bool val)
 			{
-				if (_data._f == val)
+				if (_data->F() == val)
 					return;
-				_data._f = val;
+				_data->SetF(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool G
 		{
-			bool get() { return _data._g; }
+			bool get() { return _data->G(); }
 			void set(bool val)
 			{
-				if (_data._g == val)
+				if (_data->G() == val)
 					return;
-				_data._g = val;
+				_data->SetG(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 		property bool D
 		{
-			bool get() { return _data._d; }
+			bool get() { return _data->D(); }
 			void set(bool val)
 			{
-				if (_data._d == val)
+				if (_data->D() == val)
 					return;
-				_data._d = val;
+				_data->SetD(val);
 				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data.Notify(_data);
 			}
 		}
 
 	private:
 
-		Color ConvertColor(unsigned char col[3])
+		Color ConvertColor(const unsigned char col[3])
 		{
 			auto ret = new Color();
 			ret->R = col[0];
@@ -210,7 +200,7 @@ namespace ViewModels
 			return *ret;
 		}
 
-		float *ConvertDirection(float rotation, float pitch, float data[])
+		float *ConvertDirection(float rotation, float pitch, float *data)
 		{
 			auto rot = rotation * M_PI / 180;
 			auto ptch = pitch * M_PI / 180;
@@ -220,7 +210,7 @@ namespace ViewModels
 			return data;
 		}
 
-		DirectXPageViewModelData _data;
+		std::shared_ptr<DirectXPageViewModelData> _data;
 	};
 }
 

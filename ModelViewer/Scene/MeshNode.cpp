@@ -282,8 +282,10 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(data->SubResource->ByteWidth, bindFlags);
+
+	auto device = DevResources()->GetD3DDevice();
 	DX::ThrowIfFailed(
-		DevResources()->GetD3DDevice()->CreateBuffer(
+		device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexBufferData,
 			&buffer
@@ -303,7 +305,7 @@ void MeshNode::CreateMaterial(GLTF_MaterialData ^ data)
 void MeshNode::CreateTransform(GLTF_TransformData^ data)
 {
 	// If we are handed a matrix, just apply that, otherwise break down into scale, rotate, translate
-	// and generate the matrix from those..
+	// and generate the matrix from those..createbuffer
 	XMMATRIX matrix;
 
 	if (data->hasMatrix)

@@ -49,6 +49,7 @@ namespace ModelViewer
 		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod);
 		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod);
 		bool IsTracking() { return m_tracking; }
+		void NotifyDataChanged(DirectXPageViewModelData const& data);
 		void* operator new(size_t i)
 		{
 			return _mm_malloc(i, 16);

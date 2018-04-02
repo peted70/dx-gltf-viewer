@@ -107,6 +107,7 @@
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="Container.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="Container.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

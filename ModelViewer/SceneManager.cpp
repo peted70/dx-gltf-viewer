@@ -6,6 +6,11 @@ SceneManager::SceneManager()
 	_sceneNode = make_shared<RootNode>(-1);
 }
 
+void SceneManager::Notify(const Observable & data)
+{
+	NotificationManager::Instance().Notify(data);
+}
+
 shared_ptr<RootNode> SceneManager::Current()
 {
 	return _sceneNode;

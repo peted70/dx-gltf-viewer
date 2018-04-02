@@ -1,4 +1,9 @@
 #pragma once
+#include <boost\signals2\signal.hpp>
+
+using namespace std;
+namespace signals = boost::signals2;
+
 class DirectXPageViewModelData : public Observable
 {
 public:
@@ -7,7 +12,165 @@ public:
 	// Inherited via Observable
 	virtual void Notify(const Observable & data) override;
 
-public:
+	signals::connection RegisterForUpdates(signals::signal<void(DirectXPageViewModelData const& data)>::slot_type slot)
+	{
+		return DataChanged.connect(slot);
+	}
+
+	void UnregisterForUpdates(signals::connection conn)
+	{
+		conn.disconnect();
+	}
+
+	const float *LightDirection() const { return _lightDirection; }
+	void SetLightDirection(float ld[3])
+	{
+		if (ld[0] == _lightDirection[0] && 
+			ld[0] == _lightDirection[1] &&
+			ld[0] == _lightDirection[2])
+			return;
+		_lightDirection[0] = ld[0];
+		_lightDirection[1] = ld[1];
+		_lightDirection[2] = ld[2];
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	float LightPitch() const { return _lightPitch; }
+	void SetLightPitch(float lp)
+	{
+		if (lp == _lightPitch)
+			return;
+		_lightPitch = lp;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	float LightRotation() const { return _lightRotation; }
+	void SetLightRotation(float lr)
+	{
+		if (lr == _lightRotation)
+			return;
+		_lightRotation = lr;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	float LightScale() const { return _lightScale; }
+	void SetLightScale(float ls)
+	{
+		if (ls == _lightScale)
+			return;
+		_lightScale = ls;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	float Ibl() const { return _ibl; }
+	void SetIbl(float i)
+	{
+		if (i == _ibl)
+			return;
+		_ibl = i;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	const unsigned char *LightColour() const { return _lightColour; }
+	void SetLightColour(unsigned char lc[3])
+	{
+		if (lc[0] == _lightColour[0] &&
+			lc[0] == _lightColour[1] &&
+			lc[0] == _lightColour[2])
+			return;
+		_lightColour[0] = lc[0];
+		_lightColour[1] = lc[1];
+		_lightColour[2] = lc[2];
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool Metallic() const { return _metallic; }
+	void SetMetallic(bool m)
+	{
+		if (m == _metallic)
+			return;
+		_metallic = m;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool Roughness() const { return _roughness; }
+	void SetRoughness(bool r)
+	{
+		if (r == _roughness)
+			return;
+		_roughness = r;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool BaseColour() const { return _baseColour; }
+	void SetBaseColour(bool bc)
+	{
+		if (bc == _baseColour)
+			return;
+		_baseColour = bc;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool Diffuse() const { return _diffuse; }
+	void SetDiffuse(bool d)
+	{
+		if (d == _diffuse)
+			return;
+		_diffuse = d;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool Specular() const { return _specular; }
+	void SetSpecular(bool s)
+	{
+		if (s == _specular)
+			return;
+		_specular = s;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool F() const { return _f; }
+	void SetF(bool f)
+	{
+		if (f == _f)
+			return;
+		_f = f;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool G() const { return _g; }
+	void SetG(bool g)
+	{
+		if (g == _g)
+			return;
+		_g = g;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+	bool D()const { return _d; }
+	void SetD(bool d)
+	{
+		if (d == _d)
+			return;
+		_d = d;
+		DataChanged(*this);
+		Notify(*this);
+	}
+
+private:
 	float _lightDirection[3] = { 0.5f, 0.5f, 0.0f };
 
 	float _lightPitch = 0.0f;
@@ -24,6 +187,8 @@ public:
 	bool _f = false;
 	bool _g = false;
 	bool _d = false;
+
+	signals::signal<void(DirectXPageViewModelData const& data)> DataChanged;
 };
 
 

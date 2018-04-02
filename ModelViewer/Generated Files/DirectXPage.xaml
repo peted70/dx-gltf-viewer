@@ -48,67 +48,75 @@
             </Grid.ColumnDefinitions>
             <SwapChainPanel x:ConnectionId='5' Grid.Column="0" x:Name="swapChainPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             </SwapChainPanel>
-            <ContentControl Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Grid.Column="1" Background="AliceBlue">
-                <Grid Margin="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0">Light Scale</TextBlock>
-                    <Slider x:ConnectionId='6'                                                    Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="10"></Slider>
-                    <TextBlock Grid.Row="1" Grid.Column="0">Light Rotation</TextBlock>
-                    <Slider x:ConnectionId='7'                                                       Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360"></Slider>
-                    <TextBlock Grid.Row="2" Grid.Column="0">Light Pitch</TextBlock>
-                    <Slider x:ConnectionId='8'                                                    Grid.Row="2" Grid.Column="1" Minimum="-90" Maximum="90"></Slider>
-                    <TextBlock Grid.Row="3" Grid.Column="0">IBL</TextBlock>
-                    <Slider x:ConnectionId='9'                                             Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="4"></Slider>
-                    <TextBlock Grid.Row="4" Grid.Column="0">Light Colour</TextBlock>
-
-                    <Grid Grid.Row="4" Grid.Column="1">
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ContentControl Grid.Row="0" Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                    <Grid Margin="4">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button x:ConnectionId='18' x:Name="colorPickerButton" Content="Pick a color" 
-                            Flyout="{StaticResource myColorPickerFlyout}"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0">Light Scale</TextBlock>
+                        <Slider x:ConnectionId='6'                                                    Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="10"></Slider>
+                        <TextBlock Grid.Row="1" Grid.Column="0">Light Rotation</TextBlock>
+                        <Slider x:ConnectionId='7'                                                       Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="360"></Slider>
+                        <TextBlock Grid.Row="2" Grid.Column="0">Light Pitch</TextBlock>
+                        <Slider x:ConnectionId='8'                                                    Grid.Row="2" Grid.Column="1" Minimum="-90" Maximum="90"></Slider>
+                        <TextBlock Grid.Row="3" Grid.Column="0">IBL</TextBlock>
+                        <Slider x:ConnectionId='9'                                             Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="4"></Slider>
+                        <TextBlock Grid.Row="4" Grid.Column="0">Light Colour</TextBlock>
+
+                        <Grid Grid.Row="4" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button x:ConnectionId='18' x:Name="colorPickerButton" Content="Pick a color" 
+                                Flyout="{StaticResource myColorPickerFlyout}"/>
+                        </Grid>
+
+                        <!--<ColorPicker Color="{x:Bind ViewModel.LightColour, Mode=TwoWay}" Grid.Row="4" Grid.Column="1"></ColorPicker>-->
+
+                        <TextBlock Grid.Row="5" Grid.Column="0">Base Colour</TextBlock>
+                        <CheckBox x:ConnectionId='10'                                                        Grid.Row="5" Grid.Column="1"></CheckBox>
+                        <TextBlock Grid.Row="6" Grid.Column="0">Metallic</TextBlock>
+                        <CheckBox x:ConnectionId='11'                                                      Grid.Row="6" Grid.Column="1"></CheckBox>
+                        <TextBlock Grid.Row="7" Grid.Column="0">Roughness</TextBlock>
+                        <CheckBox x:ConnectionId='12'                                                       Grid.Row="7" Grid.Column="1"></CheckBox>
+
+                        <TextBlock Grid.Row="8" Grid.Column="0">Diff(l, n)</TextBlock>
+                        <CheckBox x:ConnectionId='13'                                                     Grid.Row="8" Grid.Column="1"></CheckBox>
+                        <TextBlock Grid.Row="9" Grid.Column="0">Specular Term</TextBlock>
+                        <CheckBox x:ConnectionId='14'                                                      Grid.Row="9" Grid.Column="1"></CheckBox>
+                        <TextBlock Grid.Row="10" Grid.Column="0">F(l, h)</TextBlock>
+                        <CheckBox x:ConnectionId='15'                                               Grid.Row="9" Grid.Column="1" Margin="0.5,26,0,6" Grid.RowSpan="2"></CheckBox>
+                        <TextBlock Grid.Row="11" Grid.Column="0">G(l, v, h)</TextBlock>
+                        <CheckBox x:ConnectionId='16'                                               Grid.Row="11" Grid.Column="1"></CheckBox>
+                        <TextBlock Grid.Row="12" Grid.Column="0">D(h)</TextBlock>
+                        <CheckBox x:ConnectionId='17'                                               Grid.Row="12" Grid.Column="1"></CheckBox>
                     </Grid>
-
-                    <!--<ColorPicker Color="{x:Bind ViewModel.LightColour, Mode=TwoWay}" Grid.Row="4" Grid.Column="1"></ColorPicker>-->
-
-                    <TextBlock Grid.Row="5" Grid.Column="0">Base Colour</TextBlock>
-                    <CheckBox x:ConnectionId='10'                                                        Grid.Row="5" Grid.Column="1"></CheckBox>
-                    <TextBlock Grid.Row="6" Grid.Column="0">Metallic</TextBlock>
-                    <CheckBox x:ConnectionId='11'                                                      Grid.Row="6" Grid.Column="1"></CheckBox>
-                    <TextBlock Grid.Row="7" Grid.Column="0">Roughness</TextBlock>
-                    <CheckBox x:ConnectionId='12'                                                       Grid.Row="7" Grid.Column="1"></CheckBox>
-
-                    <TextBlock Grid.Row="8" Grid.Column="0">Diff(l, n)</TextBlock>
-                    <CheckBox x:ConnectionId='13'                                                     Grid.Row="8" Grid.Column="1"></CheckBox>
-                    <TextBlock Grid.Row="9" Grid.Column="0">Specular Term</TextBlock>
-                    <CheckBox x:ConnectionId='14'                                                      Grid.Row="9" Grid.Column="1"></CheckBox>
-                    <TextBlock Grid.Row="10" Grid.Column="0">F(l, h)</TextBlock>
-                    <CheckBox x:ConnectionId='15'                                               Grid.Row="9" Grid.Column="1" Margin="0.5,26,0,6" Grid.RowSpan="2"></CheckBox>
-                    <TextBlock Grid.Row="11" Grid.Column="0">G(l, v, h)</TextBlock>
-                    <CheckBox x:ConnectionId='16'                                               Grid.Row="11" Grid.Column="1"></CheckBox>
-                    <TextBlock Grid.Row="12" Grid.Column="0">D(h)</TextBlock>
-                    <CheckBox x:ConnectionId='17'                                               Grid.Row="12" Grid.Column="1"></CheckBox>
-                </Grid>
-            </ContentControl>
+                </ContentControl>
+                <ContentControl Grid.Row="1" Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                </ContentControl>
+            </Grid>
         </Grid>
     </ContentControl>
 </Page>

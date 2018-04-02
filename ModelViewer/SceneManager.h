@@ -8,7 +8,7 @@
 using namespace std;
 using namespace DX;
 
-class SceneManager
+class SceneManager : public Observable
 {
 public:
 	static SceneManager& Instance()
@@ -29,4 +29,7 @@ private:
 	// Just have once scene for now..
 	shared_ptr<RootNode> _sceneNode;
 	shared_ptr<DeviceResources> _deviceResources;
+
+	// Inherited via Observable
+	virtual void Notify(const Observable & data) override;
 };
