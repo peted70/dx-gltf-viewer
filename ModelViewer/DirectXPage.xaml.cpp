@@ -119,6 +119,21 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 	m_main->StartRenderLoop();
 }
 
+TreeNode^ DirectXPage::AddTreeItemsRecursive(GraphNode& node, TreeNode^ parent)
+{
+	if (parent == nullptr)
+		parent = CreateContainerNode(ref new String(node.Name().c_str()));
+	parent->IsExpanded = true;
+	for (int i = 0; i < node.NumChildren(); i++)
+	{
+		auto& child = node.GetChild(i);
+		auto childNode = CreateMeshNode(ref new String(child.Name().c_str()));
+		parent->Append(childNode);
+		AddTreeItemsRecursive(const_cast<GraphNode&>(child), childNode);
+	}
+	return parent;
+}
+
 void DirectXPage::NotifySceneChanges(Observable const& scene)
 {
 	auto scn = dynamic_cast<const SceneManager*>(&scene);
@@ -129,13 +144,9 @@ void DirectXPage::NotifySceneChanges(Observable const& scene)
 	Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([scn, this]()
 	{
 		auto root = scn->Current();
-		auto parent = CreateContainerNode(ref new String(root->Name().c_str()));
-		parent->IsExpanded = true;
-		for (int i = 0; i < root->NumChildren(); i++)
-		{
-			auto& child = root->GetChild(i);
-			parent->Append(CreateMeshNode(ref new String(child.Name().c_str())));
-		}
+		//auto parent = CreateContainerNode(ref new String(root->Name().c_str()));
+
+		auto parent = AddTreeItemsRecursive(*root.get(), nullptr);
 
 		sampleTreeView->RootNode->Append(parent);
 	}));

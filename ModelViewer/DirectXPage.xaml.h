@@ -58,6 +58,7 @@ namespace ModelViewer
 		SceneUpdateProxy updates;
 
 		void NotifySceneChanges(Observable const& scene);
+		TreeNode^ AddTreeItemsRecursive(GraphNode& node, TreeNode^ parent);
 
 		// XAML low-level rendering event handler.
 		void OnRendering(Object^ sender, Object^ args);
