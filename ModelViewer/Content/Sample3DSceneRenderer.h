@@ -127,6 +127,8 @@ namespace ModelViewer
 		float _yaw;
 		float _pitch;
 		float _roll;
+		float _panx;
+		float _pany;
 		float _zoom;
 
 		unique_ptr<DXGrid> _grid;

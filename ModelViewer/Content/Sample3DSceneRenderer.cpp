@@ -184,6 +184,8 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 	_yaw(0.0f),
 	_pitch(0.0f),
 	_roll(0.0f),
+	_panx(0.0f),
+	_pany(0.0f),
 	_zoom(1.0f)
 {
 	CreateDeviceDependentResources();
@@ -262,12 +264,12 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 		XMMatrixTranspose(perspectiveMatrix * orientationMatrix)
 		);
 
-	static const XMVECTORF32 at = { 0.0f, 0.0f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
 	auto camMatrix = XMMatrixRotationRollPitchYaw(_pitch, _yaw, _roll);
 
 	XMVECTORF32 alongZ = { 0.0f, 0.0f, _zoom };
+	XMVECTORF32 at = { _panx, _pany, 0.0f, 0.0f };
 
 	auto eye = XMVector3TransformCoord(alongZ, camMatrix);
 	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().view, 
@@ -323,11 +325,17 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 		{
 			_zoom += (positionY - lastPosY) / 120.0f;
 		}
+		else if ((int)(mod & VirtualKeyModifiers::Shift) != 0)
+		{
+			_panx += (positionX - lastPosX) / 200.0f;
+			_pany += (positionY - lastPosY) / 200.0f;
+		}
 		else
 		{
 			_pitch += (positionY - lastPosY) / 100.0f;
 			_yaw += (positionX - lastPosX) / 100.0f;
 		}
+
 
 		lastPosY = positionY;
 		lastPosX = positionX;
