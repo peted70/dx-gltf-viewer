@@ -52,7 +52,7 @@ public:
     {
         switch(__connectionId)
         {
-            case 7: // DirectXPage.xaml line 131
+            case 7: // DirectXPage.xaml line 133
                 this->obj7 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj7->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -65,7 +65,7 @@ public:
                             }
                         }));
                 break;
-            case 8: // DirectXPage.xaml line 133
+            case 8: // DirectXPage.xaml line 135
                 this->obj8 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj8->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -78,7 +78,7 @@ public:
                             }
                         }));
                 break;
-            case 9: // DirectXPage.xaml line 135
+            case 9: // DirectXPage.xaml line 137
                 this->obj9 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj9->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -91,7 +91,7 @@ public:
                             }
                         }));
                 break;
-            case 10: // DirectXPage.xaml line 137
+            case 10: // DirectXPage.xaml line 139
                 this->obj10 = safe_cast<::Windows::UI::Xaml::Controls::Slider^>(__target);
                 this->obj10->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::RangeBase::ValueProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -104,7 +104,7 @@ public:
                             }
                         }));
                 break;
-            case 11: // DirectXPage.xaml line 152
+            case 11: // DirectXPage.xaml line 154
                 this->obj11 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj11->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -117,7 +117,7 @@ public:
                             }
                         }));
                 break;
-            case 12: // DirectXPage.xaml line 154
+            case 12: // DirectXPage.xaml line 156
                 this->obj12 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj12->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -130,7 +130,7 @@ public:
                             }
                         }));
                 break;
-            case 13: // DirectXPage.xaml line 156
+            case 13: // DirectXPage.xaml line 158
                 this->obj13 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj13->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -143,7 +143,7 @@ public:
                             }
                         }));
                 break;
-            case 14: // DirectXPage.xaml line 159
+            case 14: // DirectXPage.xaml line 161
                 this->obj14 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj14->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -156,7 +156,7 @@ public:
                             }
                         }));
                 break;
-            case 15: // DirectXPage.xaml line 161
+            case 15: // DirectXPage.xaml line 163
                 this->obj15 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj15->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -169,7 +169,7 @@ public:
                             }
                         }));
                 break;
-            case 16: // DirectXPage.xaml line 163
+            case 16: // DirectXPage.xaml line 165
                 this->obj16 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj16->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -182,7 +182,7 @@ public:
                             }
                         }));
                 break;
-            case 17: // DirectXPage.xaml line 165
+            case 17: // DirectXPage.xaml line 167
                 this->obj17 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj17->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -195,7 +195,7 @@ public:
                             }
                         }));
                 break;
-            case 18: // DirectXPage.xaml line 167
+            case 18: // DirectXPage.xaml line 169
                 this->obj18 = safe_cast<::Windows::UI::Xaml::Controls::CheckBox^>(__target);
                 this->obj18->RegisterPropertyChangedCallback(::Windows::UI::Xaml::Controls::Primitives::ToggleButton::IsCheckedProperty,
                     ref new ::Windows::UI::Xaml::DependencyPropertyChangedCallback( 
@@ -272,7 +272,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 131
+            // DirectXPage.xaml line 133
             Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj7, obj);
         }
     }
@@ -280,7 +280,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 133
+            // DirectXPage.xaml line 135
             Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj8, obj);
         }
     }
@@ -288,7 +288,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 135
+            // DirectXPage.xaml line 137
             Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj9, obj);
         }
     }
@@ -296,7 +296,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 137
+            // DirectXPage.xaml line 139
             Set_Windows_UI_Xaml_Controls_Primitives_RangeBase_Value(this->obj10, obj);
         }
     }
@@ -304,7 +304,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 152
+            // DirectXPage.xaml line 154
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj11, obj, nullptr);
         }
     }
@@ -312,7 +312,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 154
+            // DirectXPage.xaml line 156
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj12, obj, nullptr);
         }
     }
@@ -320,7 +320,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 156
+            // DirectXPage.xaml line 158
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj13, obj, nullptr);
         }
     }
@@ -328,7 +328,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 159
+            // DirectXPage.xaml line 161
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj14, obj, nullptr);
         }
     }
@@ -336,7 +336,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 161
+            // DirectXPage.xaml line 163
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj15, obj, nullptr);
         }
     }
@@ -344,7 +344,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 163
+            // DirectXPage.xaml line 165
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj16, obj, nullptr);
         }
     }
@@ -352,7 +352,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 165
+            // DirectXPage.xaml line 167
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj17, obj, nullptr);
         }
     }
@@ -360,7 +360,7 @@ private:
     {
         if((phase & ((1 << 0) | NOT_PHASED | DATA_CHANGED)) != 0)
         {
-            // DirectXPage.xaml line 167
+            // DirectXPage.xaml line 169
             Set_Windows_UI_Xaml_Controls_Primitives_ToggleButton_IsChecked(this->obj18, obj, nullptr);
         }
     }
