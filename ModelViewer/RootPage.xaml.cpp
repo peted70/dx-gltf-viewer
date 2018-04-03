@@ -96,6 +96,7 @@ future<shared_ptr<GraphNode>> LoadFileAsync()
 	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
 	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
 
+	Utility::Out(L"temp file path = %s", tempFile->Path->Data());
 	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(tempFile->Path);
 	co_return ret;
 }

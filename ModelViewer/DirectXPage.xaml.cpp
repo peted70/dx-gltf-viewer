@@ -143,6 +143,8 @@ void DirectXPage::NotifySceneChanges(Observable const& scene)
 	// Marshal the rest onto the ui thread...
 	Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([scn, this]()
 	{
+		sampleTreeView->RootNode->Clear();
+
 		auto root = scn->Current();
 		//auto parent = CreateContainerNode(ref new String(root->Name().c_str()));
 
@@ -186,7 +188,7 @@ void DirectXPage::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEvent
 // DisplayInformation event handlers.
 
 void DirectXPage::OnDpiChanged(DisplayInformation^ sender, Object^ args)
-{
+{ 
 	critical_section::scoped_lock lock(m_main->GetCriticalSection());
 	// Note: The value for LogicalDpi retrieved here may not match the effective DPI of the app
 	// if it is being scaled for high resolution devices. Once the DPI is set on DeviceResources,

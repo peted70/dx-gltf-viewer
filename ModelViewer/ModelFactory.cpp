@@ -89,6 +89,7 @@ void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 future<shared_ptr<GraphNode>> ModelFactory::CreateFromFileAsync(String^ filename)
 {
 	_parser = ref new GLTF_Parser();
+	_root = _currentNode = nullptr;
 
 	function<void(GLTF_SceneNodeData^)> snmmemfun = bind(&ModelFactory::CreateSceneNode, &(ModelFactory::Instance()), placeholders::_1);
 	function<void(GLTF_BufferData^)> memfun = bind(&ModelFactory::CreateBuffer, &(ModelFactory::Instance()), placeholders::_1);
