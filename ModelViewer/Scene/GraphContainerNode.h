@@ -55,6 +55,7 @@ public:
 
 protected:
 	XMMATRIX _matrix;
+	bool _hasMatrix = false;
 
 	XMFLOAT3 _scale;
 	XMFLOAT3 _translation;

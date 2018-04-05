@@ -159,11 +159,18 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	if (!m_loadingComplete)
 		return;
 
-	// Create matrix from scale
-	auto matrix = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
+	XMMATRIX mat;
+	if (_hasMatrix)
+	{
+		mat = _matrix;
+	}
+	else
+	{
+		mat = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
+	}
 
 	// Prepare to pass the updated model matrix to the shader 
-	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(matrix));
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(mat));
 
 	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
@@ -307,10 +314,9 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 {
 	// If we are handed a matrix, just apply that, otherwise break down into scale, rotate, translate
 	// and generate the matrix from those..createbuffer
-	XMMATRIX matrix;
-
 	if (data->hasMatrix)
 	{
+		_hasMatrix = true;
 		XMFLOAT4X4 mat = 
 		{
 			data->matrix[0], 
@@ -331,7 +337,8 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 			data->matrix[15]
 		};
 		
-		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMLoadFloat4x4(&mat));
+		_matrix = XMLoadFloat4x4(&mat);
+		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, _matrix);
 	}
 	else
 	{
@@ -342,16 +349,17 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 		// system of DirectX
 		// q.x, q.y, -q.z, -q.w
 		//
-		_rotation = { data->rotation[0], data->rotation[1], -data->rotation[2], -data->rotation[3] };
+		//_rotation = { data->rotation[0], data->rotation[1], -data->rotation[2], -data->rotation[3] };
+		_rotation = { data->rotation[0], data->rotation[1], data->rotation[2], data->rotation[3] };
 
 		//XMVECTOR scale = { 1.0, 1.0, 1.0 };
 		//XMVECTOR translation = { 0.0, 0.0, 0.0 };
 
-		XMVECTOR ypr = { 0.0, 180.0, 0.0 };
-		// generate a quaternion from angle for testing...
-		XMVECTOR rotQuat = XMQuaternionRotationRollPitchYawFromVector(ypr);
+		//XMVECTOR ypr = { 0.0, 180.0, 0.0 };
+		//// generate a quaternion from angle for testing...
+		//XMVECTOR rotQuat = XMQuaternionRotationRollPitchYawFromVector(ypr);
 
-		//auto matrix = XMMatrixRotationQuaternion(quat);
+		//auto matrix = XMMatrixRotationQuaternion(rotQuat);
 
 		//_scale = { 1.0, 1.0, 1.0 };
 		//_translation = { 0.0, 0.0, 0.0 };
