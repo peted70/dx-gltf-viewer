@@ -34,11 +34,6 @@ void SceneManager::SetDevResources(const std::shared_ptr<DX::DeviceResources>& d
 
 void SceneManager::SetSelected(shared_ptr<GraphNode> node)
 {
-	// Ensure the node is in our scene
-	//auto child = _sceneNode->FindChildById(node->GetId());
-	//if (child == nullptr)
-	//	return;
-
 	// De-select all other nodes in the scene..
 	_sceneNode->ForAllChildrenRecursive([](GraphNode& nd)
 	{
