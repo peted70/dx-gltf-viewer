@@ -5,6 +5,7 @@
 GraphContainerNode::GraphContainerNode(int index) : 
 	_index(index)
 {
+	CoCreateGuid(&_guid);
 }
 
 GraphContainerNode::~GraphContainerNode()
@@ -38,12 +39,38 @@ GraphNode *GraphContainerNode::FindChildByIndex(int index)
 	return nullptr;
 }
 
+GraphNode *GraphContainerNode::FindChildById(GUID id)
+{
+	if (_guid == id)
+		return this;
+	for (auto child : _children)
+	{
+		return child->FindChildById(id);
+	}
+	return nullptr;
+}
+
 void GraphContainerNode::ForAllChildrenRecursive(function<void(GraphNode&)> func)
 {
-	func(*this);
+	//func(*this);
 	for (auto child : _children)
 	{
 		func(*child);
+		child->ForAllChildrenRecursive(func);
+	}
+}
+
+void GraphContainerNode::ForAllChildrenRecursiveUntil(function<bool(GraphNode&)> func)
+{
+	auto ret = func(*this);
+	if (!ret)
+		return;
+
+	for (auto child : _children)
+	{
+		ret = func(*child);
+		if (!ret)
+			return;
 		child->ForAllChildrenRecursive(func);
 	}
 }
@@ -81,9 +108,9 @@ int GraphContainerNode::NumChildren()
 	return _children.size();
 }
 
-const GraphNode& GraphContainerNode::GetChild(int i)
+shared_ptr<GraphNode> GraphContainerNode::GetChild(int i)
 {
-	return *(_children[i].get());
+	return _children[i];
 }
 
 const wstring& GraphContainerNode::Name() const
@@ -95,6 +122,23 @@ void GraphContainerNode::SetName(const wstring& name)
 {
 	if (_name != name)
 		_name = name;
+}
+
+bool GraphContainerNode::IsSelected()
+{
+	return _selected;
+}
+
+void GraphContainerNode::SetSelected(bool sel)
+{
+	if (sel == _selected)
+		return;
+
+	// Set all child nodes accordingly..
+	ForAllChildrenRecursive([sel](GraphNode& node)
+	{
+		node.SetSelected(sel);
+	});
 }
 
 void GraphContainerNode::CreateTransform(GLTF_TransformData^ data)

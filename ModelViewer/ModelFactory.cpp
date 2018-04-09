@@ -107,6 +107,8 @@ future<shared_ptr<GraphNode>> ModelFactory::CreateFromFileAsync(String^ filename
 
 	co_await async([this, filename]() { _parser->ParseFile(filename); });
 
+	_root->AfterLoad();
+
 	// call afterLoad on all children...
 	_root->ForAllChildrenRecursive([](GraphNode& node) 
 	{

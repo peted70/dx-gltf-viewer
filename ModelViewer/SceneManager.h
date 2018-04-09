@@ -37,6 +37,9 @@ public:
 		conn.disconnect();
 	}
 
+	void SetSelected(shared_ptr<GraphNode> node);
+	shared_ptr<GraphNode> GetSelected();
+
 private:
 	SceneManager();
 

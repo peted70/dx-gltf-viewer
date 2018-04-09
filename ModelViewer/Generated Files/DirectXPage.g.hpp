@@ -544,6 +544,8 @@ void ::ModelViewer::DirectXPage::Connect(int __connectionId, ::Platform::Object^
     case 6:
         {
             this->sampleTreeView = safe_cast<::TreeViewControl::TreeView^>(__target);
+            (safe_cast<::TreeViewControl::TreeView^>(this->sampleTreeView))->ItemClick += ref new ::Windows::UI::Xaml::Controls::ItemClickEventHandler(this, (void (::ModelViewer::DirectXPage::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::Controls::ItemClickEventArgs^))&DirectXPage::TreeView_ItemClick);
         }
         break;
     case 19:

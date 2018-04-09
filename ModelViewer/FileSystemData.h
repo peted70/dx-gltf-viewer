@@ -9,18 +9,26 @@
 //
 //*********************************************************
 #pragma once
+#include <memory>
+#include "SceneManager.h"
+
 namespace ModelViewer
 {
+	using namespace std;
+
     [Windows::UI::Xaml::Data::Bindable]
     [Windows::Foundation::Metadata::WebHostHidden]
-    public ref class FileSystemData sealed
+    public ref class GraphNodeData sealed
     {
-    public:
-        FileSystemData(Platform::String^ name)
-        {
-            this->Name = name;
-        }
+	internal:
+		GraphNodeData(shared_ptr<GraphNode> node) :
+			_node(node)
+		{
+			this->Name = ref new String(node->Name().c_str());
+		}
 
+    public:
+ 
         property Platform::String^ Name
         {
             Platform::String^ get() { return name; }
@@ -32,9 +40,20 @@ namespace ModelViewer
             bool get() { return isFolder; }
             void set(bool value) { isFolder = value; }
         }
+
+		property bool IsSelected
+		{
+			bool get() { return _node->IsSelected(); }
+			void set(bool value) 
+			{
+				SceneManager::Instance().SetSelected(_node);
+			}
+		}
+
     private:
         Platform::String^ name = nullptr;
         bool isFolder = false;
+		shared_ptr<GraphNode> _node;
     };
 }
 

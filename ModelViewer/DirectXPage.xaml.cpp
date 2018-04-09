@@ -7,6 +7,8 @@
 #include "DirectXPage.xaml.h"
 #include "SceneManager.h"
 #include "FileSystemData.h"
+#include <memory>
+#include "Scene\MeshNode.h"
 
 using namespace ModelViewer;
 
@@ -25,6 +27,7 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
+using namespace std;
 
 DirectXPage::DirectXPage():
 	m_windowVisible(true),
@@ -119,17 +122,25 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 	m_main->StartRenderLoop();
 }
 
-TreeNode^ DirectXPage::AddTreeItemsRecursive(GraphNode& node, TreeNode^ parent)
+TreeNode^ DirectXPage::AddTreeItemsRecursive(shared_ptr<GraphNode> node, TreeNode^ parent)
 {
 	if (parent == nullptr)
-		parent = CreateContainerNode(ref new String(node.Name().c_str()));
+		parent = CreateContainerNode(node);
 	parent->IsExpanded = true;
-	for (int i = 0; i < node.NumChildren(); i++)
+	for (int i = 0; i < node->NumChildren(); i++)
 	{
-		auto& child = node.GetChild(i);
-		auto childNode = CreateMeshNode(ref new String(child.Name().c_str()));
-		parent->Append(childNode);
-		AddTreeItemsRecursive(const_cast<GraphNode&>(child), childNode);
+		auto child = node->GetChild(i);
+		TreeNode^ treeNode;
+		if (dynamic_cast<MeshNode *>(child.get()))
+		{
+			treeNode = CreateMeshNode(child);
+		}
+		else
+		{
+			treeNode = CreateContainerNode(child);
+		}
+		parent->Append(treeNode);
+		AddTreeItemsRecursive(child, treeNode);
 	}
 	return parent;
 }
@@ -146,25 +157,22 @@ void DirectXPage::NotifySceneChanges(Observable const& scene)
 		sampleTreeView->RootNode->Clear();
 
 		auto root = scn->Current();
-		//auto parent = CreateContainerNode(ref new String(root->Name().c_str()));
-
-		auto parent = AddTreeItemsRecursive(*root.get(), nullptr);
-
+		auto parent = AddTreeItemsRecursive(root, nullptr);
 		sampleTreeView->RootNode->Append(parent);
 	}));
 }
 
-TreeNode^ DirectXPage::CreateMeshNode(String^ name)
+TreeNode^ DirectXPage::CreateMeshNode(shared_ptr<GraphNode> node)
 {
-	auto data = ref new FileSystemData(name);
+	auto data = ref new GraphNodeData(node);
 	auto treeNode = ref new TreeNode();
 	treeNode->Data = data;
 	return treeNode;
 }
 
-TreeNode^ DirectXPage::CreateContainerNode(String^ name)
+TreeNode^ DirectXPage::CreateContainerNode(shared_ptr<GraphNode> node)
 {
-	auto data = ref new FileSystemData(name);
+	auto data = ref new GraphNodeData(node);
 	data->IsFolder = true;
 	auto treeNode = ref new TreeNode();
 	treeNode->Data = data;
@@ -252,7 +260,7 @@ void DirectXPage::OnSwapChainPanelSizeChanged(Object^ sender, SizeChangedEventAr
 	m_main->CreateWindowSizeDependentResources();
 }
 
-void ModelViewer::DirectXPage::confirmColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void ModelViewer::DirectXPage::confirmColor_Click(Object^ sender, RoutedEventArgs^ e)
 {
 	// Assign the selected color to a variable to use outside the popup.
 	ViewModel->LightColour = myColorPicker->Color;
@@ -261,7 +269,18 @@ void ModelViewer::DirectXPage::confirmColor_Click(Platform::Object^ sender, Wind
 	colorPickerButton->Flyout->Hide();
 }
 
-void ModelViewer::DirectXPage::cancelColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void ModelViewer::DirectXPage::cancelColor_Click(Object^ sender, RoutedEventArgs^ e)
 {
 	colorPickerButton->Flyout->Hide();
+}
+
+void ModelViewer::DirectXPage::TreeView_ItemClick(Object^ sender, ItemClickEventArgs^ e)
+{
+	auto item = dynamic_cast<TreeNode^>(e->ClickedItem);
+	if (item == nullptr)
+		return;
+	auto nodeData = dynamic_cast<GraphNodeData^>(item->Data);
+	if (nodeData == nullptr)
+		return;
+	nodeData->IsSelected = true;
 }

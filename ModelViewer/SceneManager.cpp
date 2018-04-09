@@ -31,3 +31,37 @@ void SceneManager::SetDevResources(const std::shared_ptr<DX::DeviceResources>& d
 {
 	_deviceResources = deviceResources;
 }
+
+void SceneManager::SetSelected(shared_ptr<GraphNode> node)
+{
+	// Ensure the node is in our scene
+	//auto child = _sceneNode->FindChildById(node->GetId());
+	//if (child == nullptr)
+	//	return;
+
+	// De-select all other nodes in the scene..
+	_sceneNode->ForAllChildrenRecursive([](GraphNode& nd)
+	{
+		nd.SetSelected(false);
+	});
+
+	// Finally, set our node selected.
+	node->SetSelected(true);
+}
+
+shared_ptr<GraphNode> SceneManager::GetSelected()
+{
+	// Loop through the scene to find the one and only selected node (only supporting 
+	// single-selection for now)
+	shared_ptr<GraphNode> result;
+	_sceneNode->ForAllChildrenRecursiveUntil([&result](GraphNode& nd)
+	{
+		if (nd.IsSelected())
+		{
+			result.reset(&nd);
+		}
+		return true;
+	});
+
+	return result;
+}

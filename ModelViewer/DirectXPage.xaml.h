@@ -31,9 +31,6 @@ namespace ModelViewer
 		void SaveInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
-		TreeNode^ CreateMeshNode(String^ name);
-		TreeNode^ CreateContainerNode(String^ name);
-
 		property DirectXPageViewModel ^ ViewModel;
 
 	private:
@@ -56,9 +53,11 @@ namespace ModelViewer
 		};
 
 		SceneUpdateProxy updates;
+		TreeNode^ CreateMeshNode(shared_ptr<GraphNode> node);
+		TreeNode^ CreateContainerNode(shared_ptr<GraphNode> node);
 
 		void NotifySceneChanges(Observable const& scene);
-		TreeNode^ AddTreeItemsRecursive(GraphNode& node, TreeNode^ parent);
+		TreeNode^ AddTreeItemsRecursive(shared_ptr<GraphNode> node, TreeNode^ parent);
 
 		// XAML low-level rendering event handler.
 		void OnRendering(Object^ sender, Object^ args);
@@ -92,6 +91,7 @@ namespace ModelViewer
 		bool m_controlPressed;
 		void confirmColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void cancelColor_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void TreeView_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e);
 	};
 }
 

@@ -4,6 +4,7 @@
 #include <string>
 #include "../Common/DeviceResources.h"
 #include "../Common/StepTimer.h"
+#include <Rpc.h>
 
 using namespace std;
 using namespace DX;
@@ -27,11 +28,13 @@ public:
 
 	virtual void AfterLoad() override {};
 	virtual void ForAllChildrenRecursive(function<void(GraphNode&)> func) override;
+	virtual void ForAllChildrenRecursiveUntil(function<bool(GraphNode&)> func) override;
 	virtual GraphNode *FindChildByIndex(int index) override;
+	virtual GraphNode *FindChildById(GUID id) override;
 
 	virtual void AddChild(shared_ptr<GraphNode> child);
 	virtual int NumChildren() override;
-	virtual const GraphNode& GetChild(int i) override;
+	virtual shared_ptr<GraphNode> GetChild(int i) override;
 	virtual const wstring& Name() const override;
 	virtual void SetName(const wstring& name)  override;
 
@@ -40,6 +43,10 @@ public:
 
 	virtual void CreateTransform(GLTF_TransformData^ data);
 	virtual int Index() override { return _index; };
+	virtual GUID GetId() override { return _guid; }
+
+	virtual bool IsSelected() override;
+	virtual void SetSelected(bool sel) override ;
 
 	virtual BoundingBox<float> GetBoundingBox() override;
 
@@ -51,6 +58,11 @@ public:
 	void operator delete(void* p)
 	{
 		_mm_free(p);
+	}
+
+	bool IsEqual(const GraphContainerNode& other)
+	{
+		return _guid == other._guid;
 	}
 
 protected:
@@ -66,5 +78,7 @@ protected:
 	vector<shared_ptr<GraphNode>>_children;
 	shared_ptr<DeviceResources> _deviceResources;
 	wstring _name;
+	bool _selected = false;
+	GUID _guid;
 };
 

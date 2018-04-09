@@ -185,6 +185,7 @@
                       BorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
                       BorderThickness="2"
                       IsItemClickEnabled="True" 
+                      ItemClick="TreeView_ItemClick"
                       ItemTemplate="{StaticResource TreeViewItemDataTemplate}">
                         <tvs:TreeView.ItemContainerTransitions>
                             <TransitionCollection>
