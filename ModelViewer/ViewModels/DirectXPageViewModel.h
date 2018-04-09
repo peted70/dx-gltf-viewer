@@ -21,89 +21,14 @@ namespace ViewModels
 	public ref class DirectXPageViewModel sealed : public ViewModelBase
 	{
 	public:
-		DirectXPageViewModel()
-		{
-			_data = Container::Instance().ResolveDirectXPageViewModelData();
-		}
+		DirectXPageViewModel();
 
-		property float LightScale
-		{
-			float get() { return _data->LightScale(); }
-			void set(float val)
-			{
-				if (_data->LightScale() == val)
-					return;
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data->SetLightScale(val);
-			}
-		}
-
-		property float LightRotation
-		{
-			float get() { return _data->LightRotation(); }
-			void set(float val)
-			{
-				if (_data->LightRotation() == val)
-					return;
-				_data->SetLightRotation(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data->SetLightDirection(ConvertDirection(LightRotation, LightPitch, 
-					const_cast<float *>(_data->LightDirection())));
-			}
-		}
-
-		property float LightPitch
-		{
-			float get() { return _data->LightPitch(); }
-			void set(float val)
-			{
-				if (_data->LightPitch() == val)
-					return;
-				_data->SetLightPitch(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-				_data->SetLightDirection(ConvertDirection(LightRotation, LightPitch, 
-					const_cast<float *>(_data->LightDirection())));
-			}
-		}
-
-		property float Ibl
-		{
-			float get() { return _data->Ibl(); }
-			void set(float val)
-			{
-				if (_data->Ibl() == val)
-					return;
-				_data->SetIbl(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property Color LightColour
-		{
-			Color get() { return ConvertColor(_data->LightColour()); }
-			void set(Windows::UI::Color val)
-			{
-				if (_data->LightColour()[0] == val.R &&
-					_data->LightColour()[1] == val.G &&
-					_data->LightColour()[2] == val.B)
-					return;
-				unsigned char col[3] = { val.R, val.G, val.B };
-				_data->SetLightColour(col);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property bool BaseColour
-		{
-			bool get() { return _data->BaseColour(); }
-			void set(bool val)
-			{
-				if (_data->BaseColour() == val)
-					return;
-				_data->SetBaseColour(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
+		property float LightScale { float get(); void set(float val); }
+		property float LightRotation { float get(); void set(float val); }
+		property float LightPitch { float get(); void set(float val); }
+		property float Ibl { float get(); void set(float val); }
+		property Color LightColour { Color get(); void set(Color val); }
+		property bool BaseColour { bool get(); void set(bool val); }
 
 		property bool Metallic
 		{
@@ -189,28 +114,31 @@ namespace ViewModels
 			}
 		}
 
+		property float PositionX
+		{
+			float get() 
+			{
+				if (_selectedNode)
+				{
+					shared_ptr<GraphContainerNode> derived =
+						dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+					return derived->GetTranslation().x;
+				}
+				return 0.0f;
+			}
+			void set(float val)
+			{
+				OnPropertyChanged(getCallerName(__FUNCTION__));
+			}
+		}
+
 	private:
+		void NotifySelectionChanged(shared_ptr<GraphNode> node);
+		Color ConvertColor(const unsigned char col[3]);
+		float *ConvertDirection(float rotation, float pitch, float *data);
 
-		Color ConvertColor(const unsigned char col[3])
-		{
-			auto ret = new Color();
-			ret->R = col[0];
-			ret->G = col[1];
-			ret->B = col[2];
-			return *ret;
-		}
-
-		float *ConvertDirection(float rotation, float pitch, float *data)
-		{
-			auto rot = rotation * M_PI / 180;
-			auto ptch = pitch * M_PI / 180;
-			data[0] = static_cast<float>(sin(rot) * cos(ptch));
-			data[1] = static_cast<float>(sin(ptch));
-			data[2] = static_cast<float>(cos(rot) * cos(ptch));
-			return data;
-		}
-
-		std::shared_ptr<DirectXPageViewModelData> _data;
+		shared_ptr<DirectXPageViewModelData> _data;
+		shared_ptr<GraphNode> _selectedNode;
 	};
 }
 

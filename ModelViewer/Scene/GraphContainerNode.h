@@ -65,6 +65,10 @@ public:
 		return _guid == other._guid;
 	}
 
+	XMFLOAT3 GetScale() { return _scale; }
+	XMFLOAT3 GetTranslation() { return _translation; }
+	XMFLOAT4 GetRotation() { return _rotation; }
+
 protected:
 	XMMATRIX _matrix;
 	bool _hasMatrix = false;

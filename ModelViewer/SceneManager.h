@@ -37,6 +37,16 @@ public:
 		conn.disconnect();
 	}
 
+	signals::connection RegisterForSelectionChanged(signals::signal<void(shared_ptr<GraphNode>)>::slot_type slot)
+	{
+		return SelectionChanged.connect(slot);
+	}
+
+	void UnregisterForUpdates(signals::connection conn)
+	{
+		conn.disconnect();
+	}
+
 	void SetSelected(shared_ptr<GraphNode> node);
 	shared_ptr<GraphNode> GetSelected();
 
@@ -51,4 +61,5 @@ private:
 	virtual void Notify(const Observable & data) override;
 
 	signals::signal<void(Observable const&)> SceneChanged;
+	signals::signal<void(shared_ptr<GraphNode>)> SelectionChanged;
 };

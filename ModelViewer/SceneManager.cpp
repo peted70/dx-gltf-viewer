@@ -42,6 +42,7 @@ void SceneManager::SetSelected(shared_ptr<GraphNode> node)
 
 	// Finally, set our node selected.
 	node->SetSelected(true);
+	SelectionChanged(node);
 }
 
 shared_ptr<GraphNode> SceneManager::GetSelected()

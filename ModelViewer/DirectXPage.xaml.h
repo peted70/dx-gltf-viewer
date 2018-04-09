@@ -57,6 +57,7 @@ namespace ModelViewer
 		TreeNode^ CreateContainerNode(shared_ptr<GraphNode> node);
 
 		void NotifySceneChanges(Observable const& scene);
+		
 		TreeNode^ AddTreeItemsRecursive(shared_ptr<GraphNode> node, TreeNode^ parent);
 
 		// XAML low-level rendering event handler.
