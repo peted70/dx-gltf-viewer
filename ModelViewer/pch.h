@@ -22,3 +22,4 @@
 #include "GlyphConverter.h"
 #include "BooleanToVisibilityConverter.h"
 #include "FileSystemData.h"
+#include "DecimalPlacesConverter.h"

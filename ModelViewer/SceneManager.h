@@ -42,11 +42,6 @@ public:
 		return SelectionChanged.connect(slot);
 	}
 
-	void UnregisterForUpdates(signals::connection conn)
-	{
-		conn.disconnect();
-	}
-
 	void SetSelected(shared_ptr<GraphNode> node);
 	shared_ptr<GraphNode> GetSelected();
 

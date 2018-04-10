@@ -6,6 +6,8 @@
 #include "Content\Sample3DSceneRenderer.h"
 #include <memory>
 #include "Container.h"
+#include "TransformViewModel.h"
+#include "../SceneManager.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -29,116 +31,44 @@ namespace ViewModels
 		property float Ibl { float get(); void set(float val); }
 		property Color LightColour { Color get(); void set(Color val); }
 		property bool BaseColour { bool get(); void set(bool val); }
+		property bool Metallic { bool get(); void set(bool val); }
+		property bool Roughness { bool get(); void set(bool val); }
+		property bool Diffuse { bool get(); void set(bool val); }
+		property bool Specular { bool get(); void set(bool val); }
+		property bool F { bool get(); void set(bool val); }
+		property bool G { bool get(); void set(bool val); }
+		property bool D { bool get(); void set(bool val); }
+		property TransformViewModel^ SelectedTransform { TransformViewModel^ get(); void set(TransformViewModel^ val); }
 
-		property bool Metallic
-		{
-			bool get() { return _data->Metallic(); }
-			void set(bool val)
-			{
-				if (_data->Metallic() == val)
-					return;
-				_data->SetMetallic(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
+	internal:
+		void NotifySelectionChanged(shared_ptr<GraphNode> node);
 
-		property bool Roughness
+		class SelectionChangedProxy
 		{
-			bool get() { return _data->Roughness(); }
-			void set(bool val)
+		public:
+			SelectionChangedProxy(DirectXPageViewModel^ owner) :
+				_owner(owner)
 			{
-				if (_data->Roughness() == val)
-					return;
-				_data->SetRoughness(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
+				SceneManager::Instance().RegisterForSelectionChanged(boost::bind(&SelectionChangedProxy::NotifySelectionChanged, this, _1));
 			}
-		}
 
-		property bool Diffuse
-		{
-			bool get() { return _data->Diffuse(); }
-			void set(bool val)
+			void NotifySelectionChanged(shared_ptr<GraphNode> node)
 			{
-				if (_data->Diffuse() == val)
-					return;
-				_data->SetDiffuse(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
+				_owner->NotifySelectionChanged(node);
 			}
-		}
 
-		property bool Specular
-		{
-			bool get() { return _data->Specular(); }
-			void set(bool val)
-			{
-				if (_data->Specular() == val)
-					return;
-				_data->SetSpecular(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property bool F
-		{
-			bool get() { return _data->F(); }
-			void set(bool val)
-			{
-				if (_data->F() == val)
-					return;
-				_data->SetF(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property bool G
-		{
-			bool get() { return _data->G(); }
-			void set(bool val)
-			{
-				if (_data->G() == val)
-					return;
-				_data->SetG(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property bool D
-		{
-			bool get() { return _data->D(); }
-			void set(bool val)
-			{
-				if (_data->D() == val)
-					return;
-				_data->SetD(val);
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
-
-		property float PositionX
-		{
-			float get() 
-			{
-				if (_selectedNode)
-				{
-					shared_ptr<GraphContainerNode> derived =
-						dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
-					return derived->GetTranslation().x;
-				}
-				return 0.0f;
-			}
-			void set(float val)
-			{
-				OnPropertyChanged(getCallerName(__FUNCTION__));
-			}
-		}
+		private:
+			DirectXPageViewModel ^ _owner;
+		};
 
 	private:
-		void NotifySelectionChanged(shared_ptr<GraphNode> node);
 		Color ConvertColor(const unsigned char col[3]);
 		float *ConvertDirection(float rotation, float pitch, float *data);
 
 		shared_ptr<DirectXPageViewModelData> _data;
-		shared_ptr<GraphNode> _selectedNode;
+		TransformViewModel^ _selectedTransform;
+		SelectionChangedProxy _proxy;
 	};
+
 }
 

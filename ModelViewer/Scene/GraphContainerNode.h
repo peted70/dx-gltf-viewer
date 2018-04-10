@@ -69,6 +69,13 @@ public:
 	XMFLOAT3 GetTranslation() { return _translation; }
 	XMFLOAT4 GetRotation() { return _rotation; }
 
+	void SetTranslation(float x, float y, float z)
+	{
+		_translation.x = x;
+		_translation.y = y;
+		_translation.z = z;
+	}
+
 protected:
 	XMMATRIX _matrix;
 	bool _hasMatrix = false;

@@ -4,15 +4,15 @@
 
 using namespace ViewModels;
 
-DirectXPageViewModel::DirectXPageViewModel()
+DirectXPageViewModel::DirectXPageViewModel() :
+	_proxy(this)
 {
 	_data = Container::Instance().ResolveDirectXPageViewModelData();
-	SceneManager::Instance().RegisterForSelectionChanged(boost::bind(&DirectXPageViewModel::NotifySelectionChanged, this, _1));
 }
 
 void DirectXPageViewModel::NotifySelectionChanged(shared_ptr<GraphNode> node)
 {
-
+	SelectedTransform = ref new TransformViewModel(node);
 }
 
 float DirectXPageViewModel::LightScale::get()
@@ -97,6 +97,110 @@ void DirectXPageViewModel::BaseColour::set(bool val)
 	if (_data->BaseColour() == val)
 		return;
 	_data->SetBaseColour(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::Metallic::get()
+{
+	return _data->Metallic();
+}
+
+void DirectXPageViewModel::Metallic::set(bool val)
+{
+	if (_data->Metallic() == val)
+		return;
+	_data->SetMetallic(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::Roughness::get()
+{
+	return _data->Roughness();
+}
+
+void DirectXPageViewModel::Roughness::set(bool val)
+{
+	if (_data->Roughness() == val)
+		return;
+	_data->SetRoughness(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::Diffuse::get()
+{
+	return _data->Diffuse();
+}
+
+void DirectXPageViewModel::Diffuse::set(bool val)
+{
+	if (_data->Diffuse() == val)
+		return;
+	_data->SetDiffuse(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::Specular::get()
+{
+	return _data->Specular();
+}
+
+void DirectXPageViewModel::Specular::set(bool val)
+{
+	if (_data->Specular() == val)
+		return;
+	_data->SetSpecular(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::F::get()
+{
+	return _data->F();
+}
+
+void DirectXPageViewModel::F::set(bool val)
+{
+	if (_data->F() == val)
+		return;
+	_data->SetF(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::G::get()
+{
+	return _data->G();
+}
+
+void DirectXPageViewModel::G::set(bool val)
+{
+	if (_data->G() == val)
+		return;
+	_data->SetG(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+bool DirectXPageViewModel::D::get()
+{
+	return _data->D();
+}
+
+void DirectXPageViewModel::D::set(bool val)
+{
+	if (_data->D() == val)
+		return;
+	_data->SetD(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+TransformViewModel^ DirectXPageViewModel::SelectedTransform::get()
+{
+	return _selectedTransform;
+}
+
+void DirectXPageViewModel::SelectedTransform::set(TransformViewModel^ val)
+{
+	if (_selectedTransform == val)
+		return;
+	_selectedTransform = val;
 	OnPropertyChanged(getCallerName(__FUNCTION__));
 }
 

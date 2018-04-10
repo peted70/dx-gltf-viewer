@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <tvs:IntegerToIndentationConverter x:Key="IntToIndConverter"/>
             <local:GlyphConverter x:Key="folderGlyphConverter" ExpandedGlyph="&#xED44;" CollapsedGlyph="&#xED42;" />
+            <local:DecimalPlacesConverter x:Key="dpConverter" />
             <local:GlyphConverter x:Key="folderOutlineGlyphConverter" ExpandedGlyph="&#xED43;" CollapsedGlyph="&#xED41;" />
             <local:GlyphConverter x:Key="expandCollapseGlyphConverter" ExpandedGlyph="&#xE70D;" CollapsedGlyph="&#xE76C;"/>
             <local:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"  />
@@ -171,6 +172,34 @@
                         </ScrollViewer>
                     </PivotItem>
                     <PivotItem Header="Transform">
+                        <ScrollViewer Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock>Position</TextBlock>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>X</TextBlock>
+                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionX, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>Y</TextBlock>
+                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionY, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>Z</TextBlock>
+                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionZ, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
                     </PivotItem>
                 </Pivot>
                 <ScrollViewer Grid.Row="1" Margin="8" 

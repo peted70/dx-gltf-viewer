@@ -110,6 +110,8 @@
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="BooleanToVisibilityConverter.cpp" />
     <ClCompile Include="GlyphConverter.cpp" />
+    <ClCompile Include="ViewModels\TransformViewModel.cpp" />
+    <ClCompile Include="DecimalPlacesConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -154,6 +156,8 @@
     <ClInclude Include="BooleanToVisibilityConverter.h" />
     <ClInclude Include="GlyphConverter.h" />
     <ClInclude Include="FileSystemData.h" />
+    <ClInclude Include="ViewModels\TransformViewModel.h" />
+    <ClInclude Include="DecimalPlacesConverter.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
