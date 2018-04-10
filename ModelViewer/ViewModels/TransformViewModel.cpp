@@ -59,3 +59,117 @@ void TransformViewModel::PositionZ::set(float val)
 	derived->SetTranslation(derived->GetTranslation().x, derived->GetTranslation().y, val);
 	OnPropertyChanged(getCallerName(__FUNCTION__));
 }
+
+float TransformViewModel::RotationX::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetRotation().x;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::RotationX::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetRotationRoll(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+float TransformViewModel::RotationY::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetRotation().y;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::RotationY::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetRotationPitch(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+float TransformViewModel::RotationZ::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetRotation().z;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::RotationZ::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetRotationYaw(val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+float TransformViewModel::ScaleX::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetScale().x;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::ScaleX::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetScale(val, derived->GetScale().y, derived->GetScale().z);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+float TransformViewModel::ScaleY::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetScale().y;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::ScaleY::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetScale(derived->GetScale().x, val, derived->GetScale().z);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
+
+float TransformViewModel::ScaleZ::get()
+{
+	if (_selectedNode)
+	{
+		shared_ptr<GraphContainerNode> derived =
+			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+		return derived->GetScale().z;
+	}
+	return 0.0f;
+}
+
+void TransformViewModel::ScaleZ::set(float val)
+{
+	shared_ptr<GraphContainerNode> derived =
+		dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
+	derived->SetScale(derived->GetScale().x, derived->GetScale().y, val);
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}

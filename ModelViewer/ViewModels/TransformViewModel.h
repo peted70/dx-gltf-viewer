@@ -21,6 +21,14 @@ namespace ViewModels
 		property float PositionY { float get(); void set(float val); }
 		property float PositionZ { float get(); void set(float val); }
 
+		property float RotationX { float get(); void set(float val); }
+		property float RotationY { float get(); void set(float val); }
+		property float RotationZ { float get(); void set(float val); }
+
+		property float ScaleX { float get(); void set(float val); }
+		property float ScaleY { float get(); void set(float val); }
+		property float ScaleZ { float get(); void set(float val); }
+
 	private:
 		shared_ptr<GraphNode> _selectedNode;
 	};

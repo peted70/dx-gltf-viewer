@@ -25,6 +25,11 @@
 
             <Style TargetType="TextBlock">
                 <Setter Property="Padding" Value="4"></Setter>
+                <Setter Property="FontSize" Value="12"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FontSize" Value="12"></Setter>
             </Style>
             <Flyout x:Key="myColorPickerFlyout">
                 <RelativePanel>
@@ -109,7 +114,7 @@
                 </Grid.RowDefinitions>
                 <Pivot>
                     <PivotItem Header="PBR Shader">
-                        <ScrollViewer Grid.Row="0" Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                        <ScrollViewer Grid.Row="0" Margin="0" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
                             <Grid Margin="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -172,7 +177,7 @@
                         </ScrollViewer>
                     </PivotItem>
                     <PivotItem Header="Transform">
-                        <ScrollViewer Margin="8" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
+                        <ScrollViewer Margin="0" HorizontalContentAlignment="Stretch"  HorizontalAlignment="Stretch" Background="AliceBlue">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
@@ -180,29 +185,83 @@
                                     <RowDefinition Height="Auto"></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock>Position</TextBlock>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock>X</TextBlock>
-                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionX, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                <Grid VerticalAlignment="Center" Grid.Row="0" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0">Position</TextBlock>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                        <TextBlock VerticalAlignment="Center">X</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Grid.Column="1" Text="{x:Bind ViewModel.SelectedTransform.PositionX, Mode=TwoWay, Converter={StaticResource dpConverter}}">
                                         </TextBox>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Grid.Column="2">
                                         <TextBlock>Y</TextBlock>
-                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionY, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.PositionY, Mode=TwoWay, Converter={StaticResource dpConverter}}">
                                         </TextBox>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Grid.Column="3">
                                         <TextBlock>Z</TextBlock>
-                                        <TextBox Text="{x:Bind ViewModel.SelectedTransform.PositionZ, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.PositionZ, Mode=TwoWay, Converter={StaticResource dpConverter}}">
                                         </TextBox>
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
+                                <Grid VerticalAlignment="Center" Grid.Row="1" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition  Width="50"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0">Rotation</TextBlock>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                        <TextBlock VerticalAlignment="Center">X</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Grid.Column="1" Text="{x:Bind ViewModel.SelectedTransform.RotationX, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                        <TextBlock>Y</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.RotationY, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="3">
+                                        <TextBlock>Z</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.RotationZ, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid VerticalAlignment="Center" Grid.Row="2" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition  Width="50"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0">Scale</TextBlock>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                        <TextBlock VerticalAlignment="Center">X</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Grid.Column="1" Text="{x:Bind ViewModel.SelectedTransform.ScaleX, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                        <TextBlock>Y</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.ScaleY, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="3">
+                                        <TextBlock>Z</TextBlock>
+                                        <TextBox MinHeight="10" MinWidth="50" Text="{x:Bind ViewModel.SelectedTransform.ScaleZ, Mode=TwoWay, Converter={StaticResource dpConverter}}">
+                                        </TextBox>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
                         </ScrollViewer>
                     </PivotItem>
                 </Pivot>
-                <ScrollViewer Grid.Row="1" Margin="8" 
+                <ScrollViewer Grid.Row="1" Margin="8,6,8,10" 
                                 HorizontalContentAlignment="Stretch"  
                                 HorizontalAlignment="Stretch" 
                                 VerticalContentAlignment="Stretch"
