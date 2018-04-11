@@ -65,20 +65,48 @@ public:
 		return _guid == other._guid;
 	}
 
+	XMFLOAT3 QuaternionToEuler(XMFLOAT4 q)
+	{
+		XMFLOAT3 v = { 0.0f, 0.0f, 0.0f };
+
+		v.y = XMConvertToDegrees(atan2
+		(
+			2 * q.y * q.w - 2 * q.x * q.z,
+			1 - 2 * pow(q.y, 2.0f) - 2 * pow(q.z, 2.0f)
+		));
+
+		v.z = XMConvertToDegrees(asin
+		(
+			2 * q.x * q.y + 2 * q.z * q.w
+		));
+
+		v.x = XMConvertToDegrees(atan2
+		(
+			2 * q.x * q.w - 2 * q.y * q.z,
+			1 - 2 * pow(q.x, 2.0f) - 2 * pow(q.z, 2.0f)
+		));
+
+		if (q.x * q.y + q.z * q.w == 0.5)
+		{
+			v.x = XMConvertToDegrees((float)(2 * atan2(q.x, q.w)));
+			v.y = 0;
+		}
+
+		else if (q.x * q.y + q.z * q.w == -0.5)
+		{
+			v.x = XMConvertToDegrees((float)(-2 * atan2(q.x, q.w)));
+			v.y = 0;
+		}
+
+		Utility::Out(L"Euler = %f %f %f", v.x, v.y, v.z);
+		return v;
+	}
+
 	XMFLOAT3 GetScale() { return _scale; }
 	XMFLOAT3 GetTranslation() { return _translation; }
 	XMFLOAT3 GetRotation() 
 	{
-		// Need to convert quaternion rotation here into yaw, pitch and roll..
-		XMFLOAT3 ypr;
-
-		ypr.x = _roll = XMConvertToDegrees(atan2(2 * _rotation.y*_rotation.w + 2 * _rotation.x*_rotation.z, 
-			1 - 2 * _rotation.y*_rotation.y - 2 * _rotation.z*_rotation.z));
-		ypr.y = _pitch = XMConvertToDegrees(atan2(2 * _rotation.x*_rotation.w + 2 * _rotation.y*_rotation.z, 
-			1 - 2 * _rotation.x*_rotation.x - 2 * _rotation.z*_rotation.z));
-		ypr.z = _yaw = XMConvertToDegrees(asin(2 * _rotation.x*_rotation.y + 2 * _rotation.z*_rotation.w));
-
-		return ypr; 
+		return QuaternionToEuler(_rotation);
 	}
 
 	void SetTranslation(float x, float y, float z)

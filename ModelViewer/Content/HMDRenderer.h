@@ -10,6 +10,11 @@ namespace ModelViewer
 		HMDRenderer(const shared_ptr<DeviceResources>& deviceResources);
 		~HMDRenderer();
 
+		void Initialise();
 		void Render();
+
+	private:
+		bool _active = false;
+		shared_ptr<DeviceResources> _deviceResources;
 	};
 }

@@ -19,6 +19,8 @@ ModelViewerMain::ModelViewerMain(const shared_ptr<DeviceResources>& deviceResour
 	m_fpsTextRenderer = unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
 	m_HMDRenderer = unique_ptr<HMDRenderer>(new HMDRenderer(m_deviceResources));
 
+	m_HMDRenderer->Initialise();
+
 	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
 	// e.g. for 60 FPS fixed timestep update logic, call:
 	/*
@@ -112,6 +114,7 @@ bool ModelViewerMain::Render()
 	// - get HMD projection matrix and set in shader constant buffer
 	// - render main scene
 
+	// Doesn't do anything yet...
 	m_HMDRenderer->Render();
 
 	// ------------------------------------------------------
