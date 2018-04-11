@@ -112,6 +112,8 @@
     <ClCompile Include="GlyphConverter.cpp" />
     <ClCompile Include="ViewModels\TransformViewModel.cpp" />
     <ClCompile Include="DecimalPlacesConverter.cpp" />
+    <ClCompile Include="Content\HMDRenderer.cpp" />
+    <ClCompile Include="RenderTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -158,6 +160,8 @@
     <ClInclude Include="FileSystemData.h" />
     <ClInclude Include="ViewModels\TransformViewModel.h" />
     <ClInclude Include="DecimalPlacesConverter.h" />
+    <ClInclude Include="Content\HMDRenderer.h" />
+    <ClInclude Include="RenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

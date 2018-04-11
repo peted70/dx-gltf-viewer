@@ -285,8 +285,10 @@
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="FileSystemData.h" />
     <ClInclude Include="GlyphConverter.h" />
+    <ClInclude Include="Content\HMDRenderer.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="NotificationManager.h" />
+    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="ViewModels\TransformViewModel.h" />
     <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
     <ClInclude Include="DXGrid.h" />
@@ -332,8 +334,10 @@
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="GlyphConverter.cpp" />
+    <ClCompile Include="Content\HMDRenderer.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="NotificationManager.cpp" />
+    <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="ViewModels\TransformViewModel.cpp" />
     <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
     <ClCompile Include="DXGrid.cpp" />

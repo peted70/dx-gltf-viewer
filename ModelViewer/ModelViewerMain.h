@@ -4,14 +4,20 @@
 #include "Common\DeviceResources.h"
 #include "Content\Sample3DSceneRenderer.h"
 #include "Content\SampleFpsTextRenderer.h"
+#include "Content\HMDRenderer.h"
 
 // Renders Direct2D and 3D content on the screen.
 namespace ModelViewer
 {
-	class ModelViewerMain : public DX::IDeviceNotify
+	using namespace std;
+	using namespace DX;
+	using namespace Concurrency;
+	using namespace Windows::Foundation;
+
+	class ModelViewerMain : public IDeviceNotify
 	{
 	public:
-		ModelViewerMain(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+		ModelViewerMain(const shared_ptr<DeviceResources>& deviceResources);
 		~ModelViewerMain();
 		void CreateWindowSizeDependentResources();
 		void StartTracking(float positionX, float positionY, VirtualKeyModifiers mod) 
@@ -32,7 +38,7 @@ namespace ModelViewer
 		bool IsTracking() { return m_sceneRenderer->IsTracking(); }
 		void StartRenderLoop();
 		void StopRenderLoop();
-		Concurrency::critical_section& GetCriticalSection() { return m_criticalSection; }
+		critical_section& GetCriticalSection() { return m_criticalSection; }
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();
@@ -44,17 +50,18 @@ namespace ModelViewer
 		bool Render();
 
 		// Cached pointer to device resources.
-		std::shared_ptr<DX::DeviceResources> m_deviceResources;
+		shared_ptr<DeviceResources> m_deviceResources;
 
 		// TODO: Replace with your own content renderers.
-		std::unique_ptr<Sample3DSceneRenderer> m_sceneRenderer;
-		std::unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
+		unique_ptr<Sample3DSceneRenderer> m_sceneRenderer;
+		unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
+		unique_ptr<HMDRenderer> m_HMDRenderer;
 
-		Windows::Foundation::IAsyncAction^ m_renderLoopWorker;
-		Concurrency::critical_section m_criticalSection;
+		IAsyncAction^ m_renderLoopWorker;
+		critical_section m_criticalSection;
 
 		// Rendering loop timer.
-		DX::StepTimer m_timer;
+		StepTimer m_timer;
 
 		// Track current input pointer position.
 		float m_pointerLocationX;

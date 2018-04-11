@@ -23,12 +23,13 @@ namespace ModelViewer
 	using namespace Windows::System;
 	using namespace Platform;
 	using namespace Windows::Storage;
+	using namespace DX;
 
 	// This sample renderer instantiates a basic rendering pipeline.
 	class Sample3DSceneRenderer : public Observer
 	{
 	public:
-		Sample3DSceneRenderer(const shared_ptr<DX::DeviceResources>& deviceResources);
+		Sample3DSceneRenderer(const shared_ptr<DeviceResources>& deviceResources);
 
 		class TexWrapper
 		{
