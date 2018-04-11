@@ -66,7 +66,7 @@ float TransformViewModel::RotationX::get()
 	{
 		shared_ptr<GraphContainerNode> derived =
 			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
-		return derived->GetRotation().x;
+		return derived->GetRotationX();
 	}
 	return 0.0f;
 }
@@ -85,7 +85,7 @@ float TransformViewModel::RotationY::get()
 	{
 		shared_ptr<GraphContainerNode> derived =
 			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
-		return derived->GetRotation().y;
+		return derived->GetRotationY();
 	}
 	return 0.0f;
 }
@@ -104,7 +104,7 @@ float TransformViewModel::RotationZ::get()
 	{
 		shared_ptr<GraphContainerNode> derived =
 			dynamic_pointer_cast<GraphContainerNode>(_selectedNode);
-		return derived->GetRotation().z;
+		return derived->GetRotationZ();
 	}
 	return 0.0f;
 }

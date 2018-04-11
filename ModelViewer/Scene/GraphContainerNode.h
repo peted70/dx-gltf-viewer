@@ -65,6 +65,53 @@ public:
 		return _guid == other._guid;
 	}
 
+	float GetRoll(XMFLOAT4 q)
+	{
+		float x = XMConvertToDegrees(atan2
+		(
+			2 * q.x * q.w - 2 * q.y * q.z,
+			1 - 2 * pow(q.x, 2.0f) - 2 * pow(q.z, 2.0f)
+		));
+
+		if (q.x * q.y + q.z * q.w == 0.5)
+		{
+			x = XMConvertToDegrees((float)(2 * atan2(q.x, q.w)));
+		}
+
+		else if (q.x * q.y + q.z * q.w == -0.5)
+		{
+			x = XMConvertToDegrees((float)(-2 * atan2(q.x, q.w)));
+		}
+		return x;
+	}
+
+	float GetPitch(XMFLOAT4 q)
+	{
+		float y = XMConvertToDegrees(atan2
+		(
+			2 * q.y * q.w - 2 * q.x * q.z,
+			1 - 2 * pow(q.y, 2.0f) - 2 * pow(q.z, 2.0f)
+		));
+		if (q.x * q.y + q.z * q.w == 0.5)
+		{
+			y = 0;
+		}
+		else if (q.x * q.y + q.z * q.w == -0.5)
+		{
+			y = 0;
+		}
+		return y;
+	}
+
+	float GetYaw(XMFLOAT4 q)
+	{
+		float z = XMConvertToDegrees(asin
+		(
+			2 * q.x * q.y + 2 * q.z * q.w
+		));
+		return z;
+	}
+
 	XMFLOAT3 QuaternionToEuler(XMFLOAT4 q)
 	{
 		XMFLOAT3 v = { 0.0f, 0.0f, 0.0f };
@@ -104,7 +151,23 @@ public:
 
 	XMFLOAT3 GetScale() { return _scale; }
 	XMFLOAT3 GetTranslation() { return _translation; }
-	XMFLOAT3 GetRotation() 
+	
+	float GetRotationX()
+	{
+		return GetRoll(_rotation);
+	}
+	
+	float GetRotationY()
+	{
+		return GetPitch(_rotation);
+	}
+	
+	float GetRotationZ()
+	{
+		return GetYaw(_rotation);
+	}
+
+	XMFLOAT3 GetRotation()
 	{
 		return QuaternionToEuler(_rotation);
 	}
@@ -115,13 +178,6 @@ public:
 		_translation.y = y;
 		_translation.z = z;
 	}
-
-	//void SetRotation(float yaw, float pitch, float roll)
-	//{
-	//	XMVECTOR vec = { XMConvertToRadians(yaw), XMConvertToRadians(pitch), XMConvertToRadians(roll) };
-	//	auto quat = XMQuaternionRotationRollPitchYawFromVector(vec);
-	//	XMStoreFloat4(&_rotation, quat);
-	//}
 
 	void SetRotationYaw(float yaw)
 	{
