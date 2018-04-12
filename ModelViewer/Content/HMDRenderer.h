@@ -16,5 +16,9 @@ namespace ModelViewer
 	private:
 		bool _active = false;
 		shared_ptr<DeviceResources> _deviceResources;
+		IVRSystem *_system = nullptr;
+		uint32_t _renderWidth = 0;
+		uint32_t _renderHeight = 0;
+		IVRRenderModels *_renderModels;
 	};
 }
