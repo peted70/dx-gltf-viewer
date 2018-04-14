@@ -268,7 +268,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 
 	auto camMatrix = XMMatrixRotationRollPitchYaw(_pitch, _yaw, _roll);
 
-	XMVECTORF32 alongZ = { 0.0f, 0.0f, _zoom };
+	XMVECTORF32 alongZ = { _panx, _pany, _zoom };
 	XMVECTORF32 at = { _panx, _pany, 0.0f, 0.0f };
 
 	auto eye = XMVector3TransformCoord(alongZ, camMatrix);

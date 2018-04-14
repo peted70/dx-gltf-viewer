@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "HMDRenderer.h"
-#include "../OpenVR/header/openvr.h" 
 #include "Utility.h"
 
 using namespace ModelViewer;
@@ -77,7 +76,6 @@ void HMDRenderer::Initialise()
 		Utility::Out(L"Compositor initialization failed. See log file for details\n");
 		return;
 	}
-
 
 
 	// Just shut down until we have implemented something....

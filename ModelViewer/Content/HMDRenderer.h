@@ -1,6 +1,10 @@
 #pragma once
+
+#include "../OpenVR/header/openvr.h" 
+
 namespace ModelViewer
 {
+	using namespace vr;
 	using namespace std;
 	using namespace DX;
 
