@@ -193,45 +193,6 @@ void MeshNode::CreateDeviceDependentResources()
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
-
-	// Load shaders asynchronously for model rendering...
-	//auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
-	//auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
-	//auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
-	//auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
-	//auto loadPSTask = DX::ReadDataAsync(L"PixelTranslated.cso");
-
-	// After the vertex shader file is loaded, create the shader and input layout.
-	//auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
-	//{
-	//	DX::ThrowIfFailed(
-	//		DevResources()->GetD3DDevice()->CreateVertexShader(
-	//			&fileData[0],
-	//			fileData.size(),
-	//			nullptr,
-	//			&m_vertexShader));
-
-	//	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-	//	{
-	//		{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//		{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	//		{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	//	};
-
-	//	DX::ThrowIfFailed(
-	//		DevResources()->GetD3DDevice()->CreateInputLayout(
-	//			vertexDesc,
-	//			ARRAYSIZE(vertexDesc),
-	//			&fileData[0],
-	//			fileData.size(),
-	//			&m_inputLayout));
-	//	Utility::Out(L"Loaded Vertex Shader");
-	//});
-
-	//(createVSTask).then([this]() {
-	//	m_loadingComplete = true;
-	//	Utility::Out(L"Loading Complete");
-	//});
 }
 
 void MeshNode::Draw(ID3D11DeviceContext2 *context)
