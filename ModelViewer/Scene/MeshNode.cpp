@@ -343,6 +343,7 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(data->SubResource->ByteWidth, bindFlags);
+	vertexBufferDesc.StructureByteStride = data->SubResource->StructureByteStride;
 
 	auto device = DevResources()->GetD3DDevice();
 	DX::ThrowIfFailed(
