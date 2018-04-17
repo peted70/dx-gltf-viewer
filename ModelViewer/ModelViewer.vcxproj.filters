@@ -397,6 +397,7 @@
     <None Include="Assets\Shaders\pbrpixel.hlsl" />
     <None Include="openvr_api.dll" />
     <None Include="openvr_api.pdb" />
+    <None Include="Assets\Shaders\pbrvertex.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />

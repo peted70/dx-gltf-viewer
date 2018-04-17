@@ -36,10 +36,91 @@ void MeshNode::Initialise(const std::shared_ptr<DX::DeviceResources>& deviceReso
 
 void MeshNode::AfterLoad()
 {
-	CompileAndLoadShaders();
+	CompileAndLoadVertexShader();
+	CompileAndLoadPixelShader();
+	m_loadingComplete = true;
 }
 
-void MeshNode::CompileAndLoadShaders()
+void MeshNode::CompileAndLoadVertexShader()
+{
+	// Compile vertex shader
+	ID3DBlob *vsBlob = nullptr;
+
+	// Work out the path to the shader...
+	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
+	String^ path(L"\\Assets\\Shaders\\");
+	String^ filePath = sf->Path + path + "pbrvertex.hlsl";
+
+	// Currently the compiler defines consist of UV and NORMALS...
+	// Currently always define NORMALS but only define UV if we have tex coords buffer
+	auto texcoords = _buffers.find(L"TEXCOORD_0");
+	if (texcoords != _buffers.end())
+	{
+		m_hasUVs = true;
+	}
+	m_hasUVs = true;
+
+	int defineCount = 1;
+	if (m_hasUVs)
+	{
+		defineCount++;
+	}
+
+	auto defines = make_unique<D3D_SHADER_MACRO[]>(defineCount + 1);
+
+	int idx = 0;
+	(defines.get())[idx].Name = "NORMALS";
+	(defines.get())[idx].Definition = one;
+	idx++;
+	if (m_hasUVs)
+	{
+		(defines.get())[idx].Name = "UV";
+		(defines.get())[idx].Definition = one;
+		idx++;
+	}
+	(defines.get())[idx].Name = nullptr;
+	(defines.get())[idx].Definition = nullptr;
+
+	auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "vs_5_0", &vsBlob);
+	if (FAILED(hr))
+	{
+		Utility::Out(L"Failed compiling vertex shader %08X\n", hr);
+		return;
+	}
+
+	DX::ThrowIfFailed(
+		DevResources()->GetD3DDevice()->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(),
+			nullptr, &m_vertexShader));
+
+	Utility::Out(L"Loaded Vertex Shader");
+
+	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	{
+		{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	auto dynamicVertexDesc = make_unique<D3D11_INPUT_ELEMENT_DESC[]>(m_hasUVs ? 3 : 2);
+	(dynamicVertexDesc.get())[0] = vertexDesc[0];
+	(dynamicVertexDesc.get())[1] = vertexDesc[1];
+	if (m_hasUVs)
+	{
+		(dynamicVertexDesc.get())[2] = vertexDesc[2];
+	}
+
+	// Now create an Input layout that matches..
+	DX::ThrowIfFailed(
+		DevResources()->GetD3DDevice()->CreateInputLayout(
+			dynamicVertexDesc.get(),
+			m_hasUVs ? 3 : 2,
+			//ARRAYSIZE(dynamicVertexDesc.get()),
+			vsBlob->GetBufferPointer(), 
+			vsBlob->GetBufferSize(),
+			&m_inputLayout));
+}
+
+void MeshNode::CompileAndLoadPixelShader()
 {
 	// Compile pixel shader shader
 	ID3DBlob *psBlob = nullptr;
@@ -53,7 +134,7 @@ void MeshNode::CompileAndLoadShaders()
 	
 	// Allocate the defines map...
 	int count = textures.size();
-	auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
+	auto defines = make_unique<D3D_SHADER_MACRO[]>(m_hasUVs ? count + 2 : count + 1);
 
 	// Iterate through all textures and set them as shader resources...
 	int idx = 0;
@@ -70,13 +151,20 @@ void MeshNode::CompileAndLoadShaders()
 		idx++;
 	}
 
+	if (m_hasUVs)
+	{
+		(defines.get())[idx].Name = "UV";
+		(defines.get())[idx].Definition = one;
+		idx++;
+	}
+
 	(defines.get())[idx].Name = nullptr;
 	(defines.get())[idx].Definition = nullptr;
 
 	auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "ps_5_0", &psBlob);
 	if (FAILED(hr))
 	{
-		printf("Failed compiling pixel shader %08X\n", hr);
+		Utility::Out(L"Failed compiling pixel shader %08X\n", hr);
 		return;
 	}
 
@@ -117,41 +205,41 @@ void MeshNode::CreateDeviceDependentResources()
 	// Load shaders asynchronously for model rendering...
 	//auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
-	auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
+	//auto loadVSTask = DX::ReadDataAsync(L"pbrvertex.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"pbrpixel.cso");
 	//auto loadPSTask = DX::ReadDataAsync(L"PixelTranslated.cso");
 
 	// After the vertex shader file is loaded, create the shader and input layout.
-	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
-	{
-		DX::ThrowIfFailed(
-			DevResources()->GetD3DDevice()->CreateVertexShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_vertexShader));
+	//auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) 
+	//{
+	//	DX::ThrowIfFailed(
+	//		DevResources()->GetD3DDevice()->CreateVertexShader(
+	//			&fileData[0],
+	//			fileData.size(),
+	//			nullptr,
+	//			&m_vertexShader));
 
-		static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-		{
-			{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
+	//	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	//	{
+	//		{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//		{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	//		{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	//	};
 
-		DX::ThrowIfFailed(
-			DevResources()->GetD3DDevice()->CreateInputLayout(
-				vertexDesc,
-				ARRAYSIZE(vertexDesc),
-				&fileData[0],
-				fileData.size(),
-				&m_inputLayout));
-		Utility::Out(L"Loaded Vertex Shader");
-	});
+	//	DX::ThrowIfFailed(
+	//		DevResources()->GetD3DDevice()->CreateInputLayout(
+	//			vertexDesc,
+	//			ARRAYSIZE(vertexDesc),
+	//			&fileData[0],
+	//			fileData.size(),
+	//			&m_inputLayout));
+	//	Utility::Out(L"Loaded Vertex Shader");
+	//});
 
-	(createVSTask).then([this]() {
-		m_loadingComplete = true;
-		Utility::Out(L"Loading Complete");
-	});
+	//(createVSTask).then([this]() {
+	//	m_loadingComplete = true;
+	//	Utility::Out(L"Loading Complete");
+	//});
 }
 
 void MeshNode::Draw(ID3D11DeviceContext2 *context)
@@ -179,12 +267,21 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 
 	// Get POSITIONS & NORMALS..
 	auto pos = _buffers.find(L"POSITION");
-	auto normals = _buffers.find(L"NORMAL");
-	auto texcoords = _buffers.find(L"TEXCOORD_0");
-
 	auto posBuffer = pos->second.Buffer();
-	auto normalBuffer = normals->second.Buffer();
-	auto texcoordBuffer = texcoords->second.Buffer();
+
+	auto texcoords = _buffers.find(L"TEXCOORD_0");
+	ComPtr<ID3D11Buffer> texcoordBuffer;
+	if (texcoords != _buffers.end())
+	{
+		texcoordBuffer = texcoords->second.Buffer();
+	}
+
+	auto normals = _buffers.find(L"NORMAL");
+	ComPtr<ID3D11Buffer> normalBuffer;
+	if (normals != _buffers.end())
+	{
+		normalBuffer = normals->second.Buffer();
+	}
 
 	ID3D11Buffer *vbs[] =
 	{
@@ -198,13 +295,16 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	context->IASetVertexBuffers(0, 3, vbs, strides, offsets);
 
 	auto indices = _buffers.find(L"INDICES");
-	indexed = true;
-	m_indexCount = indices->second.Data()->BufferDescription->Count;
-	context->IASetIndexBuffer(
-		indices->second.Buffer().Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
-		0
-	);
+	if (indices != _buffers.end())
+	{
+		indexed = true;
+		m_indexCount = indices->second.Data()->BufferDescription->Count;
+		context->IASetIndexBuffer(
+			indices->second.Buffer().Get(),
+			DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
+			0
+		);
+	}
 
 	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(m_inputLayout.Get());

@@ -22,7 +22,8 @@ public:
 	MeshNode(int index);
 	virtual ~MeshNode();
 
-	void CompileAndLoadShaders();
+	void CompileAndLoadVertexShader();
+	void CompileAndLoadPixelShader();
 
 	virtual void Draw(ID3D11DeviceContext2 *context);
 	virtual void CreateDeviceDependentResources();
@@ -81,5 +82,7 @@ private:
 
 	shared_ptr<NodeMaterial> _currentMaterial;
 	BoundingBox<float> _bbox;
+
+	bool m_hasUVs = false;
 };
 

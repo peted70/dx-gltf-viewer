@@ -1,5 +1,5 @@
-#define NORMALS
-#define UV
+//#define NORMALS
+//#define UV
 
 // A constant buffer that stores the three basic column-major matrices for composing geometry.
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
@@ -30,9 +30,8 @@ struct PixelShaderInput
 #ifdef NORMALS
     float3 normal : NORMAL;
 #endif
-#ifdef UV
+
     float2 texcoord : TEXCOORD0;
-#endif
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -51,7 +50,7 @@ PixelShaderInput main(VertexShaderInput input)
 #ifdef UV
     output.texcoord = input.texcoord;
 #else
-    output.texcoord = float2(0.0ff, 0.0f);
+    output.texcoord = float2(0.0f, 0.0f);
 #endif
 
 #ifdef HAS_NORMALS
