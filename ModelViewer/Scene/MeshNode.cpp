@@ -58,7 +58,6 @@ void MeshNode::CompileAndLoadVertexShader()
 	{
 		m_hasUVs = true;
 	}
-	m_hasUVs = true;
 
 	int defineCount = 1;
 	if (m_hasUVs)
@@ -134,7 +133,7 @@ void MeshNode::CompileAndLoadPixelShader()
 	
 	// Allocate the defines map...
 	int count = textures.size();
-	auto defines = make_unique<D3D_SHADER_MACRO[]>(m_hasUVs ? count + 2 : count + 1);
+	auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
 
 	// Iterate through all textures and set them as shader resources...
 	int idx = 0;
@@ -148,13 +147,6 @@ void MeshNode::CompileAndLoadPixelShader()
 		(defines.get())[idx].Name = define;
 		(defines.get())[idx].Definition = one;
 
-		idx++;
-	}
-
-	if (m_hasUVs)
-	{
-		(defines.get())[idx].Name = "UV";
-		(defines.get())[idx].Definition = one;
 		idx++;
 	}
 
