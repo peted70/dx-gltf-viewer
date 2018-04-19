@@ -65,6 +65,7 @@ namespace GLTFParser
 		Document& document() { return _document; }
 
 		void Read(istream& file);
+		void CheckExtensions(const Document& document);
 		void ParseDocument(const Document& document, const Callbacks& callbacks);
 		void LoadScene(const Document& document, const Value& scene, const Callbacks& callbacks);
 		void LoadMeshNode(const Document& document, const Value& meshNode, const Callbacks& callbacks);
