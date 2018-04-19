@@ -207,11 +207,11 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 	}
 	else
 	{
-		mat = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
+		mat = XMMatrixTranspose(XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation)));
 	}
 
 	// Prepare to pass the updated model matrix to the shader 
-	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(mat));
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, /*XMMatrixTranspose(*/mat/*)*/);
 
 	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
@@ -391,8 +391,9 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 			data->matrix[15]
 		};
 		
+
 		_matrix = XMLoadFloat4x4(&mat);
-		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, _matrix);
+		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(_matrix));
 	}
 	else
 	{
