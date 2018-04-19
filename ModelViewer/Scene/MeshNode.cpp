@@ -202,7 +202,7 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 
 	XMMATRIX mat;
 	if (_hasMatrix)
-	{
+	{ 
 		mat = _matrix;
 	}
 	else
