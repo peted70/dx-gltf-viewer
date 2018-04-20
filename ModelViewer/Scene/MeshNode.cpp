@@ -195,7 +195,7 @@ void MeshNode::CreateDeviceDependentResources()
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
 }
 
-void MeshNode::Draw(ID3D11DeviceContext2 *context)
+void MeshNode::Draw(SceneContext& context)
 {
 	if (!m_loadingComplete)
 		return;
@@ -245,35 +245,35 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 
 	unsigned int strides[] = { 3 * sizeof(float), 3 * sizeof(float), 2 * sizeof(float) };
 	unsigned int offsets[] = { 0, 0, 0 };
-	context->IASetVertexBuffers(0, 3, vbs, strides, offsets);
+	context.context().IASetVertexBuffers(0, 3, vbs, strides, offsets);
 
 	auto indices = _buffers.find(L"INDICES");
 	if (indices != _buffers.end())
 	{
 		indexed = true;
 		m_indexCount = indices->second.Data()->BufferDescription->Count;
-		context->IASetIndexBuffer(
+		context.context().IASetIndexBuffer(
 			indices->second.Buffer().Get(),
 			DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
 			0
 		);
 	}
 
-	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_inputLayout.Get());
+	context.context().IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context.context().IASetInputLayout(m_inputLayout.Get());
 
 	// Attach our vertex shader.
 	assert(m_vertexShader.Get());
-	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+	context.context().VSSetShader(m_vertexShader.Get(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers1(0, 1, BufferManager::Instance().MVPBuffer().ConstantBuffer().GetAddressOf(),
+	context.context().VSSetConstantBuffers1(0, 1, BufferManager::Instance().MVPBuffer().ConstantBuffer().GetAddressOf(),
 		nullptr, nullptr);
 
 	// Attach our pixel shader.
-	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	context->PSSetConstantBuffers(0, 1, BufferManager::Instance().PerFrameBuffer().ConstantBuffer().GetAddressOf());
-	context->PSSetConstantBuffers(1, 1, BufferManager::Instance().PerObjBuffer().ConstantBuffer().GetAddressOf());
+	context.context().PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	context.context().PSSetConstantBuffers(0, 1, BufferManager::Instance().PerFrameBuffer().ConstantBuffer().GetAddressOf());
+	context.context().PSSetConstantBuffers(1, 1, BufferManager::Instance().PerObjBuffer().ConstantBuffer().GetAddressOf());
 
 	// Iterate through all textures and set them as shader resources...
 	auto textures = _material->Textures();
@@ -286,20 +286,20 @@ void MeshNode::Draw(ID3D11DeviceContext2 *context)
 
 		// Set texture and sampler.
 		auto sampler = textureWrapper->GetSampler().Get();
-		context->PSSetSamplers(textureWrapper->Type(), 1, &sampler);
+		context.context().PSSetSamplers(textureWrapper->Type(), 1, &sampler);
 		
 		//Utility::Out(L"Set texture sampler at slot %d", textureWrapper->Type());
 		auto texture = textureWrapper->GetShaderResourceView().Get();
-		context->PSSetShaderResources(textureWrapper->Type(), 1, &texture);
+		context.context().PSSetShaderResources(textureWrapper->Type(), 1, &texture);
 	}
 
 	if (indexed)
 	{
-		context->DrawIndexed(m_indexCount, 0, 0);
+		context.context().DrawIndexed(m_indexCount, 0, 0);
 	}
 	else
 	{
-		context->Draw(m_indexCount, 0);
+		context.context().Draw(m_indexCount, 0);
 	}
 
 	GraphContainerNode::Draw(context);

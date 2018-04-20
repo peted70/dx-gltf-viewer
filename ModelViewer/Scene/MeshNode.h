@@ -25,7 +25,7 @@ public:
 	void CompileAndLoadVertexShader();
 	void CompileAndLoadPixelShader();
 
-	virtual void Draw(ID3D11DeviceContext2 *context);
+	virtual void Draw(SceneContext& context);
 	virtual void CreateDeviceDependentResources();
 	virtual void Initialise(const shared_ptr<DeviceResources>& deviceResources);
 	virtual void AfterLoad();

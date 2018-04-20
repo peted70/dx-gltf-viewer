@@ -136,6 +136,7 @@ namespace ModelViewer
 		unique_ptr<Axis> _mainAxes;
 
 		ID3D11RasterizerState * _pRasterState;
+		unique_ptr<SceneContext> _context;
 
 		// Inherited via Observer
 		virtual void OnNotify(const Observable & data) const override;

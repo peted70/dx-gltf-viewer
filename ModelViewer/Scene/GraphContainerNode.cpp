@@ -20,7 +20,7 @@ void GraphContainerNode::Update(StepTimer const& timer)
 	}
 }
 
-void GraphContainerNode::Draw(ID3D11DeviceContext2 *context)
+void GraphContainerNode::Draw(SceneContext& context)
 {
 	for (auto child : _children)
 	{

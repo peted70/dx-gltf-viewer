@@ -5,6 +5,7 @@
 #include "../Common/DeviceResources.h"
 #include "../Common/StepTimer.h"
 #include <Rpc.h>
+#include "SceneContext.h"
 
 using namespace std;
 using namespace DX;
@@ -22,9 +23,9 @@ public:
 
 	virtual void Update(StepTimer const& timer);
 
-	virtual void Draw(ID3D11DeviceContext2 *context);
+	virtual void Draw(SceneContext& context);
 	virtual void CreateDeviceDependentResources();
-	virtual void Initialise(const shared_ptr<DX::DeviceResources>& deviceResources);
+	virtual void Initialise(const shared_ptr<DeviceResources>& deviceResources);
 
 	virtual void AfterLoad() override {};
 	virtual void ForAllChildrenRecursive(function<void(GraphNode&)> func) override;

@@ -191,6 +191,8 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DeviceResourc
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 
+	_context = make_unique<SceneContext>(m_deviceResources->GetD3DDeviceContext());
+
 	auto data = Container::Instance().ResolveDirectXPageViewModelData();
 	data->RegisterForUpdates(boost::bind(&Sample3DSceneRenderer::NotifyDataChanged, this, _1));
 
@@ -379,7 +381,7 @@ void Sample3DSceneRenderer::Render()
 	context->PSSetShaderResources(10, 1, _envSpecularTexResourceView.GetAddressOf());
 	context->PSSetSamplers(10, 1, _envSpecularTexSampler.GetAddressOf());
 
-	SceneManager::Instance().Current()->Draw(context);
+	SceneManager::Instance().Current()->Draw(*(_context.get()));
 	return;
 }
 
