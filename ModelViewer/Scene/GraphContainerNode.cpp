@@ -66,7 +66,9 @@ GraphNode *GraphContainerNode::FindChildByIndex(int index)
 		return this;
 	for (auto child : _children)
 	{
-		return child->FindChildByIndex(index);
+		auto ret = child->FindChildByIndex(index);
+		if (ret != nullptr)
+			return ret;
 	}
 	return nullptr;
 }

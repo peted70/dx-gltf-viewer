@@ -216,9 +216,9 @@ protected:
 	XMMATRIX _matrix;
 	bool _hasMatrix = false;
 
-	XMFLOAT3 _scale;
-	XMFLOAT3 _translation;
-	XMFLOAT4 _rotation;
+	XMFLOAT3 _scale = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 _translation = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT4 _rotation = { 0.0f, 0.0f, 0.0f, 0.0f };
 	float _yaw, _pitch, _roll;
 
 	int _index;
