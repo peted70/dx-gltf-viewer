@@ -20,11 +20,43 @@ void GraphContainerNode::Update(StepTimer const& timer)
 	}
 }
 
-void GraphContainerNode::Draw(SceneContext& context)
+XMMATRIX GraphContainerNode::PreDraw(SceneContext& context, XMMATRIX model)
+{
+	// Don't execute this until loaded..
+
+	XMMATRIX mat;
+	if (_hasMatrix)
+	{
+		mat = _matrix;
+	}
+	else
+	{
+		mat = 
+			XMMatrixTranspose(
+				XMMatrixAffineTransformation(
+					XMLoadFloat3(&_scale), 
+					XMLoadFloat3(&emptyVector), 
+					XMLoadFloat4(&_rotation), 
+					XMLoadFloat3(&_translation)));
+	}
+	if (!XMMatrixIsIdentity(model))
+	{
+		mat = XMMatrixMultiply(model, mat);
+	}
+	model = mat;
+
+	// Prepare to pass the updated model matrix to the shader 
+	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, mat);
+	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
+	return mat;
+}
+
+void GraphContainerNode::Draw(SceneContext& context, XMMATRIX model)
 {
 	for (auto child : _children)
 	{
-		child->Draw(context);
+		auto modelMatrix = child->PreDraw(context, model);
+		child->Draw(context, modelMatrix);
 	}
 }
 

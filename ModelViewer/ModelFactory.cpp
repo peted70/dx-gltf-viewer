@@ -68,6 +68,8 @@ void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 	else
 	{
 		_currentNode = new GraphContainerNode(data->NodeIndex);
+		auto devResources = SceneManager::Instance().DevResources();
+		_currentNode->Initialise(devResources);
 	}
 	_currentNode->SetName(data->Name->Data());
 

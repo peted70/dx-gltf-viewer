@@ -25,7 +25,7 @@ public:
 	void CompileAndLoadVertexShader();
 	void CompileAndLoadPixelShader();
 
-	virtual void Draw(SceneContext& context);
+	virtual void Draw(SceneContext& context, XMMATRIX model);
 	virtual void CreateDeviceDependentResources();
 	virtual void Initialise(const shared_ptr<DeviceResources>& deviceResources);
 	virtual void AfterLoad();
@@ -78,7 +78,6 @@ private:
 	shared_ptr<NodeMaterial> _material;
 
 	uint32	m_indexCount;
-	bool m_loadingComplete;
 
 	shared_ptr<NodeMaterial> _currentMaterial;
 	BoundingBox<float> _bbox;

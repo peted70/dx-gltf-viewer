@@ -9,8 +9,11 @@ public:
 	~SceneContext();
 
 	ID3D11DeviceContext2& context() { return *_context; }
+	XMMATRIX& model() { return _model; }
+	void SetModel(XMMATRIX& model) { _model = model; }
 
 private:
 	ID3D11DeviceContext2 * _context;
+	XMMATRIX _model;
 };
 

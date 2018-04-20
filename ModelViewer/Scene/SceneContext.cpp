@@ -5,6 +5,7 @@
 SceneContext::SceneContext(ID3D11DeviceContext2 *context) :
 	_context(context)
 {
+	_model = XMMatrixIdentity();
 }
 
 SceneContext::~SceneContext()

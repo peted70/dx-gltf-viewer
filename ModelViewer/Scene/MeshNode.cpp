@@ -19,8 +19,7 @@ const char *defineLookup[] =
 const char *one = "1";
 
 MeshNode::MeshNode(int index) :
-	GraphContainerNode(index),
-	m_loadingComplete(false)
+	GraphContainerNode(index)
 {
 }
 
@@ -38,7 +37,7 @@ void MeshNode::AfterLoad()
 {
 	CompileAndLoadVertexShader();
 	CompileAndLoadPixelShader();
-	m_loadingComplete = true;
+	GraphContainerNode::AfterLoad();
 }
 
 void MeshNode::CompileAndLoadVertexShader()
@@ -195,25 +194,25 @@ void MeshNode::CreateDeviceDependentResources()
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
 }
 
-void MeshNode::Draw(SceneContext& context)
+void MeshNode::Draw(SceneContext& context, XMMATRIX model)
 {
 	if (!m_loadingComplete)
 		return;
 
-	XMMATRIX mat;
-	if (_hasMatrix)
-	{ 
-		mat = _matrix;
-	}
-	else
-	{
-		mat = XMMatrixTranspose(XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation)));
-	}
+	//XMMATRIX mat;
+	//if (_hasMatrix)
+	//{ 
+	//	mat = _matrix;
+	//}
+	//else
+	//{
+	//	mat = XMMatrixTranspose(XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation)));
+	//}
 
-	// Prepare to pass the updated model matrix to the shader 
-	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, /*XMMatrixTranspose(*/mat/*)*/);
+	//// Prepare to pass the updated model matrix to the shader 
+	//XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, /*XMMatrixTranspose(*/mat/*)*/);
 
-	BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
+	//BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
 	unsigned int indexCount = 0;
 	bool indexed = false;
@@ -302,7 +301,7 @@ void MeshNode::Draw(SceneContext& context)
 		context.context().Draw(m_indexCount, 0);
 	}
 
-	GraphContainerNode::Draw(context);
+	GraphContainerNode::Draw(context, model);
 }
 
 void BoundingSphereFromBoundingBox()

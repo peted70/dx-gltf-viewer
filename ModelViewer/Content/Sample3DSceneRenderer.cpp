@@ -380,8 +380,8 @@ void Sample3DSceneRenderer::Render()
 	context->PSSetSamplers(9, 1, _brdfLutSampler.GetAddressOf());
 	context->PSSetShaderResources(10, 1, _envSpecularTexResourceView.GetAddressOf());
 	context->PSSetSamplers(10, 1, _envSpecularTexSampler.GetAddressOf());
-
-	SceneManager::Instance().Current()->Draw(*(_context.get()));
+	_context->SetModel(XMMatrixIdentity());
+	SceneManager::Instance().Current()->Draw(*(_context.get()), XMMatrixIdentity());
 	return;
 }
 

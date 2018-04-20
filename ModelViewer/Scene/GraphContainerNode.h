@@ -23,11 +23,12 @@ public:
 
 	virtual void Update(StepTimer const& timer);
 
-	virtual void Draw(SceneContext& context);
+	virtual XMMATRIX PreDraw(SceneContext& context, XMMATRIX model);
+	virtual void Draw(SceneContext& context, XMMATRIX model);
 	virtual void CreateDeviceDependentResources();
 	virtual void Initialise(const shared_ptr<DeviceResources>& deviceResources);
 
-	virtual void AfterLoad() override {};
+	virtual void AfterLoad() override { m_loadingComplete = true; };
 	virtual void ForAllChildrenRecursive(function<void(GraphNode&)> func) override;
 	virtual void ForAllChildrenRecursiveUntil(function<bool(GraphNode&)> func) override;
 	virtual GraphNode *FindChildByIndex(int index) override;
@@ -227,5 +228,6 @@ protected:
 	wstring _name;
 	bool _selected = false;
 	GUID _guid;
+	bool m_loadingComplete = false;
 };
 

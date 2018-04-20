@@ -5,9 +5,11 @@
 #include "BoundingBox.h"
 #include <Rpc.h>
 #include "SceneContext.h"
+#include <DirectXMath.h>
 
 using namespace std;
 using namespace DX;
+using namespace DirectX;
 
 class GraphNode
 {
@@ -16,7 +18,8 @@ public:
 	virtual ~GraphNode();
 
 	virtual void Update(StepTimer const& timer) = 0;
-	virtual void Draw(SceneContext& context) = 0;
+	virtual XMMATRIX PreDraw(SceneContext& context, XMMATRIX model) = 0;
+	virtual void Draw(SceneContext& context, XMMATRIX model) = 0;
 	virtual void CreateDeviceDependentResources() = 0;
 	virtual void Initialise(const std::shared_ptr<DX::DeviceResources>& deviceResources) = 0;
 	virtual void AddChild(shared_ptr<GraphNode> child) = 0;
