@@ -29,6 +29,7 @@ namespace WinRTGLTFParser
 			baseColourFactor[3] = data.baseColourFactor[3];
 
 			metallicFactor = data.metallicFactor;
+			roughnessFactor = data.roughnessFactor;
 
 			Pbrmetallicroughness_Basecolortexture = data.Pbrmetallicroughness_Basecolortexture;
 			Pbrmetallicroughness_Metallicroughnesstexture = data.Pbrmetallicroughness_Metallicroughnesstexture;
@@ -43,6 +44,7 @@ namespace WinRTGLTFParser
 		property Array<float>^ baseColourFactor;
 		
 		property float metallicFactor;
+		property float roughnessFactor;
 
 		property unsigned int Pbrmetallicroughness_Basecolortexture;
 		property unsigned int Pbrmetallicroughness_Metallicroughnesstexture;

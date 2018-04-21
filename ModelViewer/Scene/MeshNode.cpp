@@ -285,6 +285,7 @@ void MeshNode::Draw(SceneContext& context, XMMATRIX model)
 	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.z = _material->EmissiveFactor().z;
 
 	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.x = _material->MetallicFactor();
+	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.y = _material->RoughnessFactor();
 	BufferManager::Instance().PerObjBuffer().Update(*(DevResources()));
 
 	// Iterate through all textures and set them as shader resources...

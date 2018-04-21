@@ -27,7 +27,8 @@ public:
 	const char *MaterialName;
 	float emmissiveFactor[3] = { 0.0f, 0.0f, 0.0f };
 	float baseColourFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float metallicFactor = 0.0f;
+	float metallicFactor = 1.0f;
+	float roughnessFactor = 1.0f;
 
 	int Pbrmetallicroughness_Basecolortexture;
 	int Pbrmetallicroughness_Metallicroughnesstexture;

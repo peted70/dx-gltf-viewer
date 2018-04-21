@@ -25,6 +25,7 @@ void NodeMaterial::Initialise(GLTF_MaterialData^ data)
 	_baseColorFactor.z = data->baseColourFactor[2];
 	_baseColorFactor.w = data->baseColourFactor[3];
 	_metallicFactor = data->metallicFactor;
+	_roughnessFactor = data->roughnessFactor;
 }
 
 void NodeMaterial::AddTexture(unsigned int idx, 
