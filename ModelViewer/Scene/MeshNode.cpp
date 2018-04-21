@@ -274,6 +274,19 @@ void MeshNode::Draw(SceneContext& context, XMMATRIX model)
 	context.context().PSSetConstantBuffers(0, 1, BufferManager::Instance().PerFrameBuffer().ConstantBuffer().GetAddressOf());
 	context.context().PSSetConstantBuffers(1, 1, BufferManager::Instance().PerObjBuffer().ConstantBuffer().GetAddressOf());
 
+	// Set the base colour factor from the material...
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.x = _material->BaseColourFactor().x;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.y = _material->BaseColourFactor().y;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.z = _material->BaseColourFactor().z;
+	BufferManager::Instance().PerObjBuffer().BufferData().baseColorFactor.w = _material->BaseColourFactor().w;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.x = _material->EmissiveFactor().x;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.y = _material->EmissiveFactor().y;
+	BufferManager::Instance().PerObjBuffer().BufferData().emissiveFactor.z = _material->EmissiveFactor().z;
+
+	BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues.x = _material->MetallicFactor();
+	BufferManager::Instance().PerObjBuffer().Update(*(DevResources()));
+
 	// Iterate through all textures and set them as shader resources...
 	auto textures = _material->Textures();
 

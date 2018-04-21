@@ -17,9 +17,14 @@ void NodeMaterial::Initialise(GLTF_MaterialData^ data)
 	_Occlusiontexture = data->Occlusiontexture;
 	_Pbrmetallicroughness_Basecolortexture = data->Pbrmetallicroughness_Basecolortexture;
 	_Pbrmetallicroughness_Metallicroughnesstexture = data->Pbrmetallicroughness_Metallicroughnesstexture;
-	_emmissiveFactor[0] = data->emmissiveFactor[0];
-	_emmissiveFactor[1] = data->emmissiveFactor[1];
-	_emmissiveFactor[2] = data->emmissiveFactor[2];
+	_emmissiveFactor.x = data->emmissiveFactor[0];
+	_emmissiveFactor.y = data->emmissiveFactor[1];
+	_emmissiveFactor.z = data->emmissiveFactor[2];
+	_baseColorFactor.x = data->baseColourFactor[0];
+	_baseColorFactor.y = data->baseColourFactor[1];
+	_baseColorFactor.z = data->baseColourFactor[2];
+	_baseColorFactor.w = data->baseColourFactor[3];
+	_metallicFactor = data->metallicFactor;
 }
 
 void NodeMaterial::AddTexture(unsigned int idx, 

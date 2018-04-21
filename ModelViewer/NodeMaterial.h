@@ -54,16 +54,26 @@ public:
 
 	map<unsigned int, shared_ptr<TextureWrapper>>& Textures() { return _textures; }
 
+	XMFLOAT4& BaseColourFactor() { return _baseColorFactor; }
+	void SetBaseColourFactor(XMFLOAT4 bcf) { _baseColorFactor = bcf; }
+
+	XMFLOAT3& EmissiveFactor() { return _emmissiveFactor; }
+
+	float MetallicFactor() { return _metallicFactor; }
+
 private:
 	map<unsigned int, shared_ptr<TextureWrapper>> _textures;
 	wstring _name;
 
-	float _emmissiveFactor[3] = {0.0f, 0.0f, 0.0f};
+	XMFLOAT3 _emmissiveFactor = { 0.0f, 0.0f, 0.0f };
 
 	unsigned int _Pbrmetallicroughness_Basecolortexture = 0;
 	unsigned int _Pbrmetallicroughness_Metallicroughnesstexture = 0;
 	unsigned int _Normaltexture = 0;
 	unsigned int _Occlusiontexture = 0;
 	unsigned int _Emissivetexture = 0;
+
+	XMFLOAT4 _baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float _metallicFactor = 0.0f;
 };
 

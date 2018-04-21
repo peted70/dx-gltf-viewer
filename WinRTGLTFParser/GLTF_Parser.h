@@ -22,6 +22,14 @@ namespace WinRTGLTFParser
 			emmissiveFactor[1] = data.emmissiveFactor[1];
 			emmissiveFactor[2] = data.emmissiveFactor[2];
 
+			baseColourFactor = ref new Array<float>(4);
+			baseColourFactor[0] = data.baseColourFactor[0];
+			baseColourFactor[1] = data.baseColourFactor[1];
+			baseColourFactor[2] = data.baseColourFactor[2];
+			baseColourFactor[3] = data.baseColourFactor[3];
+
+			metallicFactor = data.metallicFactor;
+
 			Pbrmetallicroughness_Basecolortexture = data.Pbrmetallicroughness_Basecolortexture;
 			Pbrmetallicroughness_Metallicroughnesstexture = data.Pbrmetallicroughness_Metallicroughnesstexture;
 			Normaltexture = data.Normaltexture;
@@ -32,6 +40,9 @@ namespace WinRTGLTFParser
 	public:
 		property String^ MaterialName;
 		property Array<float>^ emmissiveFactor;
+		property Array<float>^ baseColourFactor;
+		
+		property float metallicFactor;
 
 		property unsigned int Pbrmetallicroughness_Basecolortexture;
 		property unsigned int Pbrmetallicroughness_Metallicroughnesstexture;
