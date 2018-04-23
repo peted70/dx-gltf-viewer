@@ -67,13 +67,8 @@ private:
 
 	shared_ptr<DeviceResources> m_deviceResources;
 	map<wstring, BufferWrapper> _buffers;
-	//ComPtr<ID3D11InputLayout> m_inputLayout;
 
 	ComPtr<ID3D11SamplerState> _spSampler;
-	ComPtr<ID3D11ShaderResourceView> _spTexture;
-
-	//ComPtr<ID3D11VertexShader> m_vertexShader;
-	//ComPtr<ID3D11PixelShader> m_pixelShader;
 	ComPtr<ID3D11RasterizerState> _pRasterState;
 
 	shared_ptr<NodeMaterial> _material;
