@@ -88,22 +88,16 @@ public:
 			default_delete<D3D_SHADER_MACRO[]>());
 
 		int idx = 0;
-		auto dfn = defines.get();
 		for (auto& def : descriptor.Defines())
 		{
-			const char *thng = def;
-			Utility::Out(L"define %S", thng);
-			dfn[idx].Name = thng;
-			dfn[idx].Definition = one;
+			Utility::Out(L"define %S", def);
+			(defines.get())[idx].Name = def;
+			(defines.get())[idx].Definition = one;
 			idx++;
 		}
-		dfn[idx].Name = nullptr;
-		dfn[idx].Definition = nullptr;
+		(defines.get())[idx].Name = nullptr;
+		(defines.get())[idx].Definition = nullptr;
 
-		for (int i=0;i<descriptor.Defines().size() + 1;i++)
-		{
-			Utility::Out(L"define %S %S", dfn[i].Definition, dfn[i].Name);
-		}
 		return defines;
 	}
 
