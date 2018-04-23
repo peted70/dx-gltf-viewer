@@ -93,52 +93,6 @@ void MeshNode::CompileAndLoadPixelShader()
 	}
 
 	m_pixelShaderWrapper = ShaderCache<PixelShaderWrapper>::Instance().FindOrCreateShader(descriptor);
-
-
-	// Compile pixel shader shader
-	//ID3DBlob *psBlob = nullptr;
-
-	//// Work out the path to the shader...
-	//auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
-	//String^ path(L"\\Assets\\Shaders\\");
-	//String^ filePath = sf->Path + path + "pbrpixel.hlsl";
-
-	//auto textures = _material->Textures();
-	//
-	//// Allocate the defines map...
-	//int count = textures.size();
-	//auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
-
-	//// Iterate through all textures and set them as shader resources...
-	//int idx = 0;
-	//for (auto txItr = textures.begin(); txItr != textures.end(); ++txItr)
-	//{
-	//	auto textureWrapper = txItr->second;
-	//	auto type = textureWrapper->Type();
-
-	//	const char *define = defineLookup[type];
-
-	//	(defines.get())[idx].Name = define;
-	//	(defines.get())[idx].Definition = one;
-
-	//	idx++;
-	//}
-
-	//(defines.get())[idx].Name = nullptr;
-	//(defines.get())[idx].Definition = nullptr;
-
-	//auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "ps_5_0", &psBlob);
-	//if (FAILED(hr))
-	//{
-	//	Utility::Out(L"Failed compiling pixel shader %08X\n", hr);
-	//	return;
-	//}
-
-	//DX::ThrowIfFailed(
-	//	DevResources()->GetD3DDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
-	//	nullptr, &m_pixelShader));
-
-	//Utility::Out(L"Loaded Pixel Shader");
 }
 
 void MeshNode::CreateDeviceDependentResources()
@@ -153,7 +107,8 @@ void MeshNode::CreateDeviceDependentResources()
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, _spSampler.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, 
+		_spSampler.ReleaseAndGetAddressOf()));
 
 	D3D11_RASTERIZER_DESC rasterizerState;
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
@@ -166,7 +121,8 @@ void MeshNode::CreateDeviceDependentResources()
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
-	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, _pRasterState.ReleaseAndGetAddressOf()));
+	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, 
+		_pRasterState.ReleaseAndGetAddressOf()));
 }
 
 void MeshNode::Draw(SceneContext& context, XMMATRIX model)
