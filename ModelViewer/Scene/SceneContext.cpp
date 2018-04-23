@@ -5,7 +5,7 @@
 SceneContext::SceneContext(ID3D11DeviceContext2 *context) :
 	_context(context)
 {
-	_model = XMMatrixIdentity();
+	XMStoreFloat4x4(&_model, XMMatrixIdentity());
 }
 
 SceneContext::~SceneContext()

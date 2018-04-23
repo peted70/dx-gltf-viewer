@@ -179,8 +179,6 @@ void GraphContainerNode::CreateTransform(GLTF_TransformData^ data)
 {
 	// If we are handed a matrix, just apply that, otherwise break down into scale, rotate, translate
 	// and generate the matrix from those..
-	XMMATRIX matrix;
-
 	if (data->hasMatrix)
 	{
 		XMFLOAT4X4 mat =

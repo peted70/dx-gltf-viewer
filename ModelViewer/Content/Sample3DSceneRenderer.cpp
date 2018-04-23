@@ -380,7 +380,9 @@ void Sample3DSceneRenderer::Render()
 	context->PSSetSamplers(9, 1, _brdfLutSampler.GetAddressOf());
 	context->PSSetShaderResources(10, 1, _envSpecularTexResourceView.GetAddressOf());
 	context->PSSetSamplers(10, 1, _envSpecularTexSampler.GetAddressOf());
-	_context->SetModel(XMMatrixIdentity());
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, XMMatrixIdentity());
+	_context->SetModel(matrix);
 	SceneManager::Instance().Current()->Draw(*(_context.get()), XMMatrixIdentity());
 	return;
 }

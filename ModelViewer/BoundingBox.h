@@ -41,7 +41,7 @@ public:
 	{
 		XMFLOAT3 *buffPtr = (XMFLOAT3 *)buffer;
 		BoundingBox<T> bbox;
-		for (int i = 0; i < bufferSize / (3 * sizeof(float)); i++, buffPtr++)
+		for (unsigned int i = 0; i < bufferSize / (3 * sizeof(float)); i++, buffPtr++)
 		{
 			bbox.MaxX = max<T>(buffPtr->x, bbox.MaxX);
 			bbox.MaxY = max<T>(buffPtr->y, bbox.MaxY);

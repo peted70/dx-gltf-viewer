@@ -4,10 +4,11 @@
 #include "BufferManager.h"
 #include "ImgUtils.h"
 #include "DxUtils.h"
+#include "ShaderCache.h"
 
 using namespace Platform;
 
-const char *defineLookup[] = 
+const char *defineLookup[] =
 {
 	"HAS_BASECOLORMAP",
 	"HAS_NORMALMAP",
@@ -15,8 +16,6 @@ const char *defineLookup[] =
 	"HAS_OCCLUSIONMAP",
 	"HAS_METALROUGHNESSMAP"
 };
-
-const char *one = "1";
 
 MeshNode::MeshNode(int index) :
 	GraphContainerNode(index)
@@ -40,8 +39,18 @@ void MeshNode::AfterLoad()
 	GraphContainerNode::AfterLoad();
 }
 
+const char *normals = "NORMALS";
+const char *uvs = "UV";
+
 void MeshNode::CompileAndLoadVertexShader()
 {
+	// TODO:
+	// Create a shader descriptor - use that to lookup in the shader cache
+	// for a shader. Implement creation and compilation of the shader
+	// in the shader cache... 
+	ShaderDescriptor descriptor("pbrvertex.hlsl", DevResources());
+	descriptor.AddDefine(normals);
+
 	// Compile vertex shader
 	ID3DBlob *vsBlob = nullptr;
 
@@ -55,84 +64,20 @@ void MeshNode::CompileAndLoadVertexShader()
 	auto texcoords = _buffers.find(L"TEXCOORD_0");
 	if (texcoords != _buffers.end())
 	{
+		descriptor.AddDefine(uvs);
 		m_hasUVs = true;
 	}
 
-	int defineCount = 1;
-	if (m_hasUVs)
-	{
-		defineCount++;
-	}
-
-	auto defines = make_unique<D3D_SHADER_MACRO[]>(defineCount + 1);
-
-	int idx = 0;
-	(defines.get())[idx].Name = "NORMALS";
-	(defines.get())[idx].Definition = one;
-	idx++;
-	if (m_hasUVs)
-	{
-		(defines.get())[idx].Name = "UV";
-		(defines.get())[idx].Definition = one;
-		idx++;
-	}
-	(defines.get())[idx].Name = nullptr;
-	(defines.get())[idx].Definition = nullptr;
-
-	auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "vs_5_0", &vsBlob);
-	if (FAILED(hr))
-	{
-		Utility::Out(L"Failed compiling vertex shader %08X\n", hr);
-		return;
-	}
-
-	DX::ThrowIfFailed(
-		DevResources()->GetD3DDevice()->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(),
-			nullptr, &m_vertexShader));
-
-	Utility::Out(L"Loaded Vertex Shader");
-
-	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-	{
-		{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	auto dynamicVertexDesc = make_unique<D3D11_INPUT_ELEMENT_DESC[]>(m_hasUVs ? 3 : 2);
-	(dynamicVertexDesc.get())[0] = vertexDesc[0];
-	(dynamicVertexDesc.get())[1] = vertexDesc[1];
-	if (m_hasUVs)
-	{
-		(dynamicVertexDesc.get())[2] = vertexDesc[2];
-	}
-
-	// Now create an Input layout that matches..
-	DX::ThrowIfFailed(
-		DevResources()->GetD3DDevice()->CreateInputLayout(
-			dynamicVertexDesc.get(),
-			m_hasUVs ? 3 : 2,
-			//ARRAYSIZE(dynamicVertexDesc.get()),
-			vsBlob->GetBufferPointer(), 
-			vsBlob->GetBufferSize(),
-			&m_inputLayout));
+	m_vertexShaderWrapper = ShaderCache<VertexShaderWrapper>::Instance().FindOrCreateShader(descriptor);
 }
 
 void MeshNode::CompileAndLoadPixelShader()
 {
-	// Compile pixel shader shader
-	ID3DBlob *psBlob = nullptr;
-
-	// Work out the path to the shader...
-	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
-	String^ path(L"\\Assets\\Shaders\\");
-	String^ filePath = sf->Path + path + "pbrpixel.hlsl";
-
+	ShaderDescriptor descriptor("pbrpixel.hlsl", DevResources());
 	auto textures = _material->Textures();
-	
+
 	// Allocate the defines map...
 	int count = textures.size();
-	auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
 
 	// Iterate through all textures and set them as shader resources...
 	int idx = 0;
@@ -143,27 +88,57 @@ void MeshNode::CompileAndLoadPixelShader()
 
 		const char *define = defineLookup[type];
 
-		(defines.get())[idx].Name = define;
-		(defines.get())[idx].Definition = one;
-
+		descriptor.AddDefine(define);
 		idx++;
 	}
 
-	(defines.get())[idx].Name = nullptr;
-	(defines.get())[idx].Definition = nullptr;
+	m_pixelShaderWrapper = ShaderCache<PixelShaderWrapper>::Instance().FindOrCreateShader(descriptor);
 
-	auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "ps_5_0", &psBlob);
-	if (FAILED(hr))
-	{
-		Utility::Out(L"Failed compiling pixel shader %08X\n", hr);
-		return;
-	}
 
-	DX::ThrowIfFailed(
-		DevResources()->GetD3DDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
-		nullptr, &m_pixelShader));
+	// Compile pixel shader shader
+	//ID3DBlob *psBlob = nullptr;
 
-	Utility::Out(L"Loaded Pixel Shader");
+	//// Work out the path to the shader...
+	//auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
+	//String^ path(L"\\Assets\\Shaders\\");
+	//String^ filePath = sf->Path + path + "pbrpixel.hlsl";
+
+	//auto textures = _material->Textures();
+	//
+	//// Allocate the defines map...
+	//int count = textures.size();
+	//auto defines = make_unique<D3D_SHADER_MACRO[]>(count + 1);
+
+	//// Iterate through all textures and set them as shader resources...
+	//int idx = 0;
+	//for (auto txItr = textures.begin(); txItr != textures.end(); ++txItr)
+	//{
+	//	auto textureWrapper = txItr->second;
+	//	auto type = textureWrapper->Type();
+
+	//	const char *define = defineLookup[type];
+
+	//	(defines.get())[idx].Name = define;
+	//	(defines.get())[idx].Definition = one;
+
+	//	idx++;
+	//}
+
+	//(defines.get())[idx].Name = nullptr;
+	//(defines.get())[idx].Definition = nullptr;
+
+	//auto hr = DXUtils::CompileShader(filePath->Data(), defines.get(), "main", "ps_5_0", &psBlob);
+	//if (FAILED(hr))
+	//{
+	//	Utility::Out(L"Failed compiling pixel shader %08X\n", hr);
+	//	return;
+	//}
+
+	//DX::ThrowIfFailed(
+	//	DevResources()->GetD3DDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
+	//	nullptr, &m_pixelShader));
+
+	//Utility::Out(L"Loaded Pixel Shader");
 }
 
 void MeshNode::CreateDeviceDependentResources()
@@ -198,21 +173,6 @@ void MeshNode::Draw(SceneContext& context, XMMATRIX model)
 {
 	if (!m_loadingComplete)
 		return;
-
-	//XMMATRIX mat;
-	//if (_hasMatrix)
-	//{ 
-	//	mat = _matrix;
-	//}
-	//else
-	//{
-	//	mat = XMMatrixTranspose(XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation)));
-	//}
-
-	//// Prepare to pass the updated model matrix to the shader 
-	//XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, /*XMMatrixTranspose(*/mat/*)*/);
-
-	//BufferManager::Instance().MVPBuffer().Update(*(DevResources()));
 
 	unsigned int indexCount = 0;
 	bool indexed = false;
@@ -259,18 +219,18 @@ void MeshNode::Draw(SceneContext& context, XMMATRIX model)
 	}
 
 	context.context().IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context.context().IASetInputLayout(m_inputLayout.Get());
+	context.context().IASetInputLayout(m_vertexShaderWrapper->InputLayout());
 
 	// Attach our vertex shader.
-	assert(m_vertexShader.Get());
-	context.context().VSSetShader(m_vertexShader.Get(), nullptr, 0);
+	assert(m_vertexShaderWrapper->VertexShader());
+	context.context().VSSetShader(m_vertexShaderWrapper->VertexShader(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
 	context.context().VSSetConstantBuffers1(0, 1, BufferManager::Instance().MVPBuffer().ConstantBuffer().GetAddressOf(),
 		nullptr, nullptr);
 
 	// Attach our pixel shader.
-	context.context().PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	context.context().PSSetShader(m_pixelShaderWrapper->PixelShader(), nullptr, 0);
 	context.context().PSSetConstantBuffers(0, 1, BufferManager::Instance().PerFrameBuffer().ConstantBuffer().GetAddressOf());
 	context.context().PSSetConstantBuffers(1, 1, BufferManager::Instance().PerObjBuffer().ConstantBuffer().GetAddressOf());
 

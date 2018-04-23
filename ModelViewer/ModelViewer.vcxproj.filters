@@ -115,6 +115,7 @@
     <ClCompile Include="Content\HMDRenderer.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Scene\SceneContext.cpp" />
+    <ClCompile Include="ShaderCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Content\HMDRenderer.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Scene\SceneContext.h" />
+    <ClInclude Include="ShaderCache.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
