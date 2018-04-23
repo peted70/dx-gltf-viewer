@@ -44,10 +44,10 @@ const char *uvs = "UV";
 
 void MeshNode::CompileAndLoadVertexShader()
 {
-	// TODO:
-	// Create a shader descriptor - use that to lookup in the shader cache
-	// for a shader. Implement creation and compilation of the shader
-	// in the shader cache... 
+	// Create a shader descriptor which we can use to either find the shader in the
+	// shader cache or create and add it.
+	// The hash used for lookup is generated from the shader name and defines passed
+	// when it is compiled
 	ShaderDescriptor descriptor("pbrvertex.hlsl", DevResources());
 	descriptor.AddDefine(normals);
 
@@ -68,11 +68,16 @@ void MeshNode::CompileAndLoadVertexShader()
 		m_hasUVs = true;
 	}
 
+	// Lookup and return or create the shader if necessary
 	m_vertexShaderWrapper = ShaderCache<VertexShaderWrapper>::Instance().FindOrCreateShader(descriptor);
 }
 
 void MeshNode::CompileAndLoadPixelShader()
 {
+	// Create a shader descriptor which we can use to either find the shader in the
+	// shader cache or create and add it.
+	// The hash used for lookup is generated from the shader name and defines passed
+	// when it is compiled
 	ShaderDescriptor descriptor("pbrpixel.hlsl", DevResources());
 	auto textures = _material->Textures();
 
@@ -92,6 +97,7 @@ void MeshNode::CompileAndLoadPixelShader()
 		idx++;
 	}
 
+	// Lookup and return or create the shader if necessary
 	m_pixelShaderWrapper = ShaderCache<PixelShaderWrapper>::Instance().FindOrCreateShader(descriptor);
 }
 
