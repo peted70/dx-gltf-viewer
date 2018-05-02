@@ -5,8 +5,9 @@
 namespace GLTFParser
 {
 	using namespace std;
+#ifdef LEGACY_LOADER
 	using namespace rapidjson;
-
+#endif
 	class GLTFHeader
 	{
 	private:
@@ -48,6 +49,7 @@ namespace GLTFParser
 	class GLTFFileData
 	{
 	public:
+
 		class Callbacks
 		{
 		public:
@@ -58,24 +60,73 @@ namespace GLTFParser
 			function<void(const SceneNodeData&)> SceneNode;
 		};
 
+		class ParserContext
+		{
+		public:
+			ParserContext(const GLTFDocument& document,
+				const Callbacks& callbacks,
+				const GLBResourceReader& resources) :
+				_document(document),
+				_callbacks(callbacks),
+				_resources(resources)
+			{
+
+			}
+
+			const GLTFDocument& document() const { return _document; }
+			const Callbacks& callbacks() const { return _callbacks; }
+			const GLBResourceReader& resources() const { return _resources; }
+
+		private:
+			const GLTFDocument& _document;
+			const Callbacks& _callbacks;
+			const GLBResourceReader& _resources;
+		};
+
 		const Callbacks& EventHandlers() const { return _callbacks; }
 		Callbacks& EventHandlers() { return _callbacks; }
 
 		GLTFChunk * BinaryChunk() { return _binaryChunk; }
+#ifdef LEGACY_LOADER
 		Document& document() { return _document; }
+#else
+#endif
 
 		void Read(istream& file);
+#ifndef LEGACY_LOADER
+		void CheckExtensions(const GLTFDocument& document);
+#else
 		void CheckExtensions(const Document& document);
+#endif
+#ifndef LEGACY_LOADER
+		void ParseDocument(const ParserContext& parser);
+#else
 		void ParseDocument(const Document& document, const Callbacks& callbacks);
+#endif
+#ifndef LEGACY_LOADER
+		void LoadScene(const ParserContext& parser, const Scene& scene);
+		void LoadMeshNode(const ParserContext& parser, const Node& mNode);
+		void LoadTransform(const ParserContext& parser, const Node& mNode);
+		void LoadSceneNode(const ParserContext& parser, const Node& sceneNode, int nodeIndex, int parentIndex);
+		void LoadMaterialNode(const ParserContext& parser, const Material& mNode);
+		void LoadMaterialTextures(const ParserContext& parser, const Material& mNode);
+#else
 		void LoadScene(const Document& document, const Value& scene, const Callbacks& callbacks);
 		void LoadMeshNode(const Document& document, const Value& meshNode, const Callbacks& callbacks);
-		void LoadSceneNode(const Document& document, const Value& scene, const Callbacks& callbacks, int nodeIndex, int parentIndex);
 		void LoadTransform(const Document& document, const Value& mNode, const Callbacks& callbacks);
+		void LoadSceneNode(const Document& document, const Value& scene, const Callbacks& callbacks, int nodeIndex, int parentIndex);
+#endif
 
 	private:
+
+
 		unique_ptr<GLTFHeader> _header;
 		unique_ptr<ChunkList> _chunks;
+#ifdef LEGACY_LOADER
 		Document _document;
+#else
+
+#endif
 		GLTFChunk *_headerChunk;
 		GLTFChunk *_binaryChunk;
 		GLTFFileData::Callbacks _callbacks;
