@@ -276,6 +276,7 @@
     <ClInclude Include="Axis.h" />
     <ClInclude Include="BooleanToVisibilityConverter.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BufferCache.h" />
     <ClInclude Include="Common\BindableBase.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
@@ -287,6 +288,7 @@
     <ClInclude Include="GlyphConverter.h" />
     <ClInclude Include="Content\HMDRenderer.h" />
     <ClInclude Include="ImgUtils.h" />
+    <ClInclude Include="ModelBufferManager.h" />
     <ClInclude Include="NotificationManager.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Scene\SceneContext.h" />
@@ -328,6 +330,7 @@
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="BooleanToVisibilityConverter.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BufferCache.cpp" />
     <ClCompile Include="Common\BindableBase.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
@@ -338,6 +341,7 @@
     <ClCompile Include="GlyphConverter.cpp" />
     <ClCompile Include="Content\HMDRenderer.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
+    <ClCompile Include="ModelBufferManager.cpp" />
     <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Scene\SceneContext.cpp" />

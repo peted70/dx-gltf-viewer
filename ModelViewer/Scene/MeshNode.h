@@ -82,5 +82,6 @@ private:
 
 	shared_ptr<VertexShaderWrapper> m_vertexShaderWrapper;
 	shared_ptr<PixelShaderWrapper> m_pixelShaderWrapper;
+	//shared_ptr<ID3D11BufferWrapper> m_bufferWrapper;
 };
 

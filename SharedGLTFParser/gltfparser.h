@@ -84,6 +84,7 @@ struct GLTFPARSER_API SubresourceData
 	const void *pSysMem;
 	unsigned int SysMemPitch;
 	unsigned int SysMemSlicePitch;
+	unsigned int accessorIdx;
 };
 
 struct GLTFPARSER_API BufferDesc
