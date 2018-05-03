@@ -260,46 +260,6 @@ void MeshNode::CreateBuffer(WinRTGLTFParser::GLTF_BufferData ^ data)
 	wstring type(data->BufferDescription->BufferContentType->Data());
 	BufferWrapper bw(data, bufferWrapper->Buffer());
 	_buffers[type] = bw;
-
-
-	//int bindFlags = 0;
-	//if (data->BufferDescription->BufferContentType == L"POSITION" ||
-	//	data->BufferDescription->BufferContentType == L"NORMAL" ||
-	//	data->BufferDescription->BufferContentType == L"TEXCOORD_0")
-	//{
-	//	bindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//}
-	//else if (data->BufferDescription->BufferContentType == L"INDICES")
-	//{
-	//	bindFlags = D3D11_BIND_INDEX_BUFFER;
-	//}
-	//else
-	//{
-	//	return;
-	//}
-
-	//if (data->BufferDescription->BufferContentType == L"POSITION")
-	//{
-	//	_bbox = BoundingBox<float>::CreateBoundingBoxFromVertexBuffer((void *)data->BufferDescription->pSysMem, data->SubResource->ByteWidth);
-	//}
-
-	//// Create the buffers...
-	//D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	//vertexBufferData.pSysMem = (void *)data->BufferDescription->pSysMem;
-	//vertexBufferData.SysMemPitch = 0;
-	//vertexBufferData.SysMemSlicePitch = 0;
-
-	//std::wstring type(data->BufferDescription->BufferContentType->Data());
-	//Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
-
-	//CD3D11_BUFFER_DESC vertexBufferDesc(data->SubResource->ByteWidth, bindFlags);
-	//vertexBufferDesc.StructureByteStride = data->SubResource->StructureByteStride;
-
-	//auto device = DevResources()->GetD3DDevice();
-	//DX::ThrowIfFailed(device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &buffer));
-
-	//BufferWrapper bw(data, buffer);
-	//_buffers[type] = bw;
 }
 
 void MeshNode::CreateMaterial(GLTF_MaterialData ^ data)
