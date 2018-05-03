@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <functional>
+#include <memory>
 
 using namespace std;
 
@@ -106,7 +107,7 @@ public:
 	BufferDesc desc;
 };
 
-HRESULT GLTFPARSER_API ParseFile(istream& inStr, 
+HRESULT GLTFPARSER_API ParseFile(shared_ptr<istream> inStr,
 	function<void(const BufferData&)> bufferCallback,
 	function<void(const MaterialData&)> materialCallback,
 	function<void(const TextureData&)> textureCallback,

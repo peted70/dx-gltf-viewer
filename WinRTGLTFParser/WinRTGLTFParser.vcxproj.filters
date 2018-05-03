@@ -13,4 +13,7 @@
   <ItemGroup>
     <ClInclude Include="GLTF_Parser.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
