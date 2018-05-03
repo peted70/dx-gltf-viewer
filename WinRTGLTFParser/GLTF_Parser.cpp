@@ -20,9 +20,11 @@ String^ WinRTGLTFParser::ToStringHat(char* ch)
 
 void GLTF_Parser::ParseFile(String^ Filename)
 {
-	std::ifstream infile(Filename->Data(), std::ios::binary);
+	//ifstream infile(Filename->Data(), std::ios::binary);
 
-	if (infile.fail())
+	auto infile = make_shared<ifstream>(Filename->Data(), ios::binary);
+
+	if (infile->fail())
 	{
 		throw Platform::Exception::CreateException(E_FAIL);
 	}
@@ -53,6 +55,4 @@ void GLTF_Parser::ParseFile(String^ Filename)
 			auto td = ref new GLTF_SceneNodeData(data);
 			OnSceneNodeEvent(this, td);
 		});
-
-	infile.close();
 }

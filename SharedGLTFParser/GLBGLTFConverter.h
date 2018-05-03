@@ -2,6 +2,15 @@
 
 #include "stdafx.h"
 
+#ifndef LEGACY_LOADER
+#include <GLTFSDK/Deserialize.h>
+#include <GLTFSDK/Serialize.h>
+#include <GLTFSDK/GLTFResourceWriter.h>
+#include <GLTFSDK/GLBResourceReader.h>
+
+using namespace Microsoft::glTF;
+#endif
+
 namespace GLTFParser
 {
 	using namespace std;
@@ -92,7 +101,8 @@ namespace GLTFParser
 #else
 #endif
 
-		void Read(istream& file);
+		void Read(shared_ptr<istream> file);
+
 #ifndef LEGACY_LOADER
 		void CheckExtensions(const GLTFDocument& document);
 #else
@@ -110,6 +120,11 @@ namespace GLTFParser
 		void LoadSceneNode(const ParserContext& parser, const Node& sceneNode, int nodeIndex, int parentIndex);
 		void LoadMaterialNode(const ParserContext& parser, const Material& mNode);
 		void LoadMaterialTextures(const ParserContext& parser, const Material& mNode);
+		void LoadTexture(const ParserContext& parser, const Texture& texture);
+		void LoadBufferFromAccessorId(const ParserContext& parser, const string& accessorId, 
+									  const string& bufferType);
+		void LoadBuffer(const ParserContext& parser, const BufferView& bufferView,
+						const string& bufferType, const Accessor& accessor) const;
 #else
 		void LoadScene(const Document& document, const Value& scene, const Callbacks& callbacks);
 		void LoadMeshNode(const Document& document, const Value& meshNode, const Callbacks& callbacks);
