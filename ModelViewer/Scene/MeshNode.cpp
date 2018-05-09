@@ -117,20 +117,6 @@ void MeshNode::CreateDeviceDependentResources()
 
 	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateSamplerState(&samplerDesc, 
 		_spSampler.ReleaseAndGetAddressOf()));
-
-	D3D11_RASTERIZER_DESC rasterizerState;
-	rasterizerState.FillMode = D3D11_FILL_SOLID;
-	rasterizerState.CullMode = D3D11_CULL_BACK;
-	rasterizerState.FrontCounterClockwise = true;
-	rasterizerState.DepthBias = false;
-	rasterizerState.DepthBiasClamp = 0;
-	rasterizerState.SlopeScaledDepthBias = 0;
-	rasterizerState.DepthClipEnable = false;
-	rasterizerState.ScissorEnable = false;
-	rasterizerState.MultisampleEnable = true;
-	rasterizerState.AntialiasedLineEnable = true;
-	DX::ThrowIfFailed(DevResources()->GetD3DDevice()->CreateRasterizerState(&rasterizerState, 
-		_pRasterState.ReleaseAndGetAddressOf()));
 }
 
 void MeshNode::Draw(SceneContext& context, XMMATRIX model)

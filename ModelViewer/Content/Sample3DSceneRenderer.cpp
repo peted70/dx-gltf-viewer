@@ -175,13 +175,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DeviceResourc
 	m_degreesPerSecond(45),
 	m_indexCount(0),
 	m_tracking(false),
-	m_deviceResources(deviceResources),
-	_yaw(0.0f),
-	_pitch(0.0f),
-	_roll(0.0f),
-	_panx(0.0f),
-	_pany(0.0f),
-	_zoom(1.0f)
+	m_deviceResources(deviceResources)
 {
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
@@ -363,7 +357,7 @@ void Sample3DSceneRenderer::Render()
 	DrawAxis(context, _mainAxes.get());
 	DrawGrid(context);
 
-	context->RSSetState(_pRasterState1);
+	context->RSSetState(_pRasterState1.Get());
 
 	BufferManager::Instance().PerObjBuffer().Update(*m_deviceResources);
 	BufferManager::Instance().PerFrameBuffer().Update(*m_deviceResources);
@@ -627,7 +621,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
-	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState1);
+	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState1));
 
 	// Load shaders asynchronously for model rendering...
 	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");

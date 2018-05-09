@@ -69,8 +69,6 @@ private:
 	map<wstring, BufferWrapper> _buffers;
 
 	ComPtr<ID3D11SamplerState> _spSampler;
-	ComPtr<ID3D11RasterizerState> _pRasterState;
-
 	shared_ptr<NodeMaterial> _material;
 
 	uint32	m_indexCount;
@@ -82,6 +80,5 @@ private:
 
 	shared_ptr<VertexShaderWrapper> m_vertexShaderWrapper;
 	shared_ptr<PixelShaderWrapper> m_pixelShaderWrapper;
-	//shared_ptr<ID3D11BufferWrapper> m_bufferWrapper;
 };
 

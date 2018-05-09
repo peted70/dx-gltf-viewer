@@ -128,17 +128,17 @@ namespace ModelViewer
 		float _lastPosX = 0.0f;
 		float _lastPosY = 0.0f;
 
-		float _yaw;
-		float _pitch;
-		float _roll;
-		float _panx;
-		float _pany;
-		float _zoom;
+		float _yaw = -0.05f;
+		float _pitch = -0.2f;
+		float _roll = 0.0f;
+		float _panx = 0.0f;
+		float _pany = 0.0f;
+		float _zoom = 1.0f;
 
 		unique_ptr<DXGrid> _grid;
 		unique_ptr<Axis> _mainAxes;
 
-		ID3D11RasterizerState * _pRasterState1;
+		ComPtr<ID3D11RasterizerState> _pRasterState1;
 		unique_ptr<SceneContext> _context;
 
 		// Inherited via Observer

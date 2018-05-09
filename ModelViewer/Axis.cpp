@@ -77,7 +77,7 @@ void Axis::Initialise(ID3D11Device *device)
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
-	device->CreateRasterizerState(&rasterizerState, &_pRasterState);
+	DX::ThrowIfFailed(device->CreateRasterizerState(&rasterizerState, &_pRasterState));
 }
 
 void Axis::RenderBuffers(ID3D11DeviceContext* deviceContext)
