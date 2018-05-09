@@ -77,9 +77,9 @@ void Axis::Initialise(ID3D11Device *device)
 	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
 	rasterizerState.CullMode = D3D11_CULL_NONE;
 	rasterizerState.FrontCounterClockwise = true;
-	rasterizerState.DepthBias = false;
+	rasterizerState.DepthBias = 10;
 	rasterizerState.DepthBiasClamp = 0;
-	rasterizerState.SlopeScaledDepthBias = 0;
+	rasterizerState.SlopeScaledDepthBias = 0.0;
 	rasterizerState.DepthClipEnable = false;
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
@@ -124,7 +124,7 @@ void Axis::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	//Set the render format to line list.
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case a line list.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	deviceContext->RSSetState(_pRasterState);
+	deviceContext->RSSetState(_pRasterState.Get());
 	return;
 }
 

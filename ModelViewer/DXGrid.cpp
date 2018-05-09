@@ -26,7 +26,7 @@ void DXGrid::Initialise(ID3D11Device *device)
 
 	int num = (gridWidth + 1) / 2;
 	
-	int numInRow = (num * 2 + 1);
+	int numInRow = (num * 2 + 1)-1;
 
 	// Calculate the number of vertices in the terrain mesh.
 	m_vertexCount = numInRow * numInRow;
@@ -45,9 +45,12 @@ void DXGrid::Initialise(ID3D11Device *device)
 	{
 		for (int j = -num; j <= num; j++)
 		{
-			vertices[index].pos = XMFLOAT3(cellWidth * i, 0.0f, cellHeight * j);
-			vertices[index].color = XMFLOAT3(0.4f, 0.4f, 0.4f);
-			index++;
+			if (i != 0 && j != 0)
+			{
+				vertices[index].pos = XMFLOAT3(cellWidth * i, 0.0f, cellHeight * j);
+				vertices[index].color = XMFLOAT3(0.4f, 0.4f, 0.4f);
+				index++;
+			}
 		}
 	}
 
@@ -115,9 +118,9 @@ void DXGrid::Initialise(ID3D11Device *device)
 	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
 	rasterizerState.CullMode = D3D11_CULL_NONE;
 	rasterizerState.FrontCounterClockwise = true;
-	rasterizerState.DepthBias = false;
+	rasterizerState.DepthBias = 1;
 	rasterizerState.DepthBiasClamp = 0;
-	rasterizerState.SlopeScaledDepthBias = 0;
+	rasterizerState.SlopeScaledDepthBias = -1.0;
 	rasterizerState.DepthClipEnable = false;
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = false;
@@ -166,7 +169,7 @@ void DXGrid::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	//Set the render format to line list.
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case a line list.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	deviceContext->RSSetState(_pRasterState);
+	deviceContext->RSSetState(_pRasterState.Get());
 	return;
 }
 

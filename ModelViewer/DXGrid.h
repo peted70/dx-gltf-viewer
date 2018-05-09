@@ -1,4 +1,7 @@
 #pragma once
+
+using namespace Microsoft::WRL;
+
 class DXGrid
 {
 public:
@@ -12,6 +15,6 @@ private:
 	int m_vertexCount;
 	int m_indexCount;
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	ID3D11RasterizerState * _pRasterState;
+	ComPtr<ID3D11RasterizerState> _pRasterState;
 };
 

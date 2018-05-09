@@ -14,11 +14,6 @@
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
-// Please move me :)
-static float lastPosX;
-static float lastPosY;
-static float lastY;
-
 using namespace ModelViewer;
 
 using namespace DirectX;
@@ -312,8 +307,8 @@ void Sample3DSceneRenderer::StartTracking(float positionX, float positionY, Virt
 	Utility::Out(L"StartTracking [%f %f]", positionX, positionY);
 
 	m_tracking = true;
-	lastPosY = positionY;
-	lastPosX = positionX;
+	_lastPosY = positionY;
+	_lastPosX = positionX;
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
@@ -325,22 +320,22 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX, float positionY, Vir
 
 		if ((int)(mod & VirtualKeyModifiers::Control) != 0)
 		{
-			_zoom += (positionY - lastPosY) / 120.0f;
+			_zoom += (positionY - _lastPosY) / 120.0f;
 		}
 		else if ((int)(mod & VirtualKeyModifiers::Shift) != 0)
 		{
-			_panx += (positionX - lastPosX) / 200.0f;
-			_pany += (positionY - lastPosY) / 200.0f;
+			_panx += (positionX - _lastPosX) / 200.0f;
+			_pany += (positionY - _lastPosY) / 200.0f;
 		}
 		else
 		{
-			_pitch += (positionY - lastPosY) / 100.0f;
-			_yaw += (positionX - lastPosX) / 100.0f;
+			_pitch += (positionY - _lastPosY) / 100.0f;
+			_yaw += (positionX - _lastPosX) / 100.0f;
 		}
 
 
-		lastPosY = positionY;
-		lastPosX = positionX;
+		_lastPosY = positionY;
+		_lastPosX = positionX;
 
 		CreateWindowSizeDependentResources();
 	}
@@ -365,10 +360,10 @@ void Sample3DSceneRenderer::Render()
 
 	XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(XMMatrixRotationY(0.0)));
 
-	DrawGrid(context);
 	DrawAxis(context, _mainAxes.get());
+	DrawGrid(context);
 
-	context->RSSetState(_pRasterState);
+	context->RSSetState(_pRasterState1);
 
 	BufferManager::Instance().PerObjBuffer().Update(*m_deviceResources);
 	BufferManager::Instance().PerFrameBuffer().Update(*m_deviceResources);
@@ -389,9 +384,9 @@ void Sample3DSceneRenderer::Render()
 
 void Sample3DSceneRenderer::DrawGrid(ID3D11DeviceContext2 *context)
 {
-	BufferManager::Instance().MVPBuffer().BufferData().color.x = 0.45f;
-	BufferManager::Instance().MVPBuffer().BufferData().color.y = 0.45f;
-	BufferManager::Instance().MVPBuffer().BufferData().color.z = 0.45f;
+	BufferManager::Instance().MVPBuffer().BufferData().color.x = 0.65f;
+	BufferManager::Instance().MVPBuffer().BufferData().color.y = 0.65f;
+	BufferManager::Instance().MVPBuffer().BufferData().color.z = 0.65f;
 
 	BufferManager::Instance().MVPBuffer().Update(*m_deviceResources);
 
@@ -621,6 +616,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 			_spSampler.ReleaseAndGetAddressOf()));
 
 	D3D11_RASTERIZER_DESC rasterizerState;
+
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
 	rasterizerState.CullMode = D3D11_CULL_BACK;
 	rasterizerState.FrontCounterClockwise = true;
@@ -631,7 +627,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 	rasterizerState.ScissorEnable = false;
 	rasterizerState.MultisampleEnable = true;
 	rasterizerState.AntialiasedLineEnable = true;
-	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState);
+	m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState1);
 
 	// Load shaders asynchronously for model rendering...
 	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
