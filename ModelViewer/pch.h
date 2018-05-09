@@ -17,6 +17,14 @@
 #include "App.xaml.h"
 #include "Utility.h"
 
+#include <future>
+#include <experimental/resumable>
+#include <pplawait.h>
+#include <map>
+#include <string>
+#include <memory>
+#include "./Common/DirectXHelper.h"
+
 #include "ViewModels/RootPageViewModel.h"
 #include "ViewModels/DirectXPageViewModel.h"
 #include "GlyphConverter.h"

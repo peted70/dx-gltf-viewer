@@ -2,7 +2,6 @@
 
 #include <collection.h>
 #include <ppltasks.h>
-
 #include <TreeNode.h>
 #include <ViewModel.h>
 #include <TreeViewItem.h>

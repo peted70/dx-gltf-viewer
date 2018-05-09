@@ -4,16 +4,16 @@
 #include "ShaderStructures.h"
 #include "..\Common\StepTimer.h"
 #include "../SharedGLTFParser/gltfparser.h"
-#include <map>
-#include <string>
+//#include <map>
+//#include <string>
 #include "DXGrid.h"
 #include "Axis.h"
 #include "./Scene/GraphContainerNode.h"
 #include "NotificationManager.h"
 
-#include <future>
-#include <experimental/resumable>
-#include <pplawait.h>
+//#include <future>
+//#include <experimental/resumable>
+//#include <pplawait.h>
 
 namespace ModelViewer
 {
