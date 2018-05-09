@@ -43,7 +43,7 @@ namespace GLTFParser
 		public:
 			ParserContext(const GLTFDocument& document,
 				const Callbacks& callbacks,
-				const GLBResourceReader& resources) :
+				const GLTFResourceReader& resources) :
 				_document(document),
 				_callbacks(callbacks),
 				_resources(resources)
@@ -52,12 +52,12 @@ namespace GLTFParser
 
 			const GLTFDocument& document() const { return _document; }
 			const Callbacks& callbacks() const { return _callbacks; }
-			const GLBResourceReader& resources() const { return _resources; }
+			const GLTFResourceReader& resources() const { return _resources; }
 
 		private:
 			const GLTFDocument& _document;
 			const Callbacks& _callbacks;
-			const GLBResourceReader& _resources;
+			const GLTFResourceReader& _resources;
 		};
 
 		const Callbacks& EventHandlers() const { return _callbacks; }

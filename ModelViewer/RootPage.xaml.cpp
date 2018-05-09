@@ -86,6 +86,7 @@ future<shared_ptr<GraphNode>> LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
+	fop->FileTypeFilter->Append(".gltf");
 
 	auto file = co_await fop->PickSingleFileAsync();
 	if (file == nullptr)
