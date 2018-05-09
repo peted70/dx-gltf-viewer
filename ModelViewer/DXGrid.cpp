@@ -1,14 +1,13 @@
 #include "pch.h"
 #include "DXGrid.h"
 #include "Content\ShaderStructures.h"
+#include "Common\DirectXHelper.h"
 
 using namespace ModelViewer;
 using namespace DirectX;
 
 DXGrid::DXGrid()
 {
-
-
 }
 
 void DXGrid::Initialise(ID3D11Device *device)
@@ -17,8 +16,8 @@ void DXGrid::Initialise(ID3D11Device *device)
 	float cellWidth = 1.0f;
 	float cellHeight = 1.0f;
 
-	VertexPositionColor *vertices;
-	unsigned long* indices;
+	unique_ptr<VertexPositionColor[]> vertices;
+	unique_ptr<unsigned long[]> indices;
 	int index;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
@@ -35,10 +34,10 @@ void DXGrid::Initialise(ID3D11Device *device)
 	m_indexCount = numInRow * 4;
 
 	// Create the vertex array.
-	vertices = new VertexPositionColor[m_vertexCount];
+	vertices = make_unique<VertexPositionColor[]>(m_vertexCount);
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = make_unique<unsigned long[]>(m_indexCount);
 	index = 0;
 
 	for (int i = -num; i <= num; i++)
@@ -83,16 +82,12 @@ void DXGrid::Initialise(ID3D11Device *device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = vertices.get();
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
+	DX::ThrowIfFailed(device->CreateBuffer(&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()));
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -103,16 +98,12 @@ void DXGrid::Initialise(ID3D11Device *device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
+	indexData.pSysMem = indices.get();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
+	DX::ThrowIfFailed(device->CreateBuffer(&indexBufferDesc, &indexData, m_indexBuffer.GetAddressOf()));
 
 	D3D11_RASTERIZER_DESC rasterizerState;
 	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
@@ -126,29 +117,6 @@ void DXGrid::Initialise(ID3D11Device *device)
 	rasterizerState.MultisampleEnable = false;
 	rasterizerState.AntialiasedLineEnable = false;
 	device->CreateRasterizerState(&rasterizerState, &_pRasterState);
-
-	// Release the arrays now that the buffers have been created and loaded.
-	delete [] vertices;
-	delete [] indices;
-}
-
-void DXGrid::ShutdownBuffers()
-{
-	// Release the index buffer.
-	if (m_indexBuffer)
-	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
-	}
-
-	// Release the vertex buffer.
-	if (m_vertexBuffer)
-	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
-	}
-
-	return;
 }
 
 void DXGrid::RenderBuffers(ID3D11DeviceContext* deviceContext)
@@ -160,16 +128,17 @@ void DXGrid::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	stride = sizeof(VertexPositionColor);
 	offset = 0;
 
+	auto vb = m_vertexBuffer.Get();
+
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	//Set the render format to line list.
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case a line list.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	deviceContext->RSSetState(_pRasterState.Get());
-	return;
 }
 

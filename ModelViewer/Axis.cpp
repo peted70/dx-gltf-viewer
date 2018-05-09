@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Axis.h"
 #include "Content\ShaderStructures.h"
+#include "Common\DirectXHelper.h"
 
 using namespace ModelViewer;
 using namespace DirectX;
@@ -47,11 +48,7 @@ void Axis::Initialise(ID3D11Device *device)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
+	DX::ThrowIfFailed(device->CreateBuffer(&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf()));
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -67,11 +64,7 @@ void Axis::Initialise(ID3D11Device *device)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
+	DX::ThrowIfFailed(device->CreateBuffer(&indexBufferDesc, &indexData, m_indexBuffer.GetAddressOf()));
 
 	D3D11_RASTERIZER_DESC rasterizerState;	
 	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
@@ -87,25 +80,6 @@ void Axis::Initialise(ID3D11Device *device)
 	device->CreateRasterizerState(&rasterizerState, &_pRasterState);
 }
 
-void Axis::ShutdownBuffers()
-{
-	// Release the index buffer.
-	if (m_indexBuffer)
-	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
-	}
-
-	// Release the vertex buffer.
-	if (m_vertexBuffer)
-	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
-	}
-
-	return;
-}
-
 void Axis::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	unsigned int stride;
@@ -115,16 +89,17 @@ void Axis::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	stride = sizeof(VertexPositionColor);
 	offset = 0;
 
+	auto vb = m_vertexBuffer.Get();
+
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	//Set the render format to line list.
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case a line list.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	deviceContext->RSSetState(_pRasterState.Get());
-	return;
 }
 
