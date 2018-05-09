@@ -20,8 +20,6 @@ String^ WinRTGLTFParser::ToStringHat(char* ch)
 
 void GLTF_Parser::ParseFile(String^ Filename)
 {
-	//ifstream infile(Filename->Data(), std::ios::binary);
-
 	auto infile = make_shared<ifstream>(Filename->Data(), ios::binary);
 
 	if (infile->fail())

@@ -125,6 +125,9 @@ namespace ModelViewer
 		float	m_degreesPerSecond;
 		bool	m_tracking;
 
+		float _lastPosX = 0.0f;
+		float _lastPosY = 0.0f;
+
 		float _yaw;
 		float _pitch;
 		float _roll;
@@ -135,7 +138,7 @@ namespace ModelViewer
 		unique_ptr<DXGrid> _grid;
 		unique_ptr<Axis> _mainAxes;
 
-		ID3D11RasterizerState * _pRasterState;
+		ID3D11RasterizerState * _pRasterState1;
 		unique_ptr<SceneContext> _context;
 
 		// Inherited via Observer
