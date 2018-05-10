@@ -17,6 +17,8 @@
 #include "SceneManager.h"
 #include "Utility.h"
 
+#include <fstream>
+
 using namespace ModelViewer;
 
 using namespace Platform;
@@ -94,11 +96,23 @@ future<shared_ptr<GraphNode>> LoadFileAsync()
 
 	Utility::Out(L"filename = %s", file->Path->Data());
 
+	// Since we don't have access to open a file in native code I'll take a copy of the file here
+	// and access it from the application's temp folder. Another option might be to implement a streambuf
+	// which streams data from a Winrt stream but since this is just a sample that seems quite high effort.
+	// A knock-on effect from this is that GLTF files won't load (only GLB) since the files referenced by the
+	// GLTF file i.e. .bin, .jpg, etc. won't have also been copied across..
+	//
 	auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
 	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
 
 	Utility::Out(L"temp file path = %s", tempFile->Path->Data());
-	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(tempFile->Path);
+	auto infile = make_shared<ifstream>(tempFile->Path->Data(), ios::binary);
+	if (infile->fail())
+	{
+		throw Platform::Exception::CreateException(E_FAIL);
+	}
+
+	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(file->Path);
 	co_return ret;
 }
 
