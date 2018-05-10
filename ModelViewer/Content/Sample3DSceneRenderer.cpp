@@ -623,54 +623,9 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 	rasterizerState.AntialiasedLineEnable = true;
 	DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateRasterizerState(&rasterizerState, &_pRasterState1));
 
-	// Load shaders asynchronously for model rendering...
-	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
-	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
-
-	// After the vertex shader file is loaded, create the shader and input layout.
-	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateVertexShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_vertexShader
-				)
-			);
-
-		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
-		{
-			{ "POSITION",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",		0,  DXGI_FORMAT_R32G32B32_FLOAT,	1,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD",	0,  DXGI_FORMAT_R32G32_FLOAT,		2,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateInputLayout(
-				vertexDesc,
-				ARRAYSIZE(vertexDesc),
-				&fileData[0],
-				fileData.size(),
-				&m_inputLayout
-				)
-			);
-	});
-
-	// After the pixel shader file is loaded, create the shader and constant buffer.
-	auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) {
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreatePixelShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_pixelShader
-				)
-			);
-
-		BufferManager::Instance().MVPBuffer().Initialise(*m_deviceResources);
-		BufferManager::Instance().PerFrameBuffer().Initialise(*m_deviceResources);
-		BufferManager::Instance().PerObjBuffer().Initialise(*m_deviceResources);
-	});
+	BufferManager::Instance().MVPBuffer().Initialise(*m_deviceResources);
+	BufferManager::Instance().PerFrameBuffer().Initialise(*m_deviceResources);
+	BufferManager::Instance().PerObjBuffer().Initialise(*m_deviceResources);
 
 	// Load shaders asynchronously for line rendering...
 	auto loadVSTask2 = DX::ReadDataAsync(L"SimpleVertexShader.cso");
@@ -727,7 +682,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 	co_await CreateEnvironmentMapResourcesAsync(ref new String(L"papermill"));
 
-	(createPSTask && createVSTask && createPSTask2 && createVSTask2).then([this]()
+	(createPSTask2 && createVSTask2).then([this]()
 	{
 		m_loadingComplete = true;
 	});

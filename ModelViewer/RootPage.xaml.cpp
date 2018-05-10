@@ -106,13 +106,7 @@ future<shared_ptr<GraphNode>> LoadFileAsync()
 	auto tempFile = co_await file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName);
 
 	Utility::Out(L"temp file path = %s", tempFile->Path->Data());
-	auto infile = make_shared<ifstream>(tempFile->Path->Data(), ios::binary);
-	if (infile->fail())
-	{
-		throw Platform::Exception::CreateException(E_FAIL);
-	}
-
-	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(file->Path);
+	auto ret = co_await ModelFactory::Instance().CreateFromFileAsync(tempFile->Path);
 	co_return ret;
 }
 

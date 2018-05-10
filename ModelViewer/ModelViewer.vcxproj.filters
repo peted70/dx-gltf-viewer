@@ -405,4 +405,12 @@
     <Page Include="DirectXPage.xaml" />
     <Page Include="RootPage.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Content\SimplePixelShader.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\SimpleVertexShader.hlsl">
+      <Filter>Content</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
