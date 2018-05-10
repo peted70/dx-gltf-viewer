@@ -14,7 +14,6 @@ void Axis::Initialise(ID3D11Device *device)
 {
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
 
 	XMFLOAT3 colour = { 1.0f, 1.0f, 1.0f };
 	static const VertexPositionColor vertices [] =

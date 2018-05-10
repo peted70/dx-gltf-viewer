@@ -21,7 +21,6 @@ void DXGrid::Initialise(ID3D11Device *device)
 	int index;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
 
 	int num = (gridWidth + 1) / 2;
 	
