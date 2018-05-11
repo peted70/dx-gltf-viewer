@@ -1,10 +1,8 @@
 #pragma once
 
-#include <boost\di.hpp>
 #include <iostream>
 
 using namespace std;
-namespace di = boost::di;
 
 class Container
 {
@@ -30,12 +28,9 @@ public:
 
 private:
 	Container() 
-		//:
-		//injector(di::make_injector(di::bind<IInterface>().to<MyInterfaceImplementation>().in(di::singleton)))
 	{
 	}
 	shared_ptr<DirectXPageViewModelData> _dxPageVMData;
-	//di::injector<DirectXPageViewModelData> injector;
 };
 
 
