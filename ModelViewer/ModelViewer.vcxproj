@@ -282,6 +282,7 @@
     <ClInclude Include="Common\DeviceResources.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="DecimalPlacesConverter.h" />
+    <ClInclude Include="DelegateCommand.h" />
     <ClInclude Include="DirectXPageViewModelData.h" />
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="FileSystemData.h" />
@@ -336,6 +337,7 @@
     <ClCompile Include="Common\DeviceResources.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="DecimalPlacesConverter.cpp" />
+    <ClCompile Include="DelegateCommand.cpp" />
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="GlyphConverter.cpp" />

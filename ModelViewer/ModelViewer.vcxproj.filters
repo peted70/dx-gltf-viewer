@@ -112,6 +112,7 @@
     <ClCompile Include="ShaderCache.cpp" />
     <ClCompile Include="ModelBufferManager.cpp" />
     <ClCompile Include="BufferCache.cpp" />
+    <ClCompile Include="DelegateCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="ShaderCache.h" />
     <ClInclude Include="ModelBufferManager.h" />
     <ClInclude Include="BufferCache.h" />
+    <ClInclude Include="DelegateCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
