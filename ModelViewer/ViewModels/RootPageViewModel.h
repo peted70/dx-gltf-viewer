@@ -12,5 +12,9 @@ namespace ViewModels
 	public:
 		RootPageViewModel();
 
+		property bool Loading { bool get(); void set(bool val); }
+
+	private:
+		bool _loading = false;
 	};
 }

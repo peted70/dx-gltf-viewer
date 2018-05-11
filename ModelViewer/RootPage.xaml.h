@@ -6,9 +6,12 @@
 #pragma once
 
 #include "RootPage.g.h"
+#include "ViewModels\RootPageViewModel.h"
 
 namespace ModelViewer
 {
+	using namespace ViewModels;
+
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
@@ -22,6 +25,7 @@ namespace ModelViewer
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
 		Windows::UI::Xaml::Controls::Frame^ GetContentFrame() { return this->ContentFrame; }
+		property RootPageViewModel ^ ViewModel;
 
 	private:
 		void NavView_ItemInvoked(Windows::UI::Xaml::Controls::NavigationView^ sender, Windows::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs^ args);

@@ -34,11 +34,18 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <ProgressBar Height="10" IsIndeterminate="True"></ProgressBar>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                               Grid.Row="1"
                            FontSize="28"
                            VerticalAlignment="Center"
                            Text="GLTF File Viewer Sample"/>
                     <CommandBar Grid.Column="1"
+                               Grid.Row="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             DefaultLabelPosition="Right"

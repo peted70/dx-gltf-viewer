@@ -40,6 +40,7 @@ using namespace std;
 
 RootPage::RootPage()
 {
+	ViewModel = ref new RootPageViewModel();
 	InitializeComponent();
 }
 
