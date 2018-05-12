@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:ViewModels"
     mc:Ignorable="d">
-
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <local:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"  />
+        </ResourceDictionary>
+    </Page.Resources>
+    
     <Page.DataContext>
         <vm:RootPageViewModel/>
     </Page.DataContext>
@@ -16,7 +22,8 @@
                     ItemInvoked="NavView_ItemInvoked"
                     SelectionChanged="NavView_SelectionChanged"
                     Loaded="NavView_Loaded"
-                    Canvas.ZIndex="0" IsPaneOpen="False" CompactModeThresholdWidth="50" > 
+                    Canvas.ZIndex="0" IsPaneOpen="False" CompactModeThresholdWidth="50"
+                    Header="{x:Bind ViewModel}"> 
 
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="HomeNavItem" Content="Home" Tag="home">
@@ -28,7 +35,7 @@
         </NavigationView.MenuItems>
 
         <NavigationView.HeaderTemplate>
-            <DataTemplate>
+            <DataTemplate x:DataType="vm:RootPageViewModel">
                 <Grid Margin="24,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -38,7 +45,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <ProgressBar Height="10" IsIndeterminate="True"></ProgressBar>
+                    <ProgressBar Height="10" IsIndeterminate="{x:Bind Loading, Mode=OneWay}"
+                                 Visibility="{Binding Loading, Converter={StaticResource booleanToVisibilityConverter}, Mode=OneWay}">
+                    </ProgressBar>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                Grid.Row="1"
                            FontSize="28"
@@ -50,7 +59,7 @@
                             VerticalAlignment="Top"
                             DefaultLabelPosition="Right"
                             Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
-                        <AppBarButton Label="Import" Icon="Import" Click="ImportClick"/>
+                        <AppBarButton Label="Import" Icon="Import" Command="{x:Bind LoadFileCommand}"/>
                     </CommandBar>
                 </Grid>
             </DataTemplate>

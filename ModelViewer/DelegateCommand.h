@@ -22,6 +22,5 @@ namespace ModelViewer
 		ExecuteDelegate ^ executeDelegate;
 		CanExecuteDelegate^ canExecuteDelegate;
 		bool lastCanExecute;
-
 	};
 }

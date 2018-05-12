@@ -6,6 +6,7 @@
 #include "../Common/StepTimer.h"
 #include <Rpc.h>
 #include "SceneContext.h"
+#include "Utility.h"
 
 using namespace std;
 using namespace DX;
