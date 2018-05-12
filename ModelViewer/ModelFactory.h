@@ -4,6 +4,7 @@
 #include "ppltasks.h"
 #include <future>
 #include <experimental/resumable>
+#include "Singleton.h"
 
 using namespace Windows::Foundation;
 using namespace ModelViewer;
@@ -12,17 +13,11 @@ using namespace Platform;
 using namespace concurrency;
 using namespace WinRTGLTFParser;
 
-class ModelFactory
+class ModelFactory : public Singleton<ModelFactory>
 {
-public:
-	static ModelFactory& Instance()
-	{
-		static ModelFactory instance;
-		return instance;
-	}
-	ModelFactory(ModelFactory const&) = delete;
-	void operator=(ModelFactory const&) = delete;
+	friend class Singleton<ModelFactory>;
 
+public:
 	future<shared_ptr<GraphNode>> CreateFromFileAsync(String^ filename);
 	void CreateSceneNode(GLTF_SceneNodeData^ data);
 	GraphNode *InitialiseMesh(GLTF_SceneNodeData^ data);
@@ -31,8 +26,10 @@ public:
 	void CreateMaterial(GLTF_MaterialData^ data);
 	void CreateTransform(GLTF_TransformData^ data);
 
-private:
+protected:
 	ModelFactory();
+
+private:
 	GLTF_Parser^ _parser;
 	GraphNode *_root;
 	GraphNode *_currentNode;

@@ -164,6 +164,7 @@
     <ClInclude Include="ModelBufferManager.h" />
     <ClInclude Include="BufferCache.h" />
     <ClInclude Include="DelegateCommand.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

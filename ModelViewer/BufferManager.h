@@ -48,17 +48,11 @@ private:
 	ComPtr<ID3D11Buffer> m_constantBuffer;
 };
 
-class BufferManager
+class BufferManager : public Singleton<BufferManager>
 {
-public:
-	static BufferManager& Instance()
-	{
-		static BufferManager instance;
-		return instance;
-	}
-	BufferManager(BufferManager const&) = delete;
-	void operator=(BufferManager const&) = delete;
+	friend class Singleton<BufferManager>;
 
+public:
 	ConstantBufferData<ModelViewProjectionConstantBuffer>& MVPBuffer()
 	{
 		return _mvpBuffer;
@@ -72,9 +66,10 @@ public:
 		return _cbPerFrame;
 	}
 
-private:
+protected:
 	BufferManager();
 
+private:
 	ConstantBufferData<ModelViewProjectionConstantBuffer> _mvpBuffer;
 	ConstantBufferData<cbPerObject> _cbPerObject;
 	ConstantBufferData<cbPerFrame> _cbPerFrame;

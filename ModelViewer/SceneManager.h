@@ -2,24 +2,20 @@
 
 #include "Scene\RootNode.h"
 #include <boost\signals2\signal.hpp>
+#include "Singleton.h"
 
 // Just using this singleton for the time-being until it becomes clearer on how
 // to best structure..
 //
 using namespace std;
 using namespace DX;
+using namespace ModelViewer;
 
-class SceneManager
+class SceneManager : public Singleton<SceneManager>
 {
-public:
-	static SceneManager& Instance()
-	{
-		static SceneManager instance; 
-		return instance;
-	}
-	SceneManager(SceneManager const&) = delete;
-	void operator=(SceneManager const&) = delete;
+	friend class Singleton<SceneManager>;
 
+public:
 	shared_ptr<RootNode> Current();
 	const shared_ptr<RootNode> Current() const;
 	void AddNode(shared_ptr<GraphNode> newNode);
@@ -45,8 +41,10 @@ public:
 	void SetSelected(shared_ptr<GraphNode> node);
 	shared_ptr<GraphNode> GetSelected();
 
-private:
+protected:
 	SceneManager();
+
+private:
 
 	// Just have once scene for now..
 	shared_ptr<RootNode> _sceneNode;
