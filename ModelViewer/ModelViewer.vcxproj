@@ -391,14 +391,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </None>
     <None Include="ModelViewer_TemporaryKey.pfx" />
-    <None Include="openvr_api.dll">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </None>
-    <None Include="openvr_api.pdb">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\pbrpixel.hlsl">

@@ -396,8 +396,6 @@
     <None Include="Assets\BoomBox.glb" />
     <None Include="Assets\Box.glb" />
     <None Include="Assets\Shaders\pbrpixel.hlsl" />
-    <None Include="openvr_api.dll" />
-    <None Include="openvr_api.pdb" />
     <None Include="Assets\Shaders\pbrvertex.hlsl" />
   </ItemGroup>
   <ItemGroup>
