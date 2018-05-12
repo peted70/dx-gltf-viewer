@@ -395,8 +395,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ModelViewer_TemporaryKey.pfx" />
-    <None Include="Assets\BoomBox.glb" />
-    <None Include="Assets\Box.glb" />
     <None Include="Assets\Shaders\pbrpixel.hlsl" />
     <None Include="Assets\Shaders\pbrvertex.hlsl" />
   </ItemGroup>
