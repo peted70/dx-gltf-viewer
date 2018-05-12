@@ -290,25 +290,7 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 		_scale = { data->scale[0], data->scale[1], data->scale[2] };
 		_translation = { data->translation[0], data->translation[1], data->translation[2] };
 
-		// Using the conversion from right-handed coordinate system of OpenGL to left-handed coordinate
-		// system of DirectX
-		// q.x, q.y, -q.z, -q.w
-		//
-		//_rotation = { data->rotation[0], data->rotation[1], -data->rotation[2], -data->rotation[3] };
 		_rotation = { data->rotation[0], data->rotation[1], data->rotation[2], data->rotation[3] };
-
-		//XMVECTOR scale = { 1.0, 1.0, 1.0 };
-		//XMVECTOR translation = { 0.0, 0.0, 0.0 };
-
-		//XMVECTOR ypr = { 0.0, 180.0, 0.0 };
-		//// generate a quaternion from angle for testing...
-		//XMVECTOR rotQuat = XMQuaternionRotationRollPitchYawFromVector(ypr);
-
-		//auto matrix = XMMatrixRotationQuaternion(rotQuat);
-
-		//_scale = { 1.0, 1.0, 1.0 };
-		//_translation = { 0.0, 0.0, 0.0 };
-		//_rotation = { 0.0, 0.0, 0.0, 0.0 };
 
 		// Create matrix from scale
 		auto matrix = XMMatrixAffineTransformation(XMLoadFloat3(&_scale), XMLoadFloat3(&emptyVector), XMLoadFloat4(&_rotation), XMLoadFloat3(&_translation));
