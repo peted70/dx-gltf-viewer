@@ -287,7 +287,6 @@
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="FileSystemData.h" />
     <ClInclude Include="GlyphConverter.h" />
-    <ClInclude Include="Content\HMDRenderer.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="ModelBufferManager.h" />
     <ClInclude Include="RenderTexture.h" />
@@ -341,7 +340,6 @@
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="GlyphConverter.cpp" />
-    <ClCompile Include="Content\HMDRenderer.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="ModelBufferManager.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
