@@ -22,7 +22,7 @@
                     ItemInvoked="NavView_ItemInvoked"
                     SelectionChanged="NavView_SelectionChanged"
                     Loaded="NavView_Loaded"
-                    Canvas.ZIndex="0" IsPaneOpen="False" CompactModeThresholdWidth="50"
+                    Canvas.ZIndex="0" IsPaneOpen="False" CompactModeThresholdWidth="50" ExpandedModeThresholdWidth="10000"
                     Header="{x:Bind ViewModel}"
                     Background="{ThemeResource SystemControlAcrylicWindowBrush }">
         <NavigationView.MenuItems>
@@ -64,7 +64,7 @@
                             VerticalAlignment="Top"
                             DefaultLabelPosition="Right"
                             Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
-                        <AppBarButton Label="Import" Icon="Import" Command="{x:Bind LoadFileCommand}"/>
+                        <AppBarButton Style="{ThemeResource AppBarButtonRevealStyle}" Label="Import" Icon="Import" Command="{x:Bind LoadFileCommand}"/>
                     </CommandBar>
                 </Grid>
             </DataTemplate>

@@ -37,6 +37,15 @@ App::App()
 	Resuming += ref new EventHandler<Object^>(this, &App::OnResuming);
 }
 
+void App::ExtendAcrylicIntoTitleBar()
+{
+	Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
+	auto titleBar = Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar;
+	// These properties don't exist...
+	//titleBar->ButtonBackgroundColor = Colors.Transparent;
+	//titleBar->ButtonInactiveBackgroundColor = Colors.Transparent;
+}
+
 /// <summary>
 /// Invoked when the application is launched normally by the end user.  Other entry points
 /// will be used when the application is launched to open a specific file, to display
@@ -100,6 +109,7 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 
 		// Ensure the current window is active
 		Window::Current->Activate();
+		ExtendAcrylicIntoTitleBar();
 	}
 
 	//m_rootPage->GetContentFrame()->Content = ref new DirectXPage();

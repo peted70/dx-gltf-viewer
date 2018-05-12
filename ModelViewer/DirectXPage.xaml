@@ -44,9 +44,9 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Content="OK" Click="confirmColor_Click"
+                        <Button Content="OK" Click="confirmColor_Click" Style="{StaticResource ButtonRevealStyle}"
                         Margin="0,12,2,0" HorizontalAlignment="Stretch"/>
-                        <Button Content="Cancel" Click="cancelColor_Click"
+                        <Button Content="Cancel" Click="cancelColor_Click" Style="{StaticResource ButtonRevealStyle}"
                         Margin="2,12,0,0" HorizontalAlignment="Stretch"
                         Grid.Column="1"/>
                     </Grid>
@@ -150,7 +150,7 @@
                                         <ColumnDefinition />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Button x:Name="colorPickerButton" Content="Pick a color" 
+                                    <Button Grid.ColumnSpan="2" x:Name="colorPickerButton" Content="Pick a color" Style="{StaticResource ButtonRevealStyle}"
                                 Flyout="{StaticResource myColorPickerFlyout}"/>
                                 </Grid>
 
@@ -268,8 +268,8 @@
                                 VerticalAlignment="Stretch">
                     <tvs:TreeView x:Name="sampleTreeView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       Grid.Row="1" 
-                      BorderBrush="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}"
-                      BorderThickness="1"
+                      BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                      BorderThickness="2"
                       IsItemClickEnabled="True" 
                       ItemClick="TreeView_ItemClick"
                       ItemTemplate="{StaticResource TreeViewItemDataTemplate}">
