@@ -49,16 +49,11 @@ future<shared_ptr<GraphNode>> RootPageViewModel::LoadFileAsync()
 	if (file == nullptr)
 		co_return nullptr;
 
-	auto loader = make_unique<LoadingWrapper>([this]() 
-		{ 
-			Loading = true;
-		}, 
-		[this]() 
-		{ 
-			Loading = false; 
-		});
+	// RAII-style for ensuring that the progress gets cleared robustly
+	auto loader = make_unique<LoadingWrapper>([this]() { Loading = true; }, [this]() { Loading = false; });
 
 	Utility::Out(L"filename = %s", file->Path->Data());
+	Filename = file->Path;
 
 	// Since we don't have access to open a file in native code I'll take a copy of the file here
 	// and access it from the application's temp folder. Another option might be to implement a streambuf
@@ -106,3 +101,15 @@ void RootPageViewModel::Loading::set(bool val)
 	OnPropertyChanged(getCallerName(__FUNCTION__));
 }
 
+String^ RootPageViewModel::Filename::get()
+{
+	return _filename;
+}
+
+void RootPageViewModel::Filename::set(String^ val)
+{
+	if (_filename == val)
+		return;
+	_filename = val;
+	OnPropertyChanged(getCallerName(__FUNCTION__));
+}
