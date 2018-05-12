@@ -306,6 +306,7 @@ void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 	// Disabled temporarily
 	//if (_material->HasTexture(data->Idx))
 	//	return;
+	Utility::Out(L"Create texture id - %d", data->Idx);
 
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
