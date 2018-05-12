@@ -4,6 +4,7 @@
 RootNode::RootNode(int index) :
 	GraphContainerNode(index)
 {
+	_name = wstring(L"Scene Root");
 }
 
 RootNode::~RootNode()

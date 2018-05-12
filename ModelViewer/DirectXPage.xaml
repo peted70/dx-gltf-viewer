@@ -53,20 +53,20 @@
                 </RelativePanel>
             </Flyout>
             <DataTemplate x:Key="TreeViewItemDataTemplate">
-                <StackPanel Orientation="Horizontal" Height="40" Margin="{Binding Depth, Converter={StaticResource IntToIndConverter}}" AllowDrop="{Binding Data.IsFolder}">
+                <StackPanel Orientation="Horizontal" Height="30" Margin="{Binding Depth, Converter={StaticResource IntToIndConverter}}" AllowDrop="{Binding Data.IsFolder}">
                     <FontIcon x:Name="expandCollapseChevron" 
                           Glyph="{Binding IsExpanded, Converter={StaticResource expandCollapseGlyphConverter}}"
                           Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"                           
-                          FontSize="12"
-                          Margin="12,8,12,8" 
+                          FontSize="10"
+                          Margin="6,4,6,4" 
                           FontFamily="Segoe MDL2 Assets"                          
                           />
                     <Grid>
                         <FontIcon x:Name ="expandCollapseFolder" 
                               Glyph="{Binding IsExpanded, Converter={StaticResource folderGlyphConverter}}" 
                               Foreground="#FFFFE793" 
-                              FontSize="16" 
-                              Margin="0,8,12,8" 
+                              FontSize="12" 
+                              Margin="0,4,6,4" 
                               FontFamily="Segoe MDL2 Assets"
                               Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"
                               />
@@ -74,8 +74,8 @@
                         <FontIcon x:Name ="nonFolderIcon" 
                               Glyph="&#xE160;"
                               Foreground="{ThemeResource SystemControlForegroundBaseLowBrush}"
-                              FontSize="12" 
-                              Margin="20,8,12,8" 
+                              FontSize="10" 
+                              Margin="10,4,6,4" 
                               FontFamily="Segoe MDL2 Assets"
                               Visibility="{Binding Data.IsFolder, Converter={StaticResource inverseBooleanToVisibilityConverter}}"
                               />
@@ -83,15 +83,16 @@
                         <FontIcon x:Name ="expandCollapseFolderOutline" 
                               Glyph="{Binding IsExpanded, Converter={StaticResource folderOutlineGlyphConverter}}" 
                               Foreground="#FFECC849" 
-                              FontSize="16" 
-                              Margin="0,8,12,8" 
+                               FontSize="12"
+                              Margin="0,4,6,4" 
                               FontFamily="Segoe MDL2 Assets"
                               Visibility="{Binding Data.IsFolder, Converter={StaticResource booleanToVisibilityConverter}}"/>
                     </Grid>
 
                     <TextBlock Text="{Binding Data.Name}" 
                            HorizontalAlignment="Stretch" 
-                           VerticalAlignment="Center"  
+                           VerticalAlignment="Center"
+                               FontSize="12"
                            FontWeight="Medium"
                            FontFamily="Segoe MDL2 Assests"                           
                            Style="{ThemeResource BodyTextBlockStyle}"/>
@@ -270,6 +271,7 @@
                       Grid.Row="1" 
                       BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
                       BorderThickness="2"
+                                  FontSize="10"
                       IsItemClickEnabled="True" 
                       ItemClick="TreeView_ItemClick"
                       ItemTemplate="{StaticResource TreeViewItemDataTemplate}">
@@ -277,7 +279,7 @@
                             <TransitionCollection>
                                 <ContentThemeTransition />
                                 <ReorderThemeTransition />
-                                <EntranceThemeTransition IsStaggeringEnabled="False" />
+                                <EntranceThemeTransition IsStaggeringEnabled="True" />
                             </TransitionCollection>
                         </tvs:TreeView.ItemContainerTransitions>
                     </tvs:TreeView>

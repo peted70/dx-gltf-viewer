@@ -133,7 +133,7 @@ namespace ModelViewer
 		float _roll = 0.0f;
 		float _panx = 0.0f;
 		float _pany = 0.0f;
-		float _zoom = 1.0f;
+		float _zoom = 5.0f;
 
 		unique_ptr<DXGrid> _grid;
 		unique_ptr<Axis> _mainAxes;
