@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common/ViewModelBase.h"
-#include "NotificationManager.h"
 #include "DirectXPageViewModelData.h"
 #include "Content\Sample3DSceneRenderer.h"
 #include <memory>
