@@ -9,21 +9,22 @@
 #include "FileSystemData.h"
 #include <memory>
 #include "Scene\MeshNode.h"
+#include <numeric>
+
+#undef max
+#undef min
 
 using namespace ModelViewer;
 
-using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
 using namespace Windows::System::Threading;
-using namespace Windows::UI::Core;
 using namespace Windows::UI::Input;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Data;
-using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
@@ -89,6 +90,18 @@ DirectXPage::DirectXPage():
 
 	m_main = std::unique_ptr<ModelViewerMain>(new ModelViewerMain(m_deviceResources));
 
+	auto color = (Windows::UI::Color)Application::Current->Resources->Lookup("SystemAccentColor");
+	float a = color.A / (float)(numeric_limits<unsigned char>::max());
+	float r = color.R / (float)(numeric_limits<unsigned char>::max());
+	float g = color.G / (float)(numeric_limits<unsigned char>::max());
+	float b = color.B / (float)(numeric_limits<unsigned char>::max());
+
+	XMVECTORF32 col = { r, g, b, a };
+	m_main->SetBackgroundColour(col);
+	
+	_uiSettings = ref new UISettings();
+	_uiSettings->ColorValuesChanged += ref new TypedEventHandler<UISettings^, Object^>(this, &DirectXPage::OnThemeColorChanged);
+
 	//ViewModel->SetRenderer(m_main->Renderer());
 	m_main->StartRenderLoop();
 }
@@ -100,6 +113,20 @@ DirectXPage::~DirectXPage()
 	m_coreInput->Dispatcher->StopProcessEvents();
 }
 
+void DirectXPage::OnThemeColorChanged(UISettings^ settings, Object^ sender)
+{
+	Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
+	{
+		auto color = (Windows::UI::Color)Application::Current->Resources->Lookup("SystemAccentColor");
+		float a = color.A / (float)(numeric_limits<unsigned char>::max());
+		float r = color.R / (float)(numeric_limits<unsigned char>::max());
+		float g = color.G / (float)(numeric_limits<unsigned char>::max());
+		float b = color.B / (float)(numeric_limits<unsigned char>::max());
+
+		XMVECTORF32 col = { r, g, b, a };
+		m_main->SetBackgroundColour(col);
+	}));
+}
 
 // Saves the current state of the app for suspend and terminate events.
 void DirectXPage::SaveInternalState(IPropertySet^ state)

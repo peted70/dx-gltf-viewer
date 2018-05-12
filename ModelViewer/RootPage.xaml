@@ -38,8 +38,8 @@
             <DataTemplate x:DataType="vm:RootPageViewModel">
                 <Grid Margin="24,10,0,0" Background="{ThemeResource SystemControlAcrylicWindowBrush }">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10"/>
@@ -48,18 +48,27 @@
                     <ProgressBar Grid.ColumnSpan="2" Height="10" IsIndeterminate="{x:Bind Loading, Mode=OneWay}"
                                  Visibility="{Binding Loading, Converter={StaticResource booleanToVisibilityConverter}, Mode=OneWay}">
                     </ProgressBar>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{ThemeResource SystemControlAcrylicWindowBrush }">
+                    <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicWindowBrush }" Margin="0,0,12,0"
+                                   HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                FontSize="28"
                                VerticalAlignment="Bottom"
-                               Text="DirectX GLTF Viewer"/>
-                        <TextBlock Style="{StaticResource TitleTextBlockStyle}"
-                               FontSize="16"
+                               Text="DirectX GLTF Viewer"
+                                   RelativePanel.AlignLeftWithPanel="True"/>
+                        <TextBlock Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Right"
+                               FontSize="12"
+                                   Grid.Column="1"
                                VerticalAlignment="Bottom"
-                               Text="{x:Bind Filename, Mode=OneWay}"/>
-                    </StackPanel>
+                                    Text="{x:Bind Filename, Mode=OneWay}"
+                                   RelativePanel.AlignRightWithPanel="True"/>
+                    </Grid>
                     <CommandBar Grid.Column="1"
                                Grid.Row="1"
+                                Margin="8,0,8,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             DefaultLabelPosition="Right"

@@ -18,6 +18,7 @@ namespace ModelViewer
 	using namespace Platform;
 	using namespace ViewModels;
 	using namespace TreeViewControl;
+	using namespace Windows::UI::ViewManagement;
 
 	/// <summary>
 	/// A page that hosts a DirectX SwapChainPanel.
@@ -53,6 +54,8 @@ namespace ModelViewer
 		};
 
 		SceneUpdateProxy updates;
+		UISettings^ _uiSettings;
+
 		TreeNode^ CreateMeshNode(shared_ptr<GraphNode> node);
 		TreeNode^ CreateContainerNode(shared_ptr<GraphNode> node);
 
@@ -70,6 +73,7 @@ namespace ModelViewer
 		void OnDpiChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
 		void OnOrientationChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
 		void OnDisplayContentsInvalidated(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
+		void OnThemeColorChanged(UISettings^ settings, Object^ sender);
 
 		// Other event handlers.
 		void AppBarButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);

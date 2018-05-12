@@ -26,9 +26,6 @@ namespace ModelViewer
 		}
 		void TrackingUpdate(float positionX, float positionY, VirtualKeyModifiers mod)
 		{ 
-			//m_pointerLocationX = positionX;
-			//m_pointerLocationY = positionY;
-			//m_mod = mod;
 			m_sceneRenderer->TrackingUpdate(positionX, positionY, mod);
 		}
 		void StopTracking(float positionX, float positionY, VirtualKeyModifiers mod) 
@@ -43,6 +40,8 @@ namespace ModelViewer
 		// IDeviceNotify
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
+
+		void SetBackgroundColour(XMVECTORF32 colour) { _backgroundColour = colour; }
 
 	private:
 		void ProcessInput();
@@ -67,5 +66,7 @@ namespace ModelViewer
 		float m_pointerLocationX;
 		float m_pointerLocationY;
 		VirtualKeyModifiers m_mod;
+
+		XMVECTORF32 _backgroundColour;
 	};
 }

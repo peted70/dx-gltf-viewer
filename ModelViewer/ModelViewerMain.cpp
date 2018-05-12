@@ -129,7 +129,7 @@ bool ModelViewerMain::Render()
 
 	// Clear the back buffer and depth stencil view.
 	XMVECTORF32 color;
-	color.v = XMColorSRGBToRGB(DirectX::Colors::CornflowerBlue);
+	color.v = XMColorSRGBToRGB(_backgroundColour/*DirectX::Colors::CornflowerBlue*/);
 	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), color);
 	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
