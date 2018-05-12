@@ -1,17 +1,11 @@
 #pragma once
 #include "BufferCache.h"
 
-class ModelBufferManager
+class ModelBufferManager : public Singleton<ModelBufferManager>
 {
-public:
-	static ModelBufferManager& Instance()
-	{
-		static ModelBufferManager instance;
-		return instance;
-	}
-	ModelBufferManager(ModelBufferManager const&) = delete;
-	void operator=(ModelBufferManager const&) = delete;
+	friend class Singleton<ModelBufferManager>;
 
+public:
 	BufferCache<ID3D11BufferWrapper> *CurrentBufferCache()
 	{
 		if (_currBufferCache == nullptr)
@@ -21,9 +15,10 @@ public:
 		return _currBufferCache.get();
 	}
 
-private:
+protected:
 	ModelBufferManager();
 
+private:
 	unique_ptr<BufferCache<ID3D11BufferWrapper>> _currBufferCache = nullptr;
 };
 
