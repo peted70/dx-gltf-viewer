@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef STUFF
 #include "Common/ViewModelBase.h"
 
 using namespace Common;
@@ -57,3 +57,4 @@ private:
 	NotificationManager();
 	std::vector<Observer*> _list;
 };
+#endif

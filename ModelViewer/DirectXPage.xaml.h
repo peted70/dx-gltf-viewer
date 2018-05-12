@@ -44,7 +44,7 @@ namespace ModelViewer
 				SceneManager::Instance().RegisterForUpdates(boost::bind(&SceneUpdateProxy::NotifySceneChanges, this, _1));
 			}
 
-			void NotifySceneChanges(Observable const& scene)
+			void NotifySceneChanges(SceneManager const& scene)
 			{
 				owner->NotifySceneChanges(scene);
 			}
@@ -59,7 +59,7 @@ namespace ModelViewer
 		TreeNode^ CreateMeshNode(shared_ptr<GraphNode> node);
 		TreeNode^ CreateContainerNode(shared_ptr<GraphNode> node);
 
-		void NotifySceneChanges(Observable const& scene);
+		void NotifySceneChanges(SceneManager const& scene);
 		
 		TreeNode^ AddTreeItemsRecursive(shared_ptr<GraphNode> node, TreeNode^ parent);
 

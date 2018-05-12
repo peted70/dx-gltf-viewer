@@ -172,9 +172,9 @@ TreeNode^ DirectXPage::AddTreeItemsRecursive(shared_ptr<GraphNode> node, TreeNod
 	return parent;
 }
 
-void DirectXPage::NotifySceneChanges(Observable const& scene)
+void DirectXPage::NotifySceneChanges(SceneManager const& scene)
 {
-	auto scn = dynamic_cast<const SceneManager*>(&scene);
+	auto scn = &scene;
 	if (scn == nullptr)
 		return;
 

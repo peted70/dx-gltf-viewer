@@ -4,13 +4,10 @@
 using namespace std;
 namespace signals = boost::signals2;
 
-class DirectXPageViewModelData : public Observable
+class DirectXPageViewModelData
 {
 public:
 	DirectXPageViewModelData();
-
-	// Inherited via Observable
-	virtual void Notify(const Observable & data) override;
 
 	signals::connection RegisterForUpdates(signals::signal<void(DirectXPageViewModelData const& data)>::slot_type slot)
 	{

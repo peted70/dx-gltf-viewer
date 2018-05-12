@@ -43,6 +43,16 @@ namespace ModelViewer
 
 		void SetBackgroundColour(XMVECTORF32 colour) { _backgroundColour = colour; }
 
+		void* operator new(size_t i)
+		{
+			return _mm_malloc(i, 16);
+		}
+
+		void operator delete(void* p)
+		{
+			_mm_free(p);
+		}
+
 	private:
 		void ProcessInput();
 		void Update();

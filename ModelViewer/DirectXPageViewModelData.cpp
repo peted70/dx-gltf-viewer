@@ -3,8 +3,3 @@
 
 DirectXPageViewModelData::DirectXPageViewModelData()
 {}
-
-void DirectXPageViewModelData::Notify(const Observable & data)
-{
-	NotificationManager::Instance().Notify(data);
-}

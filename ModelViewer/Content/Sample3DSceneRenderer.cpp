@@ -439,10 +439,6 @@ void Sample3DSceneRenderer::NotifyDataChanged(DirectXPageViewModelData const& pa
 	auto dir3 = payload.LightDirection()[2];
 	BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(dir1, dir2, dir3);
 
-	//auto roughness = payload._roughness;
-	//auto metallic = payload._metallic;
-	//BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues = XMFLOAT2(metallic, roughness);
-
 	auto scaleF = payload.F() ? 1.0f : 0.0f;
 	auto scaleG = payload.G() ? 1.0f : 0.0f;
 	auto scaleD = payload.D() ? 1.0f : 0.0f;
@@ -460,44 +456,6 @@ void Sample3DSceneRenderer::NotifyDataChanged(DirectXPageViewModelData const& pa
 
 	float ibl = payload.Ibl();
 	BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
-}
-
-void ModelViewer::Sample3DSceneRenderer::OnNotify(const Observable & data) const
-{
-	//auto payload = dynamic_cast<const DirectXPageViewModelData&>(data);
-
-	//auto col1 = payload.LightScale() * payload.LightColour()[0] / 255;
-	//auto col2 = payload.LightScale() * payload.LightColour()[1] / 255;
-	//auto col3 = payload.LightScale() * payload.LightColour()[2] / 255;
-
-	//BufferManager::Instance().PerFrameBuffer().BufferData().light.colour = XMFLOAT3(col1, col2, col3);
-
-	//auto dir1 = payload.LightDirection()[0];
-	//auto dir2 = payload.LightDirection()[1];
-	//auto dir3 = payload.LightDirection()[2];
-	//BufferManager::Instance().PerFrameBuffer().BufferData().light.dir = XMFLOAT3(dir1, dir2, dir3);
-
-	////auto roughness = payload._roughness;
-	////auto metallic = payload._metallic;
-	////BufferManager::Instance().PerObjBuffer().BufferData().metallicRoughnessValues = XMFLOAT2(metallic, roughness);
-
-	//auto scaleF = payload.F() ? 1.0f : 0.0f;
-	//auto scaleG = payload.G() ? 1.0f : 0.0f;
-	//auto scaleD = payload.D() ? 1.0f : 0.0f;
-	//auto specular = payload.Specular() ? 1.0f : 0.0f;
-
-	//BufferManager::Instance().PerObjBuffer().BufferData().scaleFGDSpec = XMFLOAT4(scaleF, scaleG, scaleD, specular);
-
-	//auto scaleDiffuse = payload.Diffuse() ? 1.0f : 0.0f;
-	//auto scaleBasecolour = payload.BaseColour() ? 1.0f : 0.0f;
-	//auto scaleMetallic = payload.Metallic() ? 1.0f : 0.0f;
-	//auto scaleRoughness = payload.Roughness() ? 1.0f : 0.0f;
-
-	//BufferManager::Instance().PerObjBuffer().BufferData().scaleDiffBaseMR = 
-	//	XMFLOAT4(scaleDiffuse, scaleBasecolour, scaleMetallic, scaleRoughness);
-
-	//float ibl = payload.Ibl();
-	//BufferManager::Instance().PerObjBuffer().BufferData().scaleIBLAmbient = XMFLOAT4(ibl, ibl, 0.0f, 0.0f);
 }
 
 future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateBdrfLutAsync(StorageFolder^ imgFolder)

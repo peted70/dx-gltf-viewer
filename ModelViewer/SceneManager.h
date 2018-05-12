@@ -9,7 +9,7 @@
 using namespace std;
 using namespace DX;
 
-class SceneManager : public Observable
+class SceneManager
 {
 public:
 	static SceneManager& Instance()
@@ -27,7 +27,7 @@ public:
 	void SetDevResources(const shared_ptr<DeviceResources>& deviceResources);
 	shared_ptr<DeviceResources> DevResources() { return _deviceResources; }
 
-	signals::connection RegisterForUpdates(signals::signal<void(Observable const&)>::slot_type slot)
+	signals::connection RegisterForUpdates(signals::signal<void(SceneManager const&)>::slot_type slot)
 	{
 		return SceneChanged.connect(slot);
 	}
@@ -52,9 +52,6 @@ private:
 	shared_ptr<RootNode> _sceneNode;
 	shared_ptr<DeviceResources> _deviceResources;
 
-	// Inherited via Observable
-	virtual void Notify(const Observable & data) override;
-
-	signals::signal<void(Observable const&)> SceneChanged;
+	signals::signal<void(SceneManager const&)> SceneChanged;
 	signals::signal<void(shared_ptr<GraphNode>)> SelectionChanged;
 };

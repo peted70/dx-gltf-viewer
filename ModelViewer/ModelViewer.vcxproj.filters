@@ -96,7 +96,6 @@
     <ClCompile Include="Common\ViewModelBase.cpp" />
     <ClCompile Include="ViewModels\RootPageViewModel.cpp" />
     <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
-    <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="DXUtils.cpp" />
@@ -148,7 +147,6 @@
     <ClInclude Include="Common\ViewModelBase.h" />
     <ClInclude Include="ViewModels\RootPageViewModel.h" />
     <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
-    <ClInclude Include="NotificationManager.h" />
     <ClInclude Include="DirectXPageViewModelData.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="DXUtils.h" />
