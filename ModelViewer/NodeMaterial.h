@@ -48,7 +48,11 @@ public:
 					ComPtr<ID3D11Texture2D> tex, 
 					ComPtr<ID3D11ShaderResourceView> textureResourceView, 
 					ComPtr<ID3D11SamplerState> texSampler);
+	void AddTexture(shared_ptr<TextureWrapper> tex);
+
 	shared_ptr<TextureWrapper> GetTexture(unsigned int idx) { return _textures[idx]; }
+
+	shared_ptr<TextureWrapper> HasTextureId(unsigned int idx);
 	bool HasTexture(unsigned int idx) { return _textures.find(idx) != _textures.end(); }
 	unsigned int GetNumTextures() { return _textures.size(); }
 

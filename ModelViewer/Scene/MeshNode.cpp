@@ -280,7 +280,6 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 			data->matrix[14],
 			data->matrix[15]
 		};
-		
 
 		_matrix = XMLoadFloat4x4(&mat);
 		XMStoreFloat4x4(&BufferManager::Instance().MVPBuffer().BufferData().model, XMMatrixTranspose(_matrix));
@@ -302,10 +301,17 @@ void MeshNode::CreateTransform(GLTF_TransformData^ data)
 
 void MeshNode::CreateTexture(WinRTGLTFParser::GLTF_TextureData ^ data)
 {
+	auto res = _material->HasTextureId(data->Idx);
+
 	// Don't want to allocate textures we have already allocated..
-	// Disabled temporarily
-	//if (_material->HasTexture(data->Idx))
-	//	return;
+	if (res)
+	{
+		// Don't need to load the image but we need to register an entry for the texture type in the
+		// textures map..
+		_material->AddTexture(res);
+		return;
+	}
+
 	Utility::Out(L"Create texture id - %d", data->Idx);
 
 	// Create texture.
