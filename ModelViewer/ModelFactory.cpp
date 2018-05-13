@@ -73,9 +73,6 @@ void ModelFactory::CreateSceneNode(GLTF_SceneNodeData^ data)
 	}
 	_currentNode->SetName(data->Name->Data());
 
-	//if (parent == nullptr)
-	//	parent = _root;
-
 	if (_root == nullptr)
 	{
 		_root = _currentNode;
