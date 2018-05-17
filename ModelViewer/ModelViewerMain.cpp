@@ -15,11 +15,8 @@ ModelViewerMain::ModelViewerMain(const shared_ptr<DeviceResources>& deviceResour
 	m_deviceResources->RegisterDeviceNotify(this);
 
 	// TODO: Replace this with your app's content initialization.
-	m_sceneRenderer = unique_ptr<Sample3DSceneRenderer>(new Sample3DSceneRenderer(m_deviceResources));
 	m_fpsTextRenderer = unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
-	m_HMDRenderer = unique_ptr<HMDRenderer>(new HMDRenderer(m_deviceResources));
-
-	m_HMDRenderer->Initialise();
+	m_sceneRenderer = unique_ptr<Sample3DSceneRenderer>(new Sample3DSceneRenderer(m_deviceResources));
 
 	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
 	// e.g. for 60 FPS fixed timestep update logic, call:
@@ -106,18 +103,6 @@ bool ModelViewerMain::Render()
 	}
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
-
-	// --------------- testing -------------------------------------------------
-	// try out rendering to eye textures for HMD. Will go soemthing like this...
-	//
-	// - set render target
-	// - get HMD projection matrix and set in shader constant buffer
-	// - render main scene
-
-	// Doesn't do anything yet...
-	m_HMDRenderer->Render();
-
-	// ------------------------------------------------------
 
 	// Reset the viewport to target the whole screen.
 	auto viewport = m_deviceResources->GetScreenViewport();

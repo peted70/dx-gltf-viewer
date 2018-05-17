@@ -14,7 +14,7 @@ namespace DX
 	}
 
 	// Function that reads from a binary file asynchronously.
-	inline Concurrency::task<std::vector<byte>> ReadDataAsync(const std::wstring& filename)
+	inline Concurrency::task<std::vector<::byte>> ReadDataAsync(const std::wstring& filename)
 	{
 		using namespace Windows::Storage;
 		using namespace Concurrency;
@@ -24,11 +24,11 @@ namespace DX
 		return create_task(folder->GetFileAsync(Platform::StringReference(filename.c_str()))).then([] (StorageFile^ file) 
 		{
 			return FileIO::ReadBufferAsync(file);
-		}).then([] (Streams::IBuffer^ fileBuffer) -> std::vector<byte> 
+		}).then([] (Streams::IBuffer^ fileBuffer) -> std::vector<::byte> 
 		{
-			std::vector<byte> returnBuffer;
+			std::vector<::byte> returnBuffer;
 			returnBuffer.resize(fileBuffer->Length);
-			Streams::DataReader::FromBuffer(fileBuffer)->ReadBytes(Platform::ArrayReference<byte>(returnBuffer.data(), fileBuffer->Length));
+			Streams::DataReader::FromBuffer(fileBuffer)->ReadBytes(Platform::ArrayReference<::byte>(returnBuffer.data(), fileBuffer->Length));
 			return returnBuffer;
 		});
 	}

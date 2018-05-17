@@ -11,7 +11,7 @@
 namespace ModelViewer
 {
 	using namespace WinRTGLTFParser;
-	using namespace std;
+	//using namespace std;
 	using namespace Microsoft::WRL;
 	using namespace Windows::System;
 	using namespace Platform;
@@ -22,7 +22,7 @@ namespace ModelViewer
 	class Sample3DSceneRenderer
 	{
 	public:
-		Sample3DSceneRenderer(const shared_ptr<DeviceResources>& deviceResources);
+		Sample3DSceneRenderer(const std::shared_ptr<DeviceResources>& deviceResources);
 
 		class TexWrapper
 		{
@@ -31,11 +31,11 @@ namespace ModelViewer
 			ComPtr<ID3D11SamplerState> texSampler;
 		};
 
-		future<void> CreateDeviceDependentResources();
+		std::future<void> CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
-		future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
-		future<TexWrapper> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevel);
-		future<TexWrapper> CreateBdrfLutAsync(StorageFolder^ imgFolder);
+		std::future<void> CreateEnvironmentMapResourcesAsync(String^ envName);
+		std::future<TexWrapper> CreateCubeMapAsync(ID3D11Device3 *device, StorageFolder^ imgFolder, String^ imgType, int mipLevel);
+		std::future<TexWrapper> CreateBdrfLutAsync(StorageFolder^ imgFolder);
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void Render();
@@ -80,7 +80,7 @@ namespace ModelViewer
 		void DrawAxis(ID3D11DeviceContext2 *context, Axis *axis);
 
 		// Cached pointer to device resources.
-		shared_ptr<DX::DeviceResources> m_deviceResources;
+		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
 		// Direct3D resources for cube geometry.
 		ComPtr<ID3D11InputLayout>	m_inputLayout;
@@ -106,7 +106,7 @@ namespace ModelViewer
 		ComPtr<ID3D11SamplerState>          _spSampler;
 		ComPtr<ID3D11ShaderResourceView>    _spTexture;
 
-		map<wstring, BufferWrapper> _buffers;
+		std::map<std::wstring, BufferWrapper> _buffers;
 
 		// System resources for cube geometry.
 		LineDrawingConstantBuffer _lineDrawingConstantBufferData;
@@ -128,11 +128,11 @@ namespace ModelViewer
 		float _pany = 0.0f;
 		float _zoom = 5.0f;
 
-		unique_ptr<DXGrid> _grid;
-		unique_ptr<Axis> _mainAxes;
+		std::unique_ptr<DXGrid> _grid;
+		std::unique_ptr<Axis> _mainAxes;
 
 		ComPtr<ID3D11RasterizerState> _pRasterState1;
-		unique_ptr<SceneContext> _context;
+		std::unique_ptr<SceneContext> _context;
 	};
 }
 

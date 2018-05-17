@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include <robuffer.h>  
 #include "Sample3DSceneRenderer.h"
 
 #include "..\Common\DirectXHelper.h"
@@ -9,9 +10,9 @@
 #include "BufferManager.h"
 
 #include "DirectXPageViewModelData.h"
-#include <robuffer.h>  
 
 using namespace Windows::Storage::Streams;
+using namespace Windows::Storage;
 using namespace Microsoft::WRL;
 
 using namespace ModelViewer;
@@ -47,7 +48,7 @@ future<IBuffer^> GetBuffer(StorageFolder^ imgfolder, String^ imgType, String^ si
 {
 	String^ fileName(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
 	Utility::Out(L"Loading file [%s\\%s]", imgfolder->Path->Data(), fileName->Data());
-	auto file = co_await imgfolder->GetFileAsync(imgType + "_" + side + "_" + mipmapLevel + ".jpg");
+	auto file = co_await imgfolder->GetFileAsync(fileName);
 	auto buffer = co_await FileIO::ReadBufferAsync(file);
 	return buffer;
 }
@@ -60,7 +61,7 @@ future<void *> LoadFileDataAsync(IBuffer^ buffer, int& fileSize)
 	ComPtr<IBufferByteAccess> bufferByteAccess;
 	reinterpret_cast<IInspectable*>(buffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
 
-	byte* data = nullptr;
+	::byte* data = nullptr;
 	bufferByteAccess->Buffer(&data);
 
 	co_return static_cast<void *>(data);
@@ -68,7 +69,7 @@ future<void *> LoadFileDataAsync(IBuffer^ buffer, int& fileSize)
 
 #include "ImgUtils.h"
 
-future<vector<byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgType, String^ side, int mipLevel, uint32_t& width, uint32_t& height)
+future<vector<::byte>> LoadCubeImagesAsync(StorageFolder^ imgFolder, String^ imgType, String^ side, int mipLevel, uint32_t& width, uint32_t& height)
 {
 	int dataSize = 0;
 	auto buffer = co_await GetBuffer(imgFolder, imgType, side, mipLevel);
@@ -115,7 +116,7 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateCubeMapAs
 	vector<D3D11_SUBRESOURCE_DATA> pData(6 * mipLevels);
 	uint32_t twidth = 0;
 	uint32_t theight = 0;
-	vector<vector<byte>> bytes(6 * mipLevels);
+	vector<vector<::byte>> bytes(6 * mipLevels);
 	for (int j = 0; j < mipLevels; j++)
 	{
 		for (int i = 0; i < 6; i++)
@@ -469,7 +470,7 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateBdrfLutAs
 	ComPtr<IBufferByteAccess> bufferByteAccess;
 	reinterpret_cast<IInspectable*>(buffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
 
-	byte* data = nullptr;
+	::byte* data = nullptr;
 	bufferByteAccess->Buffer(&data);
 
 	uint32_t width;
@@ -520,26 +521,25 @@ future<Sample3DSceneRenderer::TexWrapper> Sample3DSceneRenderer::CreateBdrfLutAs
 
 future<void> Sample3DSceneRenderer::CreateEnvironmentMapResourcesAsync(String^ envName)
 {
-	auto sf = Windows::ApplicationModel::Package::Current->InstalledLocation;
 	String^ imgType(L"diffuse");
 	String^ path(L"\\Assets\\textures\\");
-	String^ temp = sf->Path + path + envName + "\\"  + imgType;
-	auto imgFolder = co_await sf->GetFolderFromPathAsync(temp);
+	String^ temp = Windows::ApplicationModel::Package::Current->InstalledLocation->Path + path + envName + "\\"  + imgType;
+	auto imgFolder = co_await Windows::ApplicationModel::Package::Current->InstalledLocation->GetFolderFromPathAsync(temp);
 	auto res = co_await CreateCubeMapAsync(m_deviceResources->GetD3DDevice(), imgFolder, imgType, 1);
 
 	_envTexResourceView = res.texResourceView;
 	_envTexSampler = res.texSampler;
 
-	temp = sf->Path + path;
-	auto brdfFolder = co_await sf->GetFolderFromPathAsync(temp);
+	temp = Windows::ApplicationModel::Package::Current->InstalledLocation->Path + path;
+	auto brdfFolder = co_await Windows::ApplicationModel::Package::Current->InstalledLocation->GetFolderFromPathAsync(temp);
 	res = co_await CreateBdrfLutAsync(brdfFolder);
 
 	_brdfLutResourceView = res.texResourceView;
 	_brdfLutSampler = res.texSampler;
 
 	imgType = L"specular";
-	temp = sf->Path + path + envName + "\\" + imgType;
-	imgFolder = co_await sf->GetFolderFromPathAsync(temp);
+	temp = Windows::ApplicationModel::Package::Current->InstalledLocation->Path + path + envName + "\\" + imgType;
+	imgFolder = co_await Windows::ApplicationModel::Package::Current->InstalledLocation->GetFolderFromPathAsync(temp);
 
 	ComPtr<ID3D11ShaderResourceView> rv;
 	ComPtr<ID3D11SamplerState> ss;
@@ -590,7 +590,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 	auto loadPSTask2 = DX::ReadDataAsync(L"SimplePixelShader.cso");
 
 	// After the vertex shader file is loaded, create the shader and input layout.
-	auto createVSTask2 = loadVSTask2.then([this](const std::vector<byte>& fileData) {
+	auto createVSTask2 = loadVSTask2.then([this](const std::vector<::byte>& fileData) {
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateVertexShader(
 				&fileData[0],
@@ -618,7 +618,7 @@ future<void> Sample3DSceneRenderer::CreateDeviceDependentResources()
 	});
 
 	// After the pixel shader file is loaded, create the shader and constant buffer.
-	auto createPSTask2 = loadPSTask2.then([this](const std::vector<byte>& fileData) {
+	auto createPSTask2 = loadPSTask2.then([this](const std::vector<::byte>& fileData) {
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreatePixelShader(
 				&fileData[0],
