@@ -28,4 +28,4 @@ I used [vcpkg](https://github.com/Microsoft/vcpkg) for any source code dependenc
 This project can be built using Visual Studio 2017 Update 4 on Windows 10 Fall Creators Update (16299.0).
 
 # Further Information
-Please see this article for full details around features and coding for this sample.
+Please see this article for full details around features and coding for this sample. There is an offical sample [here] but I am retaining this repo as I would like to use it to experiment with new features - the official sample should get updated with features specific to glTF.
