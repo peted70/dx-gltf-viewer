@@ -43,7 +43,11 @@ future<shared_ptr<GraphNode>> RootPageViewModel::LoadFileAsync()
 {
 	auto fop = ref new FileOpenPicker();
 	fop->FileTypeFilter->Append(".glb");
-	fop->FileTypeFilter->Append(".gltf");
+	
+	// The code flow supports gltf files but unless we copy all of the loose files over 
+	// to a location that the native C++ environment can open them from then we will just
+	// get access denied.
+	//fop->FileTypeFilter->Append(".gltf");
 
 	auto file = co_await fop->PickSingleFileAsync();
 	if (file == nullptr)

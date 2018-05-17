@@ -59,6 +59,12 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{40b40dfc-ec76-408c-aa57-04666d2cf4c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MVVM">
+      <UniqueIdentifier>{9c6e94e2-e80e-4587-877a-b7067ae124a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ViewModels">
+      <UniqueIdentifier>{7881bd15-6b0c-4de7-8640-d2a0a911e957}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -89,28 +95,46 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Scene\RootNode.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="NodeMaterial.cpp" />
-    <ClCompile Include="Common\BindableBase.cpp" />
-    <ClCompile Include="Common\ViewModelBase.cpp" />
-    <ClCompile Include="ViewModels\RootPageViewModel.cpp" />
-    <ClCompile Include="ViewModels\DirectXPageViewModel.cpp" />
     <ClCompile Include="DirectXPageViewModelData.cpp" />
     <ClCompile Include="ImgUtils.cpp" />
     <ClCompile Include="DXUtils.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Container.cpp" />
-    <ClCompile Include="BooleanToVisibilityConverter.cpp" />
     <ClCompile Include="GlyphConverter.cpp" />
-    <ClCompile Include="ViewModels\TransformViewModel.cpp" />
-    <ClCompile Include="DecimalPlacesConverter.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Scene\SceneContext.cpp" />
     <ClCompile Include="ShaderCache.cpp" />
     <ClCompile Include="ModelBufferManager.cpp" />
     <ClCompile Include="BufferCache.cpp" />
-    <ClCompile Include="DelegateCommand.cpp" />
+    <ClCompile Include="Scene\RootNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\BindableBase.cpp">
+      <Filter>MVVM</Filter>
+    </ClCompile>
+    <ClCompile Include="DelegateCommand.cpp">
+      <Filter>MVVM</Filter>
+    </ClCompile>
+    <ClCompile Include="BooleanToVisibilityConverter.cpp">
+      <Filter>MVVM</Filter>
+    </ClCompile>
+    <ClCompile Include="DecimalPlacesConverter.cpp">
+      <Filter>MVVM</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ViewModelBase.cpp">
+      <Filter>MVVM</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewModels\DirectXPageViewModel.cpp">
+      <Filter>ViewModels</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewModels\TransformViewModel.cpp">
+      <Filter>ViewModels</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewModels\RootPageViewModel.cpp">
+      <Filter>ViewModels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -139,30 +163,48 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Scene\RootNode.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="NodeMaterial.h" />
-    <ClInclude Include="Common\BindableBase.h" />
-    <ClInclude Include="Common\ViewModelBase.h" />
-    <ClInclude Include="ViewModels\RootPageViewModel.h" />
-    <ClInclude Include="ViewModels\DirectXPageViewModel.h" />
     <ClInclude Include="DirectXPageViewModelData.h" />
     <ClInclude Include="ImgUtils.h" />
     <ClInclude Include="DXUtils.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Container.h" />
-    <ClInclude Include="BooleanToVisibilityConverter.h" />
     <ClInclude Include="GlyphConverter.h" />
     <ClInclude Include="FileSystemData.h" />
-    <ClInclude Include="ViewModels\TransformViewModel.h" />
-    <ClInclude Include="DecimalPlacesConverter.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Scene\SceneContext.h" />
     <ClInclude Include="ShaderCache.h" />
     <ClInclude Include="ModelBufferManager.h" />
     <ClInclude Include="BufferCache.h" />
-    <ClInclude Include="DelegateCommand.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Scene\RootNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\BindableBase.h">
+      <Filter>MVVM</Filter>
+    </ClInclude>
+    <ClInclude Include="DelegateCommand.h">
+      <Filter>MVVM</Filter>
+    </ClInclude>
+    <ClInclude Include="BooleanToVisibilityConverter.h">
+      <Filter>MVVM</Filter>
+    </ClInclude>
+    <ClInclude Include="DecimalPlacesConverter.h">
+      <Filter>MVVM</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ViewModelBase.h">
+      <Filter>MVVM</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewModels\DirectXPageViewModel.h">
+      <Filter>ViewModels</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewModels\TransformViewModel.h">
+      <Filter>ViewModels</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewModels\RootPageViewModel.h">
+      <Filter>ViewModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
