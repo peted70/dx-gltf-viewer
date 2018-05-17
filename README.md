@@ -26,3 +26,6 @@ I used [vcpkg](https://github.com/Microsoft/vcpkg) for any source code dependenc
 
 # Building
 This project can be built using Visual Studio 2017 Update 4 on Windows 10 Fall Creators Update (16299.0).
+
+# Further Information
+Please see this article for full details around features and coding for this sample.
